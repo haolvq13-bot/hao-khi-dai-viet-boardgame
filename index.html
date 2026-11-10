@@ -423,7 +423,7 @@
       border-radius: 18px;
       border: 4px solid #D97706;
       background-color: #0F172A;
-      background-image: url('assets/mountain_bg_3d.jpg');
+      background-image: url('assets/olympia_map_bg.jpg'), url('assets/mountain_bg_3d.jpg');
       background-size: 100% 100%;
       background-position: center;
       box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.35), 0 10px 26px rgba(15, 23, 42, 0.18);
@@ -681,14 +681,14 @@
       to { transform: scale(1.12); }
     }
 
-    /* Central 3D Sacred Mountain Summit (Stage 4 Boss - Đỉnh Thiêng Về Nguồn) */
+    /* Central 3D Sacred Mountain Summit (Stage 4 Boss - Đỉnh Olympia Vị Trí Chiến Thắng) */
     .center-citadel-node {
       position: absolute;
-      left: 50%;
-      top: 19%;
+      left: 79.8%;
+      top: 24.5%;
       transform: translate(-50%, -50%);
-      width: 92px;
-      height: 92px;
+      width: 82px;
+      height: 82px;
       border-radius: 50%;
       background: radial-gradient(circle, #FEF08A 0%, #F59E0B 100%);
       border: 4px solid #FDE047;
@@ -2163,8 +2163,8 @@
 
     .summit-halo-rays {
       position: absolute;
-      left: 50%;
-      top: 19%;
+      left: 79.8%;
+      top: 19.5%;
       width: 240px;
       height: 240px;
       transform: translate(-50%, -50%);
@@ -3237,19 +3237,19 @@
         <div class="options-grid" id="battleOptionsGrid"></div>
       </div>
 
-      <!-- Stage 4 Grand Reunion (KÉO THẢ 3 CẶP DẪN CHỨNG & VAI TRÒ RÚT RA + CHỐT KIẾN THỨC + BẢNG XẾP HẠNG TỐI GIẢN) -->
+      <!-- Stage 4 Grand Reunion (KÉO THẢ 3 CẶP DẪN CHỨNG & Ý NGHĨA RÚT RA + CHỐT KIẾN THỨC + BẢNG XẾP HẠNG TỐI GIẢN) -->
       <div id="bossMatchingQuestionArea" style="display:none;">
         <div id="bossMatchingInteractiveBox">
           <div class="question-prompt" style="font-size:15.5px;">
-            ⛰️ <strong>Chặng 4 — Đỉnh Thiêng Về Nguồn (Kéo - Thả Ghép Nối):</strong> Em hãy <strong>giữ và kéo thẻ <em>"Vai trò rút ra"</em> (Cột phải / bên dưới) thả vào đúng ô <em>"Dẫn chứng lịch sử"</em> tương ứng</strong> để chinh phục Đỉnh Núi và mở <strong>Bảng Xếp Hạng & Bảng Chốt Kiến Thức</strong>:
+            ⛰️ <strong>FINAL: Đỉnh Olympia — Vị Trí Chiến Thắng (Kéo - Thả Ghép Nối):</strong> Em hãy <strong>giữ và kéo thẻ <em>"Ý nghĩa rút ra"</em> (Cột phải / bên dưới) thả vào đúng ô <em>"Dẫn chứng/biểu hiện"</em> tương ứng</strong> để chinh phục Đỉnh Olympia và mở <strong>Bảng Xếp Hạng & Bảng Chốt Kiến Thức</strong>:
           </div>
           <div class="stage4-dnd-container matching-arena">
             <div>
-              <div style="font-size:12.5px; font-weight:900; color:#991B1B; margin-bottom:8px;">📜 3 HỘP ĐÍCH: DẪN CHỨNG LỊCH SỬ (THẢ THẺ VÀO ĐÂY)</div>
+              <div style="font-size:12.5px; font-weight:900; color:#991B1B; margin-bottom:8px;">📜 3 HỘP ĐÍCH: DẪN CHỨNG / BIỂU HIỆN (THẢ THẺ VÀO ĐÂY)</div>
               <div id="matchLeftCol"></div>
             </div>
             <div>
-              <div style="font-size:12.5px; font-weight:900; color:#047857; margin-bottom:8px;">✋ KHAY THẺ KÉO: VAI TRÒ RÚT RA (GIỮ & KÉO THẢ SANG Ô TRÁI)</div>
+              <div style="font-size:12.5px; font-weight:900; color:#047857; margin-bottom:8px;">✋ KHAY THẺ KÉO: Ý NGHĨA RÚT RA (GIỮ & KÉO THẢ SANG Ô TRÁI)</div>
               <div id="matchRightCol"></div>
             </div>
           </div>
@@ -3362,7 +3362,7 @@
             📌 DÀNH CHO CÔ GIÁO CHỐT KIẾN THỨC TOÀN LỚP
           </span>
           <h2 style="font-size:clamp(20px, 2.3vw, 28px); font-weight:900; color:#991B1B; margin:4px 0 0;">
-            📚 BẢNG CHUẨN KIẾN THỨC: VAI TRÒ CỦA CHIẾN TRANH BẢO VỆ TỔ QUỐC TRONG LỊCH SỬ VIỆT NAM
+            📚 BẢNG CHUẨN KIẾN THỨC: Ý NGHĨA CỦA CHIẾN TRANH BẢO VỆ TỔ QUỐC TRONG LỊCH SỬ VIỆT NAM
           </h2>
         </div>
         <button class="btn-3d btn-3d-crimson" style="padding:8px 18px; font-size:14px;" onclick="closeKnowledgeSummaryModal()">
@@ -3375,184 +3375,129 @@
 
   <script>
     /* =====================================================================
-     * 1. EXACT 3 HISTORICAL ROWS FROM USER'S TABLE
+     * 1. EXACT 3 HISTORICAL ROWS FROM USER'S "Ý NGHĨA" TABLE (IMAGE 2)
      * ===================================================================== */
     const CORE_HISTORY_ROWS = [
       {
         id: 'row0',
-        shortTitle: 'Chiến thắng Bạch Đằng',
-        eraIcon: '🌊',
-        evidence: 'Chiến thắng Bạch Đằng chấm dứt thời kì Bắc thuộc. Mở ra thời kỳ độc lập lâu dài cho dân tộc',
-        role: 'Vai trò quan trọng đối với sự sinh tồn và phát triển của dân tộc VN',
-        keywords: ['chấm dứt thời kì Bắc thuộc', 'sinh tồn và phát triển', 'độc lập lâu dài'],
+        shortTitle: 'Nam quốc sơn hà & Bình Ngô đại cáo',
+        eraIcon: '📜',
+        evidence: 'Tuyên ngôn về chủ quyền trong “Nam quốc sơn hà”; Bình ngô đại cáo',
+        role: 'Hình thành, nâng cao lòng tự hào, ý thức tự cường',
+        keywords: ['Nam quốc sơn hà', 'lòng tự hào, ý thức tự cường', 'Bình ngô đại cáo'],
         wrongCloze: 'mở đầu thời kì Bắc thuộc và lệ thuộc phong kiến phương Bắc'
       },
       {
         id: 'row1',
-        shortTitle: 'Kháng chiến chống Xiêm & Thanh',
-        eraIcon: '🐎',
-        evidence: 'Kháng chiến chống Xiêm, và quân Thanh bảo vệ vững chắc nền độc lập, chủ quyền dân tộc.',
-        role: 'Bảo vệ vững chắc độc lập dân tộc',
-        keywords: ['chống Xiêm, và quân Thanh', 'Bảo vệ vững chắc độc lập dân tộc', 'chủ quyền dân tộc'],
-        wrongCloze: 'chấm dứt hơn một nghìn năm Bắc thuộc, mở đầu kỷ nguyên tự chủ'
+        shortTitle: 'Hịch tướng sĩ & Hội nghị Diên Hồng',
+        eraIcon: '🔥',
+        evidence: '“Hịch tướng sĩ”; Hội nghị Diên Hồng',
+        role: 'Tô đậm những truyền thống tốt đẹp (yêu nước, ý chí độc lập mạnh mẽ, tinh thần đoàn kết)',
+        keywords: ['Hịch tướng sĩ', 'truyền thống tốt đẹp', 'Hội nghị Diên Hồng'],
+        wrongCloze: 'xóa bỏ truyền thống đoàn kết và tinh thần độc lập tự chủ'
       },
       {
         id: 'row2',
-        shortTitle: 'Kháng chiến chống Tống',
-        eraIcon: '🛡️',
-        evidence: 'Kháng chiến chống Tống tạo môi trường hòa bình lâu dài, đất nước có điều kiện thuận lợi để phát triển',
-        role: 'Giữ gìn bản sắc văn hóa; Tạo điều kiện thuận lợi cho phát triển đất nước',
-        keywords: ['môi trường hòa bình lâu dài', 'Giữ gìn bản sắc văn hóa', 'thuận lợi cho phát triển đất nước'],
-        wrongCloze: 'đánh tan 5 vạn quân Xiêm và 29 vạn quân Thanh xâm lược'
+        shortTitle: 'Nghệ thuật chiến tranh & Bài học kinh nghiệm',
+        eraIcon: '⚔️',
+        evidence: '- Sự chủ động trong chuẩn bị và đánh địch hiệu quả. - Phát huy sức mạnh dân tộc. - Nghệ thuật chiến tranh độc đáo, sáng tạo',
+        role: 'Để lại bài học kinh nghiệm quý báu',
+        keywords: ['Nghệ thuật chiến tranh độc đáo, sáng tạo', 'bài học kinh nghiệm quý báu', 'Phát huy sức mạnh dân tộc'],
+        wrongCloze: 'phụ thuộc hoàn toàn vào viện trợ quân sự từ bên ngoài'
       }
     ];
 
     /* =====================================================================
-     * 2. 4 MOUNTAIN CLIMBING TEAMS ("HÀNH TRÌNH VỀ NGUỒN" — 4 ĐỘI LEO NÚI)
-     *    CLIMBING FROM MOUNTAIN BASE (Y=87%) UP TO THE GOLDEN TEMPLE SUMMIT (X=50%, Y=19%)
+     * 2. MAP GAME: ĐƯỜNG LÊN ĐỈNH OLYMPIA ("HÀNH TRÌNH VỀ NGUỒN" — 4 ĐỘI CHƠI)
+     *    - BỤC BẮT ĐẦU (ĐỘI 1 ĐỎ, ĐỘI 2 XANH DƯƠNG, ĐỘI 3 XANH LÁ, ĐỘI 4 VÀNG)
+     *    - 3 CHẶNG THỬ THÁCH TRÊN ĐƯỜNG ĐI CHUNG + FINAL: ĐỈNH OLYMPIA
      * ===================================================================== */
     const STAGE_STEP_MAP = { 0: 0, 1: 4, 2: 8, 3: 12, 4: 15 };
+
+    const OLYMPIA_SHARED_WAYPOINTS = [
+      { x: 49.5, y: 88.0, stepIdx: 0,  placeName: 'Bục Bắt Đầu',                    title: 'Bắt Đầu — Đường Đi Chung', icon: '🏁' },
+      { x: 30.2, y: 71.5, stepIdx: 4,  placeName: 'Chặng 1: Khởi Động',             title: '1. Chặng 1: Khởi Động [Kiến thức chung]', icon: '⛺' },
+      { x: 69.8, y: 55.8, stepIdx: 8,  placeName: 'Chặng 2: Vượt Chướng Ngại Vật',  title: '2. Chặng 2: Vượt Chướng Ngại Vật [Giải mã]', icon: '🌉' },
+      { x: 83.2, y: 42.2, stepIdx: 12, placeName: 'Chặng 3: Tăng Tốc',              title: '3. Chặng 3: Tăng Tốc [Tư duy logic/Bất ngờ]', icon: '⚡' },
+      { x: 79.8, y: 24.5, stepIdx: 15, placeName: 'FINAL: Đỉnh Olympia',            title: 'FINAL: Đỉnh Olympia — Vị Trí Chiến Thắng', icon: '🏆' }
+    ];
+
+    function buildOlympiaSharedSteps(startX, startY, laneOffsetX, laneOffsetY) {
+      const base = [
+        { x: startX, y: startY }, // 0: Bục Bắt Đầu của từng Đội (Đội 1, Đội 2, Đội 3, Đội 4)
+        { x: 34.0,   y: 90.0 },   // 1: Đường Đi Chung (Đỏ)
+        { x: 22.5,   y: 88.2 },   // 2: Khúc cua Khởi Động
+        { x: 24.5,   y: 78.5 },   // 3: Lều Trại Khởi Động
+        { x: 30.2,   y: 71.5 },   // 4: CHẶNG 1: KHỞI ĐỘNG (POINT 1)
+        { x: 38.0,   y: 64.5 },   // 5: Đường Đèo Xanh
+        { x: 46.5,   y: 59.0 },   // 6: Tiếp cận Cầu Vượt Trở Ngại
+        { x: 55.2,   y: 55.2 },   // 7: Cầu Vượt Trở Ngại
+        { x: 69.8,   y: 55.8 },   // 8: CHẶNG 2: VƯỢT CHƯỚNG NGẠI VẬT (POINT 2)
+        { x: 76.5,   y: 51.8 },   // 9: Đường dốc Tăng Tốc
+        { x: 81.5,   y: 47.8 },   // 10: Vách núi Tăng Tốc
+        { x: 85.0,   y: 44.8 },   // 11: Khúc cua Tăng Tốc
+        { x: 83.2,   y: 42.2 },   // 12: CHẶNG 3: TĂNG TỐC
+        { x: 76.2,   y: 37.2 },   // 13: Vòng cung lên Đỉnh Olympia
+        { x: 73.8,   y: 31.2 },   // 14: Áp sát Đỉnh Olympia
+        { x: 79.8,   y: 24.5 }    // 15: FINAL: ĐỈNH OLYMPIA (VỊ TRÍ CHIẾN THẮNG)
+      ];
+      return base.map((pt, idx) => {
+        if (idx === 0) return pt;
+        return {
+          x: Number((pt.x + laneOffsetX).toFixed(2)),
+          y: Number((pt.y + laneOffsetY).toFixed(2))
+        };
+      });
+    }
 
     const FOUR_DIRECTIONS = {
       east: {
         key: 'east',
         name: 'ĐỘI 1',
-        armyTitle: 'Cung Đường Bạch Đằng',
+        armyTitle: 'Làn Đỏ • Đường Lên Đỉnh Olympia',
         generalName: 'Đội Leo Núi Số 1',
-        weaponEffect: '⛰️ Bứt phá vượt trạm — Tiến lên Đỉnh Thiêng Về Nguồn!',
-        img: 'assets/chibi_east_naval.jpg',
-        color: '#0284C7',
+        weaponEffect: '🔴 Đội 1 bứt phá tốc độ — Tiến lên Đỉnh Olympia!',
+        img: 'assets/chibi_west_cavalry.jpg',
+        color: '#DC2626',
         defaultTeamName: 'Nhóm 1',
-        pathSteps: [
-          { x: 12, y: 87 }, // 0: Chân Núi Đội 1
-          { x: 14, y: 81 }, // 1: Bậc 1
-          { x: 16, y: 75 }, // 2: Bậc 2
-          { x: 17, y: 69 }, // 3: Bậc 3
-          { x: 18, y: 64 }, // 4: TRẠM 1
-          { x: 16, y: 58 }, // 5: Bậc 5
-          { x: 18, y: 52 }, // 6: Bậc 6
-          { x: 20, y: 48 }, // 7: Bậc 7
-          { x: 23, y: 44 }, // 8: TRẠM 2
-          { x: 25, y: 39 }, // 9: Bậc 9
-          { x: 28, y: 35 }, // 10: Bậc 10
-          { x: 31, y: 32 }, // 11: Bậc 11
-          { x: 35, y: 29 }, // 12: TRẠM 3
-          { x: 40, y: 25 }, // 13: Bậc 13
-          { x: 45, y: 22 }, // 14: Bậc 14
-          { x: 50, y: 19 }  // 15: ĐỈNH THIÊNG VỀ NGUỒN (CHẶNG 4)
-        ],
-        waypoints: [
-          { x: 12, y: 87, stepIdx: 0,  placeName: 'Chân Núi Đội 1',       title: 'Trại Xuất Phát Đội 1', icon: '⛺' },
-          { x: 18, y: 64, stepIdx: 4,  placeName: 'Cửa Biển Bạch Đằng',   title: 'Trạm 1: Cửa Biển Bạch Đằng', icon: '🌊' },
-          { x: 23, y: 44, stepIdx: 8,  placeName: 'Bãi Cọc Đá Bạc',       title: 'Trạm 2: Bãi Cọc Đá Bạc', icon: '🪵' },
-          { x: 35, y: 29, stepIdx: 12, placeName: 'Ghềnh Nam Triệu',      title: 'Trạm 3: Ghềnh Nam Triệu', icon: '⛰️' },
-          { x: 50, y: 19, stepIdx: 15, placeName: 'Đỉnh Thiêng Về Nguồn', title: 'Đỉnh Thiêng Về Nguồn (Chặng 4)', icon: '🚩' }
-        ]
+        pathSteps: buildOlympiaSharedSteps(41.8, 88.2, -1.8, -0.8),
+        waypoints: OLYMPIA_SHARED_WAYPOINTS
       },
       west: {
         key: 'west',
         name: 'ĐỘI 2',
-        armyTitle: 'Cung Đường Ngọc Hồi',
+        armyTitle: 'Làn Xanh Dương • Đường Lên Đỉnh Olympia',
         generalName: 'Đội Leo Núi Số 2',
-        weaponEffect: '🔥 Thần tốc leo dốc — Tiến lên Đỉnh Thiêng Về Nguồn!',
-        img: 'assets/chibi_west_cavalry.jpg',
-        color: '#EA580C',
+        weaponEffect: '🔵 Đội 2 vượt chướng ngại vật — Tiến lên Đỉnh Olympia!',
+        img: 'assets/chibi_east_naval.jpg',
+        color: '#2563EB',
         defaultTeamName: 'Nhóm 2',
-        pathSteps: [
-          { x: 35, y: 89 }, // 0: Chân Núi Đội 2
-          { x: 36, y: 84 }, // 1: Bậc 1
-          { x: 37, y: 79 }, // 2: Bậc 2
-          { x: 37, y: 74 }, // 3: Bậc 3
-          { x: 38, y: 69 }, // 4: TRẠM 1
-          { x: 37, y: 64 }, // 5: Bậc 5
-          { x: 38, y: 59 }, // 6: Bậc 6
-          { x: 39, y: 55 }, // 7: Bậc 7
-          { x: 40, y: 50 }, // 8: TRẠM 2
-          { x: 41, y: 45 }, // 9: Bậc 9
-          { x: 42, y: 41 }, // 10: Bậc 10
-          { x: 43, y: 38 }, // 11: Bậc 11
-          { x: 44, y: 34 }, // 12: TRẠM 3
-          { x: 46, y: 29 }, // 13: Bậc 13
-          { x: 48, y: 24 }, // 14: Bậc 14
-          { x: 50, y: 19 }  // 15: ĐỈNH THIÊNG VỀ NGUỒN (CHẶNG 4)
-        ],
-        waypoints: [
-          { x: 35, y: 89, stepIdx: 0,  placeName: 'Chân Núi Đội 2',       title: 'Trại Xuất Phát Đội 2', icon: '⛺' },
-          { x: 38, y: 69, stepIdx: 4,  placeName: 'Đồn Hà Hồi',           title: 'Trạm 1: Đồn Hà Hồi', icon: '🐎' },
-          { x: 40, y: 50, stepIdx: 8,  placeName: 'Lũy Ngọc Hồi',         title: 'Trạm 2: Lũy Ngọc Hồi', icon: '🔥' },
-          { x: 44, y: 34, stepIdx: 12, placeName: 'Gò Đống Đa',           title: 'Trạm 3: Gò Đống Đa', icon: '⛰️' },
-          { x: 50, y: 19, stepIdx: 15, placeName: 'Đỉnh Thiêng Về Nguồn', title: 'Đỉnh Thiêng Về Nguồn (Chặng 4)', icon: '🚩' }
-        ]
+        pathSteps: buildOlympiaSharedSteps(47.2, 85.2, -0.6, -0.3),
+        waypoints: OLYMPIA_SHARED_WAYPOINTS
       },
       south: {
         key: 'south',
         name: 'ĐỘI 3',
-        armyTitle: 'Cung Đường Rạch Gầm',
+        armyTitle: 'Làn Xanh Lá • Đường Lên Đỉnh Olympia',
         generalName: 'Đội Leo Núi Số 3',
-        weaponEffect: '🌿 Vững bước vượt đèo — Tiến lên Đỉnh Thiêng Về Nguồn!',
+        weaponEffect: '🟢 Đội 3 tăng tốc thần tốc — Tiến lên Đỉnh Olympia!',
         img: 'assets/chibi_south_elephant.jpg',
         color: '#16A34A',
         defaultTeamName: 'Nhóm 3',
-        pathSteps: [
-          { x: 65, y: 89 }, // 0: Chân Núi Đội 3
-          { x: 64, y: 84 }, // 1: Bậc 1
-          { x: 63, y: 79 }, // 2: Bậc 2
-          { x: 63, y: 74 }, // 3: Bậc 3
-          { x: 62, y: 69 }, // 4: TRẠM 1
-          { x: 63, y: 64 }, // 5: Bậc 5
-          { x: 62, y: 59 }, // 6: Bậc 6
-          { x: 61, y: 55 }, // 7: Bậc 7
-          { x: 60, y: 50 }, // 8: TRẠM 2
-          { x: 59, y: 45 }, // 9: Bậc 9
-          { x: 58, y: 41 }, // 10: Bậc 10
-          { x: 57, y: 38 }, // 11: Bậc 11
-          { x: 56, y: 34 }, // 12: TRẠM 3
-          { x: 54, y: 29 }, // 13: Bậc 13
-          { x: 52, y: 24 }, // 14: Bậc 14
-          { x: 50, y: 19 }  // 15: ĐỈNH THIÊNG VỀ NGUỒN (CHẶNG 4)
-        ],
-        waypoints: [
-          { x: 65, y: 89, stepIdx: 0,  placeName: 'Chân Núi Đội 3',       title: 'Trại Xuất Phát Đội 3', icon: '⛺' },
-          { x: 62, y: 69, stepIdx: 4,  placeName: 'Bến Trà Tân',          title: 'Trạm 1: Bến Trà Tân', icon: '🐘' },
-          { x: 60, y: 50, stepIdx: 8,  placeName: 'Cù Lao Thới Sơn',      title: 'Trạm 2: Cù Lao Thới Sơn', icon: '🛡️' },
-          { x: 56, y: 34, stepIdx: 12, placeName: 'Rạch Gầm - Xoài Mút',  title: 'Trạm 3: Rạch Gầm - Xoài Mút', icon: '⛰️' },
-          { x: 50, y: 19, stepIdx: 15, placeName: 'Đỉnh Thiêng Về Nguồn', title: 'Đỉnh Thiêng Về Nguồn (Chặng 4)', icon: '🚩' }
-        ]
+        pathSteps: buildOlympiaSharedSteps(52.8, 86.2, 0.6, 0.3),
+        waypoints: OLYMPIA_SHARED_WAYPOINTS
       },
       north: {
         key: 'north',
         name: 'ĐỘI 4',
-        armyTitle: 'Cung Đường Như Nguyệt',
+        armyTitle: 'Làn Vàng • Đường Lên Đỉnh Olympia',
         generalName: 'Đội Leo Núi Số 4',
-        weaponEffect: '⚡ Chinh phục vách đá — Tiến lên Đỉnh Thiêng Về Nguồn!',
+        weaponEffect: '🟡 Đội 4 chinh phục vòng nguyệt quế — Tiến lên Đỉnh Olympia!',
         img: 'assets/chibi_north_shield.jpg',
-        color: '#2563EB',
+        color: '#D97706',
         defaultTeamName: 'Nhóm 4',
-        pathSteps: [
-          { x: 88, y: 87 }, // 0: Chân Núi Đội 4
-          { x: 86, y: 81 }, // 1: Bậc 1
-          { x: 84, y: 75 }, // 2: Bậc 2
-          { x: 83, y: 69 }, // 3: Bậc 3
-          { x: 82, y: 64 }, // 4: TRẠM 1
-          { x: 84, y: 58 }, // 5: Bậc 5
-          { x: 82, y: 52 }, // 6: Bậc 6
-          { x: 80, y: 48 }, // 7: Bậc 7
-          { x: 77, y: 44 }, // 8: TRẠM 2
-          { x: 75, y: 39 }, // 9: Bậc 9
-          { x: 72, y: 35 }, // 10: Bậc 10
-          { x: 69, y: 32 }, // 11: Bậc 11
-          { x: 65, y: 29 }, // 12: TRẠM 3
-          { x: 60, y: 25 }, // 13: Bậc 13
-          { x: 55, y: 22 }, // 14: Bậc 14
-          { x: 50, y: 19 }  // 15: ĐỈNH THIÊNG VỀ NGUỒN (CHẶNG 4)
-        ],
-        waypoints: [
-          { x: 88, y: 87, stepIdx: 0,  placeName: 'Chân Núi Đội 4',       title: 'Trại Xuất Phát Đội 4', icon: '⛺' },
-          { x: 82, y: 64, stepIdx: 4,  placeName: 'Thành Ung Châu',       title: 'Trạm 1: Thành Ung Châu', icon: '🛡️' },
-          { x: 77, y: 44, stepIdx: 8,  placeName: 'Bến Vạn Kiếp',         title: 'Trạm 2: Bến Vạn Kiếp', icon: '🌊' },
-          { x: 65, y: 29, stepIdx: 12, placeName: 'Sông Như Nguyệt',      title: 'Trạm 3: Sông Như Nguyệt', icon: '⛰️' },
-          { x: 50, y: 19, stepIdx: 15, placeName: 'Đỉnh Thiêng Về Nguồn', title: 'Đỉnh Thiêng Về Nguồn (Chặng 4)', icon: '🚩' }
-        ]
+        pathSteps: buildOlympiaSharedSteps(58.2, 88.2, 1.8, 0.8),
+        waypoints: OLYMPIA_SHARED_WAYPOINTS
       }
     };
 
@@ -3709,49 +3654,49 @@
     }
 
     const VOICE_CLIP_CATALOG = {
-      cmd_test_audio:        { role: 'general',  src: 'assets/voices/cmd_test_audio.mp3',        text: 'Trống trận Đại Việt đã điểm! Lời thoại rõ ràng, bốn đạo quân sẵn sàng xuất kích!' },
-      cmd_host_waiting:      { role: 'general',  src: 'assets/voices/cmd_host_waiting.mp3',      text: 'Bạn là Chủ Phòng! Khi các nhóm đã chọn tướng xong, hãy bấm nút Bắt Đầu Trận Đấu!' },
-      cmd_member_waiting:    { role: 'general',  src: 'assets/voices/cmd_member_waiting.mp3',    text: 'Đã chốt tướng vào bàn! Đang chờ Chủ Phòng bấm Bắt Đầu Trận Đấu để xuất quân!' },
-      cmd_char_locked:       { role: 'general',  src: 'assets/voices/cmd_char_locked.mp3',       text: 'Tướng này đã có nhóm vào trước chọn rồi! Hãy chọn hướng đánh còn trống!' },
-      cmd_start_match:       { role: 'general',  src: 'assets/voices/cmd_start_match.mp3',       text: 'Trống trận đã điểm! Chủ Phòng phát lệnh khởi tranh! Bốn đạo quân đồng loạt tiến lên!' },
+      cmd_test_audio:        { role: 'general',  src: '', text: 'Hành Trình Về Nguồn — Đường Lên Đỉnh Olympia sẵn sàng! Bốn đội leo núi chuẩn bị xuất phát!' },
+      cmd_host_waiting:      { role: 'general',  src: '', text: 'Cô Giáo là Chủ Phòng! Khi 4 đội đã chọn vị trí xong, hãy bấm nút Bắt Đầu Trận Đấu!' },
+      cmd_member_waiting:    { role: 'general',  src: '', text: 'Đã chốt đội tại Bục Bắt Đầu! Đang chờ Cô Giáo bấm Bắt Đầu Trận Đấu để xuất phát!' },
+      cmd_char_locked:       { role: 'general',  src: '', text: 'Đội này đã có nhóm chọn trước rồi! Hãy chọn một đội còn trống!' },
+      cmd_start_match:       { role: 'general',  src: '', text: 'Trống lệnh đã điểm! Cô Giáo phát lệnh khởi tranh! Bốn đội đồng loạt tiến lên Đỉnh Olympia!' },
 
-      intro_east_s1:         { role: 'narrator', src: 'assets/voices/intro_east_s1.mp3',         text: 'Chặng 1 Hướng Đông: Cửa Biển Bạch Đằng! Hãy trả lời đúng câu hỏi lịch sử để mở đường tiến quân!' },
-      intro_east_s2:         { role: 'narrator', src: 'assets/voices/intro_east_s2.mp3',         text: 'Chặng 2 Hướng Đông: Bãi Cọc Đá Bạc! Hãy chọn đáp án chính xác để công phá trận địa cọc ngầm!' },
-      intro_east_s3:         { role: 'narrator', src: 'assets/voices/intro_east_s3.mp3',         text: 'Chặng 3 Hướng Đông: Ghềnh Nam Triệu! Vượt qua thử thách cuối cùng trước khi tiến về Thăng Long!' },
+      intro_east_s1:         { role: 'narrator', src: '', text: 'Chặng 1: Khởi Động — Kiến thức chung! Hãy kéo thả đáp án đúng vào ô trả lời để vượt qua Chặng 1!' },
+      intro_east_s2:         { role: 'narrator', src: '', text: 'Chặng 2: Vượt Chướng Ngại Vật! Hãy giải mã chướng ngại vật lịch sử để vượt qua cây cầu!' },
+      intro_east_s3:         { role: 'narrator', src: '', text: 'Chặng 3: Tăng Tốc! Hãy kéo thả nhanh và chính xác để bứt phá lên Đỉnh Olympia!' },
 
-      intro_west_s1:         { role: 'narrator', src: 'assets/voices/intro_west_s1.mp3',         text: 'Chặng 1 Hướng Tây: Đồn Hà Hồi! Hãy trả lời đúng câu hỏi để kỵ binh thần tốc hạ đồn địch!' },
-      intro_west_s2:         { role: 'narrator', src: 'assets/voices/intro_west_s2.mp3',         text: 'Chặng 2 Hướng Tây: Lũy Ngọc Hồi! Hãy chọn đáp án chính xác để phá tan phòng tuyến quân Thanh!' },
-      intro_west_s3:         { role: 'narrator', src: 'assets/voices/intro_west_s3.mp3',         text: 'Chặng 3 Hướng Tây: Gò Đống Đa! Hãy trả lời đúng để mở toang cánh cửa tiến vào kinh thành!' },
+      intro_west_s1:         { role: 'narrator', src: '', text: 'Chặng 1: Khởi Động — Kiến thức chung! Hãy kéo thả đáp án đúng vào ô trả lời để vượt qua Chặng 1!' },
+      intro_west_s2:         { role: 'narrator', src: '', text: 'Chặng 2: Vượt Chướng Ngại Vật! Hãy giải mã chướng ngại vật lịch sử để vượt qua cây cầu!' },
+      intro_west_s3:         { role: 'narrator', src: '', text: 'Chặng 3: Tăng Tốc! Hãy kéo thả nhanh và chính xác để bứt phá lên Đỉnh Olympia!' },
 
-      intro_south_s1:        { role: 'narrator', src: 'assets/voices/intro_south_s1.mp3',        text: 'Chặng 1 Hướng Nam: Bến Trà Tân! Hãy trả lời đúng câu hỏi để đội tượng binh xuất kích!' },
-      intro_south_s2:        { role: 'narrator', src: 'assets/voices/intro_south_s2.mp3',        text: 'Chặng 2 Hướng Nam: Cù Lao Thới Sơn! Hãy chọn đáp án chính xác để khép chặt vòng vây trên sông!' },
-      intro_south_s3:        { role: 'narrator', src: 'assets/voices/intro_south_s3.mp3',        text: 'Chặng 3 Hướng Nam: Rạch Gầm Xoài Mút! Hãy trả lời đúng để hoàn tất chiến công vang dội phương Nam!' },
+      intro_south_s1:        { role: 'narrator', src: '', text: 'Chặng 1: Khởi Động — Kiến thức chung! Hãy kéo thả đáp án đúng vào ô trả lời để vượt qua Chặng 1!' },
+      intro_south_s2:        { role: 'narrator', src: '', text: 'Chặng 2: Vượt Chướng Ngại Vật! Hãy giải mã chướng ngại vật lịch sử để vượt qua cây cầu!' },
+      intro_south_s3:        { role: 'narrator', src: '', text: 'Chặng 3: Tăng Tốc! Hãy kéo thả nhanh và chính xác để bứt phá lên Đỉnh Olympia!' },
 
-      intro_north_s1:        { role: 'narrator', src: 'assets/voices/intro_north_s1.mp3',        text: 'Chặng 1 Hướng Bắc: Thành Ung Châu! Hãy trả lời đúng câu hỏi để tiên phát chế nhân phá thành!' },
-      intro_north_s2:        { role: 'narrator', src: 'assets/voices/intro_north_s2.mp3',        text: 'Chặng 2 Hướng Bắc: Bến Vạn Kiếp! Hãy chọn đáp án chính xác để củng cố đại bản doanh!' },
-      intro_north_s3:        { role: 'narrator', src: 'assets/voices/intro_north_s3.mp3',        text: 'Chặng 3 Hướng Bắc: Sông Như Nguyệt! Hãy trả lời đúng để vang vọng bài thần thơ Nam Quốc Sơn Hà!' },
+      intro_north_s1:        { role: 'narrator', src: '', text: 'Chặng 1: Khởi Động — Kiến thức chung! Hãy kéo thả đáp án đúng vào ô trả lời để vượt qua Chặng 1!' },
+      intro_north_s2:        { role: 'narrator', src: '', text: 'Chặng 2: Vượt Chướng Ngại Vật! Hãy giải mã chướng ngại vật lịch sử để vượt qua cây cầu!' },
+      intro_north_s3:        { role: 'narrator', src: '', text: 'Chặng 3: Tăng Tốc! Hãy kéo thả nhanh và chính xác để bứt phá lên Đỉnh Olympia!' },
 
-      intro_stage4_reunion:  { role: 'narrator', src: 'assets/voices/intro_stage4_reunion.mp3',  text: 'Chặng 4 Chung Kết: Hội Ngộ Thăng Long! Hãy ghép nối chính xác ba dẫn chứng lịch sử ở cột trái với ba vai trò rút ra ở cột phải!' },
+      intro_stage4_reunion:  { role: 'narrator', src: '', text: 'Chặng Chung Kết: Đỉnh Olympia — Vị Trí Chiến Thắng! Hãy kéo thả chính xác 3 thẻ Ý nghĩa rút ra vào 3 ô Dẫn chứng lịch sử tương ứng!' },
 
-      congrats_east_s1:      { role: 'general',  src: 'assets/voices/congrats_east_s1.mp3',      text: 'Chúc mừng đạo quân! Phá chặng Cửa Biển Bạch Đằng thành công! Tiến quân sang chặng hai!' },
-      congrats_east_s2:      { role: 'general',  src: 'assets/voices/congrats_east_s2.mp3',      text: 'Tuyệt vời! Chúc mừng đạo quân phá chặng Bãi Cọc Đá Bạc thành công! Tiếp tục tiến lên!' },
-      congrats_east_s3:      { role: 'general',  src: 'assets/voices/congrats_east_s3.mp3',      text: 'Đại thắng! Chúc mừng đạo quân phá chặng Ghềnh Nam Triệu thành công! Tiến thẳng về Hoàng Thành Thăng Long!' },
+      congrats_east_s1:      { role: 'general',  src: '', text: 'Chúc mừng Đội 1 vượt qua Chặng 1 Khởi Động! Tiếp tục tiến lên Chặng 2 Vượt Chướng Ngại Vật!' },
+      congrats_east_s2:      { role: 'general',  src: '', text: 'Tuyệt vời! Đội 1 đã vượt qua Chặng 2 Vượt Chướng Ngại Vật! Tiếp tục tiến lên Chặng 3 Tăng Tốc!' },
+      congrats_east_s3:      { role: 'general',  src: '', text: 'Bứt phá xuất sắc! Đội 1 đã vượt qua Chặng 3 Tăng Tốc! Tiến thẳng lên Đỉnh Olympia!' },
 
-      congrats_west_s1:      { role: 'general',  src: 'assets/voices/congrats_west_s1.mp3',      text: 'Chúc mừng đạo quân! Phá chặng Đồn Hà Hồi thành công! Tiến quân sang chặng hai!' },
-      congrats_west_s2:      { role: 'general',  src: 'assets/voices/congrats_west_s2.mp3',      text: 'Tuyệt vời! Chúc mừng đạo quân phá chặng Lũy Ngọc Hồi thành công! Tiếp tục tiến lên!' },
-      congrats_west_s3:      { role: 'general',  src: 'assets/voices/congrats_west_s3.mp3',      text: 'Đại thắng! Chúc mừng đạo quân phá chặng Gò Đống Đa thành công! Tiến thẳng về Hoàng Thành Thăng Long!' },
+      congrats_west_s1:      { role: 'general',  src: '', text: 'Chúc mừng Đội 2 vượt qua Chặng 1 Khởi Động! Tiếp tục tiến lên Chặng 2 Vượt Chướng Ngại Vật!' },
+      congrats_west_s2:      { role: 'general',  src: '', text: 'Tuyệt vời! Đội 2 đã vượt qua Chặng 2 Vượt Chướng Ngại Vật! Tiếp tục tiến lên Chặng 3 Tăng Tốc!' },
+      congrats_west_s3:      { role: 'general',  src: '', text: 'Bứt phá xuất sắc! Đội 2 đã vượt qua Chặng 3 Tăng Tốc! Tiến thẳng lên Đỉnh Olympia!' },
 
-      congrats_south_s1:     { role: 'general',  src: 'assets/voices/congrats_south_s1.mp3',     text: 'Chúc mừng đạo quân! Phá chặng Bến Trà Tân thành công! Tiến quân sang chặng hai!' },
-      congrats_south_s2:     { role: 'general',  src: 'assets/voices/congrats_south_s2.mp3',     text: 'Tuyệt vời! Chúc mừng đạo quân phá chặng Cù Lao Thới Sơn thành công! Tiếp tục tiến lên!' },
-      congrats_south_s3:     { role: 'general',  src: 'assets/voices/congrats_south_s3.mp3',     text: 'Đại thắng! Chúc mừng đạo quân phá chặng Rạch Gầm Xoài Mút thành công! Tiến thẳng về Hoàng Thành Thăng Long!' },
+      congrats_south_s1:     { role: 'general',  src: '', text: 'Chúc mừng Đội 3 vượt qua Chặng 1 Khởi Động! Tiếp tục tiến lên Chặng 2 Vượt Chướng Ngại Vật!' },
+      congrats_south_s2:     { role: 'general',  src: '', text: 'Tuyệt vời! Đội 3 đã vượt qua Chặng 2 Vượt Chướng Ngại Vật! Tiếp tục tiến lên Chặng 3 Tăng Tốc!' },
+      congrats_south_s3:     { role: 'general',  src: '', text: 'Bứt phá xuất sắc! Đội 3 đã vượt qua Chặng 3 Tăng Tốc! Tiến thẳng lên Đỉnh Olympia!' },
 
-      congrats_north_s1:     { role: 'general',  src: 'assets/voices/congrats_north_s1.mp3',     text: 'Chúc mừng đạo quân! Phá chặng Thành Ung Châu thành công! Tiến quân sang chặng hai!' },
-      congrats_north_s2:     { role: 'general',  src: 'assets/voices/congrats_north_s2.mp3',     text: 'Tuyệt vời! Chúc mừng đạo quân phá chặng Bến Vạn Kiếp thành công! Tiếp tục tiến lên!' },
-      congrats_north_s3:     { role: 'general',  src: 'assets/voices/congrats_north_s3.mp3',     text: 'Đại thắng! Chúc mừng đạo quân phá chặng Sông Như Nguyệt thành công! Tiến thẳng về Hoàng Thành Thăng Long!' },
+      congrats_north_s1:     { role: 'general',  src: '', text: 'Chúc mừng Đội 4 vượt qua Chặng 1 Khởi Động! Tiếp tục tiến lên Chặng 2 Vượt Chướng Ngại Vật!' },
+      congrats_north_s2:     { role: 'general',  src: '', text: 'Tuyệt vời! Đội 4 đã vượt qua Chặng 2 Vượt Chướng Ngại Vật! Tiếp tục tiến lên Chặng 3 Tăng Tốc!' },
+      congrats_north_s3:     { role: 'general',  src: '', text: 'Bứt phá xuất sắc! Đội 4 đã vượt qua Chặng 3 Tăng Tốc! Tiến thẳng lên Đỉnh Olympia!' },
 
-      congrats_stage4_victory: { role: 'general', src: 'assets/voices/congrats_stage4_victory.mp3', text: 'Chúc mừng đại thắng! Đạo quân đã hoàn thành Hội Ngộ Thăng Long, ghép nối chính xác toàn bộ ba vai trò của chiến tranh bảo vệ Tổ quốc!' },
-      cmd_wrong_retreat:     { role: 'general',  src: 'assets/voices/cmd_wrong_retreat.mp3',     text: 'Câu trả lời chưa chính xác! Đạo quân lùi lại hai bước để củng cố lực lượng và công phá lại chặng này!' },
-      cmd_stage4_wrong:      { role: 'general',  src: 'assets/voices/cmd_stage4_wrong.mp3',      text: 'Câu trả lời chưa chính xác!' }
+      congrats_stage4_victory: { role: 'general', src: '', text: 'Chúc mừng chiến thắng! Đội đã chinh phục Đỉnh Olympia và ghép nối chính xác toàn bộ ba Ý nghĩa của chiến tranh bảo vệ Tổ quốc!' },
+      cmd_wrong_retreat:     { role: 'general',  src: '', text: 'Câu trả lời chưa chính xác! Đội bị lùi lại hai bước và thử sức lại chặng này!' },
+      cmd_stage4_wrong:      { role: 'general',  src: '', text: 'Câu trả lời chưa chính xác! Hãy đọc kỹ dẫn chứng và kéo thả lại ý nghĩa rút ra tương ứng!' }
     };
 
     function getAudioCtx() {
@@ -4903,7 +4848,7 @@
     }
 
     /* =====================================================================
-     * 7. RENDER 3D TERRAIN MAP, SERPENTINE ROADS, HISTORICAL LANDMARKS & TOKENS
+     * 7. RENDER MAP GAME: ĐƯỜNG LÊN ĐỈNH OLYMPIA (ĐƯỜNG ĐI CHUNG, 3 CHẶNG & 4 ĐỘI)
      * ===================================================================== */
     function renderDioramaMap() {
       const svgRoads = document.getElementById('dioramaSvgRoads');
@@ -4913,91 +4858,86 @@
 
       const isTeacherView = myRole === 'TEACHER';
 
-      // 0. Render Smooth Winding Serpentine S-Curve Roads in SVG
+      // 0. Subtle glowing highlight along the Olympia shared lanes in SVG
       let svgHtml = '';
       Object.values(FOUR_DIRECTIONS).forEach((dir) => {
         const isMyLane = !isTeacherView && dir.key === myGroup.direction;
         const pts = dir.pathSteps.map(p => `${p.x * 10},${p.y * 6.25}`).join(' ');
-        svgHtml += `<polyline points="${pts}" fill="none" stroke="rgba(15, 23, 42, 0.55)" stroke-width="${isMyLane ? 22 : 17}" stroke-linecap="round" stroke-linejoin="round" />`;
-        svgHtml += `<polyline points="${pts}" fill="none" stroke="${isMyLane ? '#FEF3C7' : 'rgba(241, 245, 249, 0.78)'}" stroke-width="${isMyLane ? 15 : 11}" stroke-linecap="round" stroke-linejoin="round" />`;
-        svgHtml += `<polyline points="${pts}" fill="none" stroke="${dir.color}" stroke-width="${isMyLane ? 6 : 4.5}" stroke-dasharray="10 8" stroke-linecap="round" stroke-linejoin="round" />`;
+        if (isMyLane) {
+          svgHtml += `<polyline points="${pts}" fill="none" stroke="rgba(254, 240, 138, 0.7)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />`;
+        }
+        svgHtml += `<polyline points="${pts}" fill="none" stroke="${dir.color}" stroke-width="${isMyLane ? 5 : 3}" stroke-dasharray="8 8" stroke-opacity="${isMyLane ? '0.95' : '0.55'}" stroke-linecap="round" stroke-linejoin="round" />`;
       });
       svgRoads.innerHTML = svgHtml;
 
-      // 1. Render Intermediate 3D Stepping Stones + Historical Landmark Stage Checkpoints (1, 2, 3)
+      // 1. Render ONE Clean Set of Shared Stepping Stones + 3 Olympia Checkpoints along ĐƯỜNG ĐI CHUNG
       const stageIndices = [0, 4, 8, 12, 15];
-      Object.values(FOUR_DIRECTIONS).forEach((dir) => {
-        const isMyLane = !isTeacherView && dir.key === myGroup.direction;
-        const laneState = allFourLanesState[dir.key];
-        const maxPassedStep = isMyLane
-          ? myGroup.tokenStepIdx
-          : (typeof laneState.tokenStepIdx === 'number' ? laneState.tokenStepIdx : STAGE_STEP_MAP[Math.min(4, laneState.stageProgress)]);
+      const maxPassedStep = isTeacherView
+        ? Math.max(0, ...Object.values(allFourLanesState).map(l => typeof l.tokenStepIdx === 'number' ? l.tokenStepIdx : STAGE_STEP_MAP[Math.min(4, l.stageProgress || 0)]))
+        : myGroup.tokenStepIdx;
 
-        dir.pathSteps.forEach((pt, sIdx) => {
-          if (stageIndices.includes(sIdx)) return;
-          const isPassed = sIdx <= maxPassedStep;
-          const isCurrentStone = isMyLane && myGroup.tokenStepIdx === sIdx && isMarchingAnimation;
-          const dot = document.createElement('div');
-          dot.className = `road-step-dot ${isMyLane ? 'my-lane-dot' : ''} ${isPassed ? 'passed-dot' : ''} ${isCurrentStone ? 'active-stepping' : ''}`;
-          dot.style.left = pt.x + '%';
-          dot.style.top = pt.y + '%';
-          dot.title = `${dir.name} • Nút bước hành quân #${sIdx}`;
-          dot.innerHTML = isPassed ? '✓' : '•';
-          dot.onclick = () => {
-            if (isTeacherView) {
-              showToast(`👩‍🏫 Màn hình Cô Giáo đang giám sát đường tiến quân của ${laneState.teamName} (${dir.name})!`);
-              return;
-            }
-            if (!isMyLane) {
-              showToast(`👀 Đây là đường hành quân của ${laneState.teamName} (${dir.name})!`);
-              return;
-            }
-            const targetStage = sIdx <= 4 ? 1 : sIdx <= 8 ? 2 : sIdx <= 12 ? 3 : 4;
-            marchToStageAndOpenQuestion(targetStage);
-          };
-          stagesContainer.appendChild(dot);
-        });
-
-        // Render Stage Checkpoints 1, 2, 3 with Historical Place Names!
-        [1, 2, 3].forEach((stageNum) => {
-          const wp = dir.waypoints[stageNum];
-          const isConquered = isMyLane
-            ? myGroup.conqueredStages.includes(stageNum)
-            : laneState.stageProgress >= stageNum;
-          const isLocked = isMyLane && stageNum > myGroup.currentStage;
-          const isActiveTarget = isMyLane && myGroup.currentStage === stageNum && !isConquered;
-
-          const node = document.createElement('div');
-          node.className = `stage-node ${isMyLane ? 'my-lane' : ''} ${isConquered ? 'conquered' : ''} ${isLocked ? 'locked-stage' : ''} ${isActiveTarget ? 'active-target' : ''}`;
-          node.style.left = wp.x + '%';
-          node.style.top = wp.y + '%';
-          node.onclick = () => {
-            if (isTeacherView) {
-              showToast(`👩‍🏫 Địa danh ${wp.placeName} (${dir.name}) — Tiến độ nhóm: Chặng ${laneState.stageProgress}/4`);
-              return;
-            }
-            if (isMyLane) {
-              marchToStageAndOpenQuestion(stageNum);
-            } else {
-              showToast(`👀 Địa danh ${wp.placeName} thuộc hướng tiến quân của ${laneState.teamName}!`);
-            }
-          };
-
-          node.innerHTML = `
-            ${isActiveTarget ? '<div class="map-go-pill">⚔️ BẮT ĐẦU</div>' : ''}
-            <div class="st-icon">${isConquered ? '🚩' : isLocked ? '🔒' : wp.icon}</div>
-            <div class="st-label">Chặng ${stageNum}</div>
-            <div class="st-place-name">${wp.placeName}</div>
-          `;
-          stagesContainer.appendChild(node);
-        });
+      const sharedRefSteps = buildOlympiaSharedSteps(49.5, 88.0, 0, 0);
+      sharedRefSteps.forEach((pt, sIdx) => {
+        if (stageIndices.includes(sIdx)) return;
+        const isPassed = sIdx <= maxPassedStep;
+        const isCurrentStone = !isTeacherView && myGroup.tokenStepIdx === sIdx && isMarchingAnimation;
+        const dot = document.createElement('div');
+        dot.className = `road-step-dot my-lane-dot ${isPassed ? 'passed-dot' : ''} ${isCurrentStone ? 'active-stepping' : ''}`;
+        dot.style.left = pt.x + '%';
+        dot.style.top = pt.y + '%';
+        dot.title = `Đường Đi Chung • Bước hành trình #${sIdx}`;
+        dot.innerHTML = isPassed ? '✓' : sIdx;
+        dot.onclick = () => {
+          if (isTeacherView) {
+            showToast('👩‍🏫 Màn hình Cô Giáo đang giám sát 4 đội trên Đường Đi Chung lên Đỉnh Olympia!');
+            return;
+          }
+          const targetStage = sIdx <= 4 ? 1 : sIdx <= 8 ? 2 : sIdx <= 12 ? 3 : 4;
+          marchToStageAndOpenQuestion(targetStage);
+        };
+        stagesContainer.appendChild(dot);
       });
 
-      // 2. Render Central 3D Imperial Citadel (Stage 4 Grand Reunion — Hội Ngộ Thăng Long)
+      // Render Shared Olympia Checkpoints 1, 2, 3 (Khởi Động -> Vượt Chướng Ngại Vật -> Tăng Tốc)
+      const stageBadges = {
+        1: '1. KHỞI ĐỘNG',
+        2: '2. VƯỢT CHƯỚNG NGẠI VẬT',
+        3: '3. TĂNG TỐC'
+      };
+      [1, 2, 3].forEach((stageNum) => {
+        const wp = OLYMPIA_SHARED_WAYPOINTS[stageNum];
+        const anyTeamPassed = Object.values(allFourLanesState).some(l => (l.stageProgress || 0) >= stageNum);
+        const isConquered = isTeacherView
+          ? anyTeamPassed
+          : myGroup.conqueredStages.includes(stageNum);
+        const isLocked = !isTeacherView && stageNum > myGroup.currentStage;
+        const isActiveTarget = !isTeacherView && myGroup.currentStage === stageNum && !isConquered;
+
+        const node = document.createElement('div');
+        node.className = `stage-node my-lane ${isConquered ? 'conquered' : ''} ${isLocked ? 'locked-stage' : ''} ${isActiveTarget ? 'active-target' : ''}`;
+        node.style.left = wp.x + '%';
+        node.style.top = wp.y + '%';
+        node.onclick = () => {
+          if (isTeacherView) {
+            showToast(`👩‍🏫 ${wp.title} — Các đội trả lời đúng câu hỏi Kéo-Thả để vượt qua chặng này!`);
+            return;
+          }
+          marchToStageAndOpenQuestion(stageNum);
+        };
+
+        node.innerHTML = `
+          ${isActiveTarget ? '<div class="map-go-pill">⛰️ VÀO THI</div>' : ''}
+          <div class="st-icon">${isConquered ? '🚩' : isLocked ? '🔒' : wp.icon}</div>
+          <div class="st-label">Chặng ${stageNum}</div>
+          <div class="st-place-name">${stageBadges[stageNum] || wp.placeName}</div>
+        `;
+        stagesContainer.appendChild(node);
+      });
+
+      // 2. Render Summit Node (FINAL: ĐỈNH OLYMPIA — VỊ TRÍ CHIẾN THẮNG)
       const anyConquered4 = Object.values(allFourLanesState).some(l => l.stageProgress >= 4);
       const isCenterConquered = isTeacherView ? anyConquered4 : myGroup.conqueredStages.includes(4);
       const isCenterTarget = !isTeacherView && myGroup.currentStage === 4 && !isCenterConquered;
-      const isCenterLocked = !isTeacherView && myGroup.currentStage < 4;
       const centerNode = document.createElement('div');
       centerNode.className = `center-citadel-node ${isCenterTarget ? 'active-target' : ''}`;
       centerNode.onclick = () => {
@@ -5012,13 +4952,13 @@
         marchToStageAndOpenQuestion(4);
       };
       centerNode.innerHTML = `
-        ${isCenterTarget ? '<div class="map-go-pill" style="top:-28px; font-size:11px;">⛰️ LÊN ĐỈNH THIÊNG</div>' : ''}
-        <img src="assets/citadel_center_3d.jpg" alt="Đỉnh Thiêng Về Nguồn 3D" />
-        <div class="citadel-ribbon">${isCenterConquered ? '🏆 ĐỈNH THIÊNG & XẾP HẠNG 1-2-3-4' : '⛰️ CHẶNG 4: ĐỈNH THIÊNG VỀ NGUỒN'}</div>
+        ${isCenterTarget ? '<div class="map-go-pill" style="top:-28px; font-size:11px;">🏆 CHINH PHỤC ĐỈNH OLYMPIA</div>' : ''}
+        <img src="assets/citadel_center_3d.jpg" alt="Đỉnh Olympia 3D" />
+        <div class="citadel-ribbon">${isCenterConquered ? '🏆 ĐỈNH OLYMPIA & XẾP HẠNG 1-2-3-4' : '🏆 FINAL: ĐỈNH OLYMPIA'}</div>
       `;
       stagesContainer.appendChild(centerNode);
 
-      // 3. Update All 4 3D Chibi Mountain-Climbing Team Tokens IN-PLACE
+      // 3. Update All 4 Team Tokens (ĐỘI 1 Đỏ, ĐỘI 2 Xanh Dương, ĐỘI 3 Xanh Lá, ĐỘI 4 Vàng)
       const liveRankMap = {};
       try {
         computeFourGroupsRankingAndAnalysis().forEach((r) => {
@@ -5042,10 +4982,10 @@
 
         let ox = 0, oy = 0;
         if (stepIdx === 15) {
-          if (dir.key === 'west')  { ox = -10.5; oy = 3.5; }
-          if (dir.key === 'north') { ox = -3.8;  oy = 6.2; }
-          if (dir.key === 'east')  { ox = 3.8;   oy = 6.2; }
-          if (dir.key === 'south') { ox = 10.5;  oy = 3.5; }
+          if (dir.key === 'east')  { ox = -9.5; oy = 2.5; }
+          if (dir.key === 'west')  { ox = -3.5; oy = 5.5; }
+          if (dir.key === 'south') { ox = 3.5;  oy = 5.5; }
+          if (dir.key === 'north') { ox = 9.5;  oy = 2.5; }
         }
 
         let token = document.getElementById(`mapToken_${dir.key}`);
@@ -5059,7 +4999,7 @@
         token.className = `chibi-map-token ${isMe ? 'is-my-group' : ''} ${(isMe && isMarchingAnimation) || bubbleText ? 'walking' : ''}`;
         token.style.left = (pt.x + ox) + '%';
         token.style.top = (pt.y + oy) + '%';
-        token.style.opacity = isOnline ? '1' : '0.72';
+        token.style.opacity = isOnline ? '1' : '0.82';
         token.innerHTML = `
           ${bubbleText ? `<div class="token-step-bubble">${bubbleText}</div>` : ''}
           <div class="token-nameplate" style="border-color:${dir.color}">
@@ -5516,13 +5456,13 @@
         return {
           stageNum,
           targetRow,
-          prompt: `[Chặng ${stageNum} - ${wp.placeName}] Từ "Dẫn chứng / biểu hiện" lịch sử dưới đây, hãy KÉO THẢ "Vai trò rút ra" chính xác vào Ô Thả Đáp Án:`,
+          prompt: `[${wp.placeName}] Từ "Dẫn chứng / biểu hiện" lịch sử dưới đây, hãy KÉO THẢ "Ý nghĩa rút ra" chính xác vào Ô Thả Đáp Án:`,
           excerpt: `📜 Dẫn chứng / biểu hiện: "${targetRow.evidence}"`,
           options: shuffleArray([
             { text: targetRow.role, isCorrect: true },
             { text: otherRows[0].role, isCorrect: false },
             { text: otherRows[1].role, isCorrect: false },
-            { text: 'Mở rộng giao thương hàng hải và xác lập chế độ quân chủ lập hiến', isCorrect: false }
+            { text: 'Làm suy giảm tinh thần đoàn kết dân tộc và phụ thuộc hoàn toàn vào ngoại bang', isCorrect: false }
           ])
         };
       }
@@ -5531,13 +5471,13 @@
         return {
           stageNum,
           targetRow,
-          prompt: `[Chặng ${stageNum} - ${wp.placeName}] Để làm rõ cho "Vai trò rút ra" dưới đây, hãy KÉO THẢ "Dẫn chứng / biểu hiện" đúng vào Ô Thả Đáp Án:`,
-          excerpt: `👑 Vai trò rút ra: "${targetRow.role}"`,
+          prompt: `[${wp.placeName}] Để làm rõ cho "Ý nghĩa rút ra" dưới đây, hãy KÉO THẢ "Dẫn chứng / biểu hiện" đúng vào Ô Thả Đáp Án:`,
+          excerpt: `👑 Ý nghĩa rút ra: "${targetRow.role}"`,
           options: shuffleArray([
             { text: targetRow.evidence, isCorrect: true },
             { text: otherRows[0].evidence, isCorrect: false },
             { text: otherRows[1].evidence, isCorrect: false },
-            { text: 'Cuộc cải cách tiền tệ, giáo dục và bang giao hòa hiếu với phương Nam', isCorrect: false }
+            { text: 'Bãi bỏ quân đội thường trực và cắt giảm toàn bộ các cuộc tập trận phòng thủ đất nước', isCorrect: false }
           ])
         };
       }
@@ -5550,8 +5490,8 @@
       return {
         stageNum,
         targetRow,
-        prompt: `[Chặng ${stageNum} - ${wp.placeName}] KÉO THẢ cặp từ khóa còn thiếu vào vị trí (1) và (2) để vượt qua trạm leo núi:`,
-        excerpt: `📜 Dẫn chứng: ${maskedEv}<br/>👑 Vai trò rút ra: ${maskedRl}`,
+        prompt: `[${wp.placeName}] KÉO THẢ cặp từ khóa còn thiếu vào vị trí (1) và (2) để vượt qua chặng thi:`,
+        excerpt: `📜 Dẫn chứng/biểu hiện: ${maskedEv}<br/>👑 Ý nghĩa rút ra: ${maskedRl}`,
         options: shuffleArray([
           { text: `(1) "${kw1}"  ↔  (2) "${kw2}"`, isCorrect: true },
           { text: `(1) "${otherRows[0].keywords[0]}"  ↔  (2) "${otherRows[0].keywords[1]}"`, isCorrect: false },
@@ -5715,11 +5655,11 @@
       const dirInfo = FOUR_DIRECTIONS[myGroup.direction];
 
       document.getElementById('battleStageHeader').innerHTML = showCompletedLeaderboard
-        ? `⛰️ CHẶNG 4: ĐỈNH THIÊNG VỀ NGUỒN — BẢNG XẾP HẠNG & BẢNG CHỐT KIẾN THỨC`
-        : `⛰️ CHẶNG 4: ĐỈNH THIÊNG VỀ NGUỒN (KÉO THẢ 3 CẶP KIẾN THỨC)`;
+        ? `🏆 FINAL: ĐỈNH OLYMPIA — BẢNG XẾP HẠNG & BẢNG CHỐT KIẾN THỨC`
+        : `🏆 FINAL: ĐỈNH OLYMPIA — VỊ TRÍ CHIẾN THẮNG (KÉO THẢ 3 CẶP KIẾN THỨC)`;
       document.getElementById('battleRewardBadge').textContent = showCompletedLeaderboard
         ? `🏆 Bảng Xếp Hạng 4 Đội & Bảng Chuẩn Kiến Thức!`
-        : `✋ Kéo thả đúng cả 3 cặp để lên Đỉnh Thiêng!`;
+        : `✋ Kéo thả đúng cả 3 cặp để lên Đỉnh Olympia!`;
 
       document.getElementById('duelHeroImg').src = dirInfo.img;
       document.getElementById('duelHeroDirText').textContent = isTeacher
@@ -5729,10 +5669,10 @@
         ? `Phòng #${currentRoomCode} — Tổng Kết Hành Trình Về Nguồn`
         : myGroup.teamName;
       document.getElementById('duelActionStatus').textContent = showCompletedLeaderboard
-        ? '🏆 Bảng Xếp Hạng 4 Đội & Bảng Chuẩn Kiến Thức tại Đỉnh Thiêng Về Nguồn!'
-        : '⛰️ Kéo thẻ "Vai trò rút ra" thả vào đúng ô "Dẫn chứng" tương ứng!';
-      document.getElementById('duelGateName').textContent = 'Đỉnh Thiêng Về Nguồn';
-      document.getElementById('duelGateIcon').textContent = '⛰️';
+        ? '🏆 Bảng Xếp Hạng 4 Đội & Bảng Chuẩn Kiến Thức tại Đỉnh Olympia!'
+        : '⛰️ Kéo thẻ "Ý nghĩa rút ra" thả vào đúng ô "Dẫn chứng/biểu hiện" tương ứng!';
+      document.getElementById('duelGateName').textContent = 'Đỉnh Olympia';
+      document.getElementById('duelGateIcon').textContent = '🏆';
       if (showCompletedLeaderboard) {
         document.getElementById('duelGateBoss').classList.add('shattered');
       } else {
@@ -5791,10 +5731,10 @@
         dropSlot.className = `stage4-drop-slot ${isPaired ? 'paired' : selectedLeftId === row.id ? 'drag-over' : ''}`;
         dropSlot.dataset.targetId = row.id;
         dropSlot.innerHTML = isPaired
-          ? `✅ <span><strong>Vai trò rút ra:</strong> ${row.role}</span>`
+          ? `✅ <span><strong>Ý nghĩa rút ra:</strong> ${row.role}</span>`
           : selectedLeftId === row.id
-            ? `👉 <span>Đang chọn ô này — Hãy bấm hoặc kéo thẻ <strong>"Vai trò rút ra"</strong> bên phải thả vào đây!</span>`
-            : `📥 <span>Kéo thẻ <strong>"Vai trò rút ra"</strong> thả vào ô này (hoặc chạm để chọn)</span>`;
+            ? `👉 <span>Đang chọn ô này — Hãy bấm hoặc kéo thẻ <strong>"Ý nghĩa rút ra"</strong> bên phải thả vào đây!</span>`
+            : `📥 <span>Kéo thẻ <strong>"Ý nghĩa rút ra"</strong> thả vào ô này (hoặc chạm để chọn)</span>`;
 
         if (!isPaired) {
           card.onclick = () => {
@@ -5813,14 +5753,14 @@
 
         const evTitle = document.createElement('div');
         evTitle.className = 'stage4-evidence-text';
-        evTitle.innerHTML = `${row.eraIcon} <strong>Dẫn chứng:</strong> ${row.evidence}`;
+        evTitle.innerHTML = `${row.eraIcon} <strong>Dẫn chứng/biểu hiện:</strong> ${row.evidence}`;
 
         card.appendChild(evTitle);
         card.appendChild(dropSlot);
         leftCol.appendChild(card);
       });
 
-      // 2. Render 3 Draggable "Vai trò rút ra" Chips in #matchRightCol
+      // 2. Render 3 Draggable "Ý nghĩa rút ra" Chips in #matchRightCol
       (window._bossRightOrder || ['row0', 'row1', 'row2']).forEach((rId) => {
         const row = CORE_HISTORY_ROWS.find(r => r.id === rId);
         const isPaired = pairedRowIds.includes(row.id);
@@ -5836,7 +5776,7 @@
           chip.onclick = () => {
             if (!selectedLeftId) {
               // Auto-select first unpaired evidence row if student taps a role chip directly, or guide them
-              showToast('👉 Hãy KÉO THẢ thẻ này vào ô "Dẫn chứng" bên trái (hoặc chạm chọn 1 ô bên trái trước)!', false);
+              showToast('👉 Hãy KÉO THẢ thẻ này vào ô "Dẫn chứng/biểu hiện" bên trái (hoặc chạm chọn 1 ô bên trái trước)!', false);
               return;
             }
             onBossRightClick(row.id);
@@ -5852,7 +5792,7 @@
                 onBossRightClick(draggedRoleId);
               }
             },
-            `✋ <strong>Kéo thả Vai trò:</strong> ${row.role}`
+            `✋ <strong>Kéo thả Ý nghĩa:</strong> ${row.role}`
           );
         }
         rightCol.appendChild(chip);
@@ -5862,7 +5802,7 @@
     function onBossRightClick(rightId) {
       clearFloatingGhost();
       if (!selectedLeftId) {
-        showToast('👉 Hãy kéo thả thẻ "Vai trò rút ra" vào đúng ô "Dẫn chứng" tương ứng!', true);
+        showToast('👉 Hãy kéo thả thẻ "Ý nghĩa rút ra" vào đúng ô "Dẫn chứng/biểu hiện" tương ứng!', true);
         return;
       }
       myGroup.totalAttempts = (myGroup.totalAttempts || 0) + 1;
@@ -5877,7 +5817,7 @@
         renderBossMatchColumns();
 
         if (pairedRowIds.length === CORE_HISTORY_ROWS.length) {
-          triggerStageBreakExplosion('Đỉnh Thiêng Về Nguồn', 500, '⛰️ CHINH PHỤC ĐỈNH THIÊNG THÀNH CÔNG!');
+          triggerStageBreakExplosion('Đỉnh Olympia', 500, '🏆 CHINH PHỤC ĐỈNH OLYMPIA THÀNH CÔNG!');
           playSound('fanfare');
           playVoiceClip('congrats_stage4_victory');
           document.getElementById('duelHeroFighter').classList.add('hero-charge');
@@ -5906,7 +5846,7 @@
           const interactiveBox = document.getElementById('bossMatchingInteractiveBox');
           if (interactiveBox) interactiveBox.style.display = 'none';
           document.getElementById('battleStageHeader').innerHTML =
-            `⛰️ CHẶNG 4: ĐỈNH THIÊNG VỀ NGUỒN — BẢNG XẾP HẠNG & BẢNG CHỐT KIẾN THỨC`;
+            `🏆 FINAL: ĐỈNH OLYMPIA — BẢNG XẾP HẠNG & BẢNG CHỐT KIẾN THỨC`;
           document.getElementById('battleRewardBadge').textContent =
             `🏆 Bảng Xếp Hạng 4 Đội & Bảng Chuẩn Kiến Thức!`;
           renderStage4SynthesisAndInlineRanking();
@@ -5916,7 +5856,7 @@
           fb.innerHTML = `
             <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
               <div style="font-size:15px; font-weight:900; color:#047857;">
-                🏆 CHÚC MỪNG ${myGroup.teamName.toUpperCase()} ĐÃ LÊN TỚI ĐỈNH THIÊNG VỀ NGUỒN (+500🪙)!
+                🏆 CHÚC MỪNG ${myGroup.teamName.toUpperCase()} ĐÃ LÊN TỚI ĐỈNH OLYMPIA (+500🪙)!
               </div>
               <div style="display:flex; gap:8px; flex-wrap:wrap;">
                 <button class="btn-3d btn-3d-emerald" style="padding:7px 14px; font-size:12.5px;" onclick="openKnowledgeSummaryModal()">
@@ -5928,7 +5868,7 @@
               </div>
             </div>
           `;
-          showToast('🏆 CHÚC MỪNG! Đã hoàn thành toàn bộ câu hỏi Chặng 4 & mở Bảng Xếp Hạng 4 Đội!');
+          showToast('🏆 CHÚC MỪNG! Đã hoàn thành toàn bộ câu hỏi Chặng Chung Kết & mở Bảng Xếp Hạng 4 Đội!');
           updateAllUI();
         } else {
           const fb = document.getElementById('battleFeedbackBox');
@@ -5959,7 +5899,7 @@
         fb.className = 'feedback-box show error';
         fb.innerHTML = `
           <div style="font-size:14px; font-weight:900; color:#B91C1B;">
-            ❌ Câu trả lời chưa chính xác! Hãy đọc kỹ từ khóa "Dẫn chứng" và kéo thả lại "Vai trò rút ra" tương ứng nhé!
+            ❌ Câu trả lời chưa chính xác! Hãy đọc kỹ từ khóa "Dẫn chứng/biểu hiện" và kéo thả lại "Ý nghĩa rút ra" tương ứng nhé!
           </div>
         `;
         broadcastMyLane();
@@ -6079,7 +6019,7 @@
     }
 
     /**
-     * Giant High-Contrast "BẢNG CHUẨN KIẾN THỨC" for Teacher Classroom Wrap-Up (Ảnh 2)
+     * Giant High-Contrast "BẢNG CHUẨN KIẾN THỨC: Ý NGHĨA" for Teacher Classroom Wrap-Up (Image 2)
      */
     function buildGiantKnowledgeTableHtml(isFullscreenModal = false) {
       const cellFontSize = isFullscreenModal ? 'clamp(17px, 1.9vw, 23px)' : 'clamp(15px, 1.6vw, 20px)';
@@ -6088,7 +6028,7 @@
           ${!isFullscreenModal ? `
             <div class="knowledge-master-header">
               <div style="font-size:clamp(15px, 1.7vw, 21px); font-weight:900; color:#FEF08A;">
-                📚 BẢNG CHUẨN KIẾN THỨC CHẶNG 4: VAI TRÒ CỦA CHIẾN TRANH BẢO VỆ TỔ QUỐC TRONG LỊCH SỬ VIỆT NAM
+                📚 BẢNG CHUẨN KIẾN THỨC: Ý NGHĨA CỦA CHIẾN TRANH BẢO VỆ TỔ QUỐC TRONG LỊCH SỬ VIỆT NAM
               </div>
               <button class="btn-3d btn-3d-gold" style="padding:7px 14px; font-size:13px;" onclick="openKnowledgeSummaryModal()">
                 🔍 Phóng To Bảng Chốt Kiến Thức
@@ -6096,8 +6036,8 @@
             </div>
           ` : ''}
           <div class="knowledge-master-cols-head" style="font-size:${isFullscreenModal ? '19px' : '16px'};">
-            <div>📜 DẪN CHỨNG / BIỂU HIỆN LỊCH SỬ</div>
-            <div>👑 VAI TRÒ RÚT RA (KIẾN THỨC CHỐT BÀI)</div>
+            <div>📜 DẪN CHỨNG / BIỂU HIỆN</div>
+            <div>👑 Ý NGHĨA RÚT RA (KIẾN THỨC CHỐT BÀI)</div>
           </div>
           ${CORE_HISTORY_ROWS.map((r, idx) => `
             <div class="knowledge-master-row" style="font-size:${cellFontSize};">
@@ -6109,7 +6049,7 @@
               </div>
               <div>
                 <span style="display:inline-block; background:#D1FAE5; color:#065F46; border:2px solid #10B981; border-radius:8px; padding:2px 9px; font-size:0.82em; font-weight:900; margin-right:6px;">
-                  👑 Vai trò rút ra:
+                  👑 Ý nghĩa rút ra:
                 </span>
                 ${r.role}
               </div>
@@ -6127,16 +6067,16 @@
         <div class="simple-rank-grid">
           ${ranked.map((r) => `
             <div class="simple-rank-card rank-${r.rank}">
-              <div style="display:flex; align-items:center; gap:12px; min-width:0; flex:1;">
-                <span style="background:${r.badgeBg}; color:#FFFFFF; font-size:13px; font-weight:900; padding:6px 12px; border-radius:999px; white-space:nowrap; flex-shrink:0; box-shadow:0 2px 6px rgba(15,23,42,0.18);">
-                  ${r.medalIcon} ${r.rankTitle}
+              <div style="display:flex; align-items:center; gap:9px; min-width:0; flex:1; overflow:hidden;">
+                <span style="background:${r.badgeBg}; color:#FFFFFF; font-size:11px; font-weight:900; padding:4px 8px; border-radius:999px; white-space:nowrap; flex-shrink:0; box-shadow:0 2px 6px rgba(15,23,42,0.18);">
+                  ${r.medalIcon} #${r.rank}
                 </span>
-                <img src="${r.img}" alt="${r.teamName}" style="width:52px; height:52px; border-radius:50%; border:3px solid ${r.color}; object-fit:cover; background:#FFFFFF; flex-shrink:0;" />
-                <div style="font-size:clamp(16px, 1.7vw, 21px); font-weight:900; color:#0F172A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${r.teamName}">
+                <img src="${r.img}" alt="${r.teamName}" style="width:36px; height:36px; border-radius:50%; border:2.5px solid ${r.color}; object-fit:cover; background:#FFFFFF; flex-shrink:0;" />
+                <div style="font-size:clamp(14px, 1.5vw, 18px); font-weight:900; color:#0F172A; line-height:1.25; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; min-width:0;" title="${r.teamName}">
                   ${r.teamName}
                 </div>
               </div>
-              <div style="font-family:'JetBrains Mono',monospace; font-size:clamp(17px, 1.9vw, 23px); font-weight:900; color:#B45309; background:#FFFFFF; border:2.5px solid #F59E0B; padding:7px 14px; border-radius:14px; white-space:nowrap; flex-shrink:0;">
+              <div style="font-family:'JetBrains Mono',monospace; font-size:clamp(14.5px, 1.6vw, 19px); font-weight:900; color:#B45309; background:#FFFFFF; border:2px solid #F59E0B; padding:5px 10px; border-radius:11px; white-space:nowrap; flex-shrink:0;">
                 ${r.evalTotalScore} điểm
               </div>
             </div>
