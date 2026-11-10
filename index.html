@@ -4394,7 +4394,7 @@
       document.getElementById('duelHeroFighter').classList.remove('hero-charge');
 
       const duelBanner = document.querySelector('#battleModal .battle-duel-stage');
-      if (duelBanner) duelBanner.style.display = 'grid';
+      if (duelBanner) duelBanner.style.display = 'flex';
       document.getElementById('standardBattleQuestionArea').style.display = 'block';
       document.getElementById('bossMatchingQuestionArea').style.display = 'none';
 
@@ -5036,7 +5036,7 @@
             </div>
           ` : ''}
 
-          <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:8px;">
+          <div class="rank-podium-grid" style="gap:8px;">
             ${ranked.map(r => `
               <div style="border:2.5px solid ${r.rank === 1 ? '#F59E0B' : r.rank === 2 ? '#64748B' : r.rank === 3 ? '#EA580C' : '#0284C7'}; background:${r.rank === 1 ? '#FEF3C7' : '#F8FAFC'}; border-radius:13px; padding:8px 10px; font-size:11.5px; display:flex; flex-direction:column; gap:4px;">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
