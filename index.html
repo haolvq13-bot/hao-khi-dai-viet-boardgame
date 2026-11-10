@@ -6079,30 +6079,35 @@
      * Giant High-Contrast "BẢNG CHUẨN KIẾN THỨC" for Teacher Classroom Wrap-Up (Ảnh 2)
      */
     function buildGiantKnowledgeTableHtml(isFullscreenModal = false) {
+      const cellFontSize = isFullscreenModal ? 'clamp(17px, 1.9vw, 23px)' : 'clamp(15px, 1.6vw, 20px)';
       return `
         <div class="knowledge-master-box">
-          <div class="knowledge-master-header">
-            <div class="km-title">
-              📚 BẢNG CHUẨN KIẾN THỨC: VAI TRÒ CỦA CHIẾN TRANH BẢO VỆ TỔ QUỐC TRONG LỊCH SỬ VIỆT NAM
-            </div>
-            ${!isFullscreenModal ? `
+          ${!isFullscreenModal ? `
+            <div class="knowledge-master-header">
+              <div style="font-size:clamp(15px, 1.7vw, 21px); font-weight:900; color:#FEF08A;">
+                📚 BẢNG CHUẨN KIẾN THỨC CHẶNG 4: VAI TRÒ CỦA CHIẾN TRANH BẢO VỆ TỔ QUỐC TRONG LỊCH SỬ VIỆT NAM
+              </div>
               <button class="btn-3d btn-3d-gold" style="padding:7px 14px; font-size:13px;" onclick="openKnowledgeSummaryModal()">
                 🔍 Phóng To Bảng Chốt Kiến Thức
               </button>
-            ` : ''}
-          </div>
-          <div class="knowledge-master-col-titles">
+            </div>
+          ` : ''}
+          <div class="knowledge-master-cols-head" style="font-size:${isFullscreenModal ? '19px' : '16px'};">
             <div>📜 DẪN CHỨNG / BIỂU HIỆN LỊCH SỬ</div>
-            <div>👑 VAI TRÒ RÚT RA (KIẾN THỨC TRỌNG TÂM)</div>
+            <div>👑 VAI TRÒ RÚT RA (KIẾN THỨC CHỐT BÀI)</div>
           </div>
           ${CORE_HISTORY_ROWS.map((r, idx) => `
-            <div class="knowledge-master-row">
-              <div class="km-cell-evidence">
-                <span class="km-badge-label">📜 Dẫn chứng ${idx + 1}:</span>
-                ${r.eraIcon} ${r.evidence}
+            <div class="knowledge-master-row" style="font-size:${cellFontSize};">
+              <div>
+                <span style="display:inline-block; background:#FEF3C7; color:#991B1B; border:2px solid #F59E0B; border-radius:8px; padding:2px 9px; font-size:0.82em; font-weight:900; margin-right:6px;">
+                  ${r.eraIcon} Dẫn chứng ${idx + 1}:
+                </span>
+                ${r.evidence}
               </div>
-              <div class="km-cell-role">
-                <span class="km-badge-label">👑 Vai trò rút ra:</span>
+              <div>
+                <span style="display:inline-block; background:#D1FAE5; color:#065F46; border:2px solid #10B981; border-radius:8px; padding:2px 9px; font-size:0.82em; font-weight:900; margin-right:6px;">
+                  👑 Vai trò rút ra:
+                </span>
                 ${r.role}
               </div>
             </div>
@@ -6119,16 +6124,16 @@
         <div class="simple-rank-grid">
           ${ranked.map((r) => `
             <div class="simple-rank-card rank-${r.rank}">
-              <div class="simple-rank-left">
-                <span class="simple-rank-medal" style="background:${r.badgeBg};">
+              <div style="display:flex; align-items:center; gap:12px; min-width:0; flex:1;">
+                <span style="background:${r.badgeBg}; color:#FFFFFF; font-size:13px; font-weight:900; padding:6px 12px; border-radius:999px; white-space:nowrap; flex-shrink:0; box-shadow:0 2px 6px rgba(15,23,42,0.18);">
                   ${r.medalIcon} ${r.rankTitle}
                 </span>
-                <img class="simple-rank-avatar" src="${r.img}" alt="${r.teamName}" style="border-color:${r.color};" />
-                <div class="simple-rank-teamname" title="${r.teamName}">
+                <img src="${r.img}" alt="${r.teamName}" style="width:52px; height:52px; border-radius:50%; border:3px solid ${r.color}; object-fit:cover; background:#FFFFFF; flex-shrink:0;" />
+                <div style="font-size:clamp(16px, 1.7vw, 21px); font-weight:900; color:#0F172A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${r.teamName}">
                   ${r.teamName}
                 </div>
               </div>
-              <div class="simple-rank-score">
+              <div style="font-family:'JetBrains Mono',monospace; font-size:clamp(17px, 1.9vw, 23px); font-weight:900; color:#B45309; background:#FFFFFF; border:2.5px solid #F59E0B; padding:7px 14px; border-radius:14px; white-space:nowrap; flex-shrink:0;">
                 ${r.evalTotalScore} điểm
               </div>
             </div>
@@ -6223,7 +6228,9 @@
     }
 
     function openKnowledgeSummaryModal() {
-      const container = document.getElementById('knowledgeModalBodyContent');
+      const container =
+        document.getElementById('fullscreenKnowledgeTableContent') ||
+        document.getElementById('knowledgeModalBodyContent');
       if (container) {
         container.innerHTML = buildGiantKnowledgeTableHtml(true);
       }
