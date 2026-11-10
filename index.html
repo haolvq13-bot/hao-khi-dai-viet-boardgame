@@ -5561,15 +5561,18 @@
           setupPeerConnHandlers(conn);
         });
 
-        myPeer.on('error', () => {
-          // If directional ID is busy, open with random suffix and connect to teacher + 4 directional peers
-          try {
-            const fallbackPeer = new Peer(`hkdv-v4-${cleanCode}-${roleSuffix}-${Math.floor(Math.random() * 900 + 100)}`);
-            myPeer = fallbackPeer;
-            pendingPeerConnTs = {};
-            myPeer.on('open', () => connectToOtherDirectionalPeers(cleanCode));
-            myPeer.on('connection', (conn) => setupPeerConnHandlers(conn));
-          } catch (e2) {}
+        myPeer.on('error', (err) => {
+          // Only create a fallback Peer ID if our own ID is already taken ('unavailable-id').
+          // Ignore 'peer-unavailable' which simply means a remote directional slot hasn't joined yet!
+          if (err && err.type === 'unavailable-id') {
+            try {
+              const fallbackPeer = new Peer(`hkdv-v4-${cleanCode}-${roleSuffix}-${Math.floor(Math.random() * 900 + 100)}`);
+              myPeer = fallbackPeer;
+              pendingPeerConnTs = {};
+              myPeer.on('open', () => connectToOtherDirectionalPeers(cleanCode));
+              myPeer.on('connection', (conn) => setupPeerConnHandlers(conn));
+            } catch (e2) {}
+          }
         });
       } catch (err) {}
     }
@@ -5577,7 +5580,9 @@
     function connectToOtherDirectionalPeers(cleanCode) {
       if (!myPeer || myPeer.destroyed || !myPeer.open) return;
       const now = Date.now();
-      const peerTargets = ['teacher', ...Object.keys(FOUR_DIRECTIONS)];
+      const peerTargets = (myRole === 'STUDENT' && !hasClaimedCharacter)
+        ? ['teacher']
+        : ['teacher', ...Object.keys(FOUR_DIRECTIONS)];
       peerTargets.forEach((targetRole) => {
         if (myRole === 'TEACHER' && targetRole === 'teacher') return;
         if (myRole === 'STUDENT' && hasClaimedCharacter && targetRole === myGroup.direction) return;
