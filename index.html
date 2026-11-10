@@ -3551,12 +3551,9 @@
       if (syncChannel) {
         try { syncChannel.postMessage(resetCmd); } catch (e) {}
       }
-      Object.values(activePeerConns).forEach((conn) => {
-        if (conn && conn.open) {
-          try { conn.send(resetCmd); } catch (e) {}
-        }
-      });
+      sendToAllWebRtcPeers(resetCmd);
       pushActionToRoomHubServer(resetCmd);
+      pushActionToCloudRelay(resetCmd, true);
     }
 
     function teacherUnlockAllCharactersInRoom(showFeedback = true) {
@@ -5326,6 +5323,7 @@
 
       saveRoomSnapshotToStorage(hasClaimedCharacter ? buildMySyncPayload() : null);
       pushActionToRoomHubServer(startCmd);
+      pushActionToCloudRelay(startCmd, true);
       if (syncChannel) {
         try { syncChannel.postMessage(startCmd); } catch (e) {}
       }
@@ -5368,8 +5366,86 @@
       };
     }
 
-    // Cross-Browser / Local Server Room Hub Sync (/api/room)
+    // Cross-Browser / Local Server Room Hub Sync (/api/room) + Cloud PubSub Relay (wss://ntfy.sh)
     let isRoomHubAvailable = true;
+    let cloudRelayWs = null;
+    let lastCloudPushedSyncKey = '';
+    let cloudTopicName = '';
+
+    function getCloudTopicForRoom(code) {
+      const cleanCode = (code || '1010').replace(/[^a-zA-Z0-9]/g, '').toLowerCase() || '1010';
+      return `hkdv_v10_room_${cleanCode}`;
+    }
+
+    async function pushActionToCloudRelay(payload, force = false) {
+      if (!payload || window.location.protocol === 'file:') return;
+      if (payload.type === 'PLAYER_SYNC' && !force) {
+        if (isMarchingAnimation) return;
+        const syncKey = `${payload.roomCode}:${payload.direction}:${payload.teamName}:${payload.stageProgress}:${payload.wrongAttempts}:${payload.totalAttempts}:${payload.finishedAt}`;
+        if (syncKey === lastCloudPushedSyncKey) return;
+        lastCloudPushedSyncKey = syncKey;
+      }
+      const topic = getCloudTopicForRoom(payload.roomCode || currentRoomCode);
+      try {
+        await fetch(`https://ntfy.sh/${topic}`, {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+      } catch (e) {}
+    }
+
+    async function pollCloudRelayHistory(code) {
+      if (window.location.protocol === 'file:') return;
+      const topic = getCloudTopicForRoom(code || currentRoomCode);
+      try {
+        const res = await fetch(`https://ntfy.sh/${topic}/json?poll=1&since=20m`, { cache: 'no-store' });
+        if (!res.ok) return;
+        const text = await res.text();
+        if (!text) return;
+        text.split('\n').forEach((line) => {
+          const trimmed = line.trim();
+          if (!trimmed) return;
+          try {
+            const wrapper = JSON.parse(trimmed);
+            if (wrapper && wrapper.event === 'message' && wrapper.message) {
+              const data = JSON.parse(wrapper.message);
+              if (data && data.roomCode === currentRoomCode) {
+                applyIncomingPlayerSync(data);
+              }
+            }
+          } catch (e) {}
+        });
+      } catch (e) {}
+    }
+
+    function initCloudPubSubRelay(code) {
+      if (window.location.protocol === 'file:') return;
+      const topic = getCloudTopicForRoom(code);
+      if (cloudRelayWs && cloudTopicName === topic && cloudRelayWs.readyState <= 1) return;
+      cloudTopicName = topic;
+      if (cloudRelayWs) {
+        try { cloudRelayWs.close(); } catch (e) {}
+        cloudRelayWs = null;
+      }
+      try {
+        const ws = new WebSocket(`wss://ntfy.sh/${topic}/ws?since=20m`);
+        cloudRelayWs = ws;
+        ws.onmessage = (ev) => {
+          if (!ev.data) return;
+          try {
+            const wrapper = JSON.parse(ev.data);
+            if (wrapper && wrapper.event === 'message' && wrapper.message) {
+              const data = JSON.parse(wrapper.message);
+              if (data && data.roomCode === currentRoomCode) {
+                applyIncomingPlayerSync(data);
+              }
+            }
+          } catch (e) {}
+        };
+      } catch (e) {}
+      pollCloudRelayHistory(code);
+    }
+
     async function pushActionToRoomHubServer(payload) {
       if (!isRoomHubAvailable || !payload || window.location.protocol === 'file:') return;
       try {
@@ -5649,6 +5725,7 @@
       if (isRoomChanged) {
         hasClaimedCharacter = false;
         hasAutoOpenedTeacherFinalModal = false;
+        lastCloudPushedSyncKey = '';
         roomMatchState = {
           status: 'WAITING',
           hostClientId: myRole === 'TEACHER' ? myClientId : null,
@@ -5696,6 +5773,7 @@
 
       loadRoomSnapshotFromStorage(currentRoomCode);
       pollRoomHubServer();
+      initCloudPubSubRelay(currentRoomCode);
       initWebRtcPeerMesh(currentRoomCode);
       if (hasClaimedCharacter) {
         broadcastMyLane();
@@ -5739,6 +5817,7 @@
 
       saveRoomSnapshotToStorage(payload);
       pushActionToRoomHubServer(payload);
+      pushActionToCloudRelay(payload, false);
 
       if (syncChannel) {
         try { syncChannel.postMessage(payload); } catch (e) {}
@@ -5968,12 +6047,15 @@
       setInterval(() => {
         const cleanCode = currentRoomCode.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() || '1010';
         connectToOtherDirectionalPeers(cleanCode);
+        if (!cloudRelayWs || cloudRelayWs.readyState > 1) {
+          initCloudPubSubRelay(currentRoomCode);
+        }
         if (hasClaimedCharacter) {
           sendToAllWebRtcPeers(buildMySyncPayload());
         } else if (myRole === 'TEACHER') {
           sendToAllWebRtcPeers(buildRoomStateSnapshotPayload());
         }
-      }, 1200);
+      }, 1500);
     });
   </script>
 </body>
