@@ -3730,9 +3730,11 @@
       clearWalkTimers();
       isMarchingAnimation = false;
       const rawName = document.getElementById('inputOnboardTeamName').value.trim();
-      const rawRoom = document.getElementById('inputOnboardRoomCode').value.trim() || '1010';
+      const rawRoom = (document.getElementById('inputOnboardRoomCode').value.trim() || '1010').toUpperCase();
 
-      connectToOnlineRoom(rawRoom);
+      if (rawRoom !== currentRoomCode) {
+        connectToOnlineRoom(rawRoom);
+      }
 
       // Re-check if another player locked this character
       if (isDirectionTakenByOther(selectedDirectionKey)) {
@@ -5549,15 +5551,20 @@
       } catch (err) {}
     }
 
+    let pendingPeerConnTs = {};
+
     function connectToOtherDirectionalPeers(cleanCode) {
-      if (!myPeer || myPeer.destroyed) return;
+      if (!myPeer || myPeer.destroyed || !myPeer.open) return;
+      const now = Date.now();
       const peerTargets = ['teacher', ...Object.keys(FOUR_DIRECTIONS)];
       peerTargets.forEach((targetRole) => {
         if (myRole === 'TEACHER' && targetRole === 'teacher') return;
         if (myRole === 'STUDENT' && hasClaimedCharacter && targetRole === myGroup.direction) return;
         const targetPeerId = `hkdv-v4-${cleanCode}-${targetRole}`;
         if (activePeerConns[targetPeerId] && activePeerConns[targetPeerId].open) return;
+        if (pendingPeerConnTs[targetPeerId] && now - pendingPeerConnTs[targetPeerId] < 3800) return;
         try {
+          pendingPeerConnTs[targetPeerId] = now;
           const conn = myPeer.connect(targetPeerId, { reliable: true });
           setupPeerConnHandlers(conn);
         } catch (e) {}
@@ -5932,6 +5939,20 @@
       setInterval(() => {
         pollRoomHubServer();
       }, 400);
+      setInterval(() => {
+        const cleanCode = currentRoomCode.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() || '1010';
+        connectToOtherDirectionalPeers(cleanCode);
+        if (hasClaimedCharacter) {
+          broadcastMyLane();
+        } else if (myRole === 'TEACHER') {
+          const snap = buildRoomStateSnapshotPayload();
+          Object.values(activePeerConns).forEach((c) => {
+            if (c && c.open) {
+              try { c.send(snap); } catch (e) {}
+            }
+          });
+        }
+      }, 2200);
     });
   </script>
 </body>
