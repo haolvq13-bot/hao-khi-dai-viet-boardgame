@@ -3599,10 +3599,12 @@
     }
 
     const TEACHER_PIN_CODE = '1234';
+    const _initUrlParams = new URLSearchParams(window.location.search);
+    const _initUrlMode = _initUrlParams.get('mode');
     let myClientId = getOrCreateSessionClientId();
-    let isTeacherAuthenticated = false;
-    let isQrStudentMode = false;
-    let myRole = 'STUDENT'; // 'STUDENT' | 'TEACHER'
+    let isTeacherAuthenticated = _initUrlMode === 'teacher';
+    let isQrStudentMode = _initUrlMode === 'student';
+    let myRole = _initUrlMode === 'teacher' ? 'TEACHER' : 'STUDENT'; // 'STUDENT' | 'TEACHER'
     let hasClaimedCharacter = false;
     let studentReadyAt = 0;
     let roomMatchState = {
@@ -7362,9 +7364,12 @@
         isQrStudentMode = true;
       } else if (urlMode === 'teacher') {
         isTeacherAuthenticated = true;
+        myRole = 'TEACHER';
         try {
           sessionStorage.setItem('hkdv_teacher_authed', '1');
         } catch (e) {}
+        const onbModal = document.getElementById('onboardingModal');
+        if (onbModal) onbModal.classList.remove('open');
       }
       // Automatic Cloud Asset Fallback when opened as standalone file without local assets/ folder
       const cloudAssetBase = 'https://haolvq13-bot.github.io/hao-khi-dai-viet-boardgame/';
