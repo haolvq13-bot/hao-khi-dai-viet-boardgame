@@ -1582,30 +1582,32 @@
 
     @media (max-width: 640px) {
       .topbar {
-        padding: 6px 10px;
-        gap: 6px;
+        padding: 5px 8px;
+        gap: 4px;
         flex-direction: column;
         align-items: stretch;
       }
 
       .brand-block {
         justify-content: center;
+        gap: 6px;
       }
 
       .brand-crest {
-        width: 34px;
-        height: 34px;
-        font-size: 17px;
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
+        border-radius: 8px;
       }
 
       .brand-title h1 {
-        font-size: 13px;
+        font-size: 12px;
         white-space: normal;
+        line-height: 1.2;
       }
 
       .brand-title p {
-        font-size: 10px;
-        white-space: normal;
+        display: none;
       }
 
       .cockpit > * {
@@ -1616,240 +1618,386 @@
       .topbar-controls {
         display: flex;
         overflow-x: auto;
-        padding-bottom: 3px;
-        gap: 5px;
+        padding-bottom: 2px;
+        gap: 4px;
         justify-content: flex-start;
         -webkit-overflow-scrolling: touch;
       }
 
       .topbar-controls .btn-3d {
-        padding: 6px 9px;
-        font-size: 11px;
-        min-height: 36px;
+        padding: 5px 8px;
+        font-size: 10.5px;
+        min-height: 32px;
+        flex-shrink: 0;
+        border-radius: 10px;
+      }
+
+      #studentRoomReadonlyPill {
+        padding: 4px 9px !important;
+        font-size: 11px !important;
+        border-radius: 10px !important;
         flex-shrink: 0;
       }
 
       .battlefield-banner {
-        padding: 6px 8px;
-        margin-bottom: 6px;
+        padding: 5px 8px;
+        margin-bottom: 5px;
+        gap: 6px;
       }
 
       #mapGuideBanner {
-        font-size: 11px !important;
-        line-height: 1.3;
+        font-size: 10.5px !important;
+        line-height: 1.25;
+      }
+
+      #masteryBadge {
+        font-size: 10px !important;
+        padding: 3px 8px !important;
+        white-space: nowrap;
       }
 
       .diorama-viewport {
-        min-height: 330px;
-        aspect-ratio: 1 / 1;
+        min-height: 285px;
+        aspect-ratio: 4 / 3.1;
         border-width: 3px;
         border-radius: 14px;
       }
 
       .host-lobby-overlay-bar {
-        top: 6px;
-        padding: 7px 10px;
-        border-radius: 14px;
+        top: 5px;
+        padding: 6px 8px;
+        border-radius: 12px;
         flex-direction: column;
         align-items: stretch;
-        gap: 6px;
+        gap: 4px;
         width: 96%;
       }
 
       #lobbyHeaderTitle {
-        font-size: 11.5px !important;
+        font-size: 11px !important;
       }
 
       #lobbySubStatusText {
-        font-size: 10.5px !important;
+        font-size: 10px !important;
       }
 
       .host-start-match-btn {
         width: 100%;
-        padding: 8px 12px;
-        font-size: 12.5px;
+        padding: 7px 10px;
+        font-size: 12px;
         text-align: center;
       }
 
       .waiting-member-pill {
         width: 100%;
         text-align: center;
-        font-size: 11px;
-        padding: 6px 10px;
+        font-size: 10.5px;
+        padding: 5px 8px;
       }
 
       .stage-node {
-        width: 40px;
-        height: 40px;
-        border-radius: 11px;
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
       }
 
       .stage-node .st-icon {
-        font-size: 15px;
+        font-size: 14px;
       }
 
       .stage-node .st-label {
-        font-size: 7.5px;
+        font-size: 7px;
       }
 
       .stage-node .st-place-name {
-        font-size: 8px;
-        padding: 1px 5px;
-        bottom: -17px;
+        font-size: 7.5px;
+        padding: 1px 4px;
+        bottom: -15px;
       }
 
       .road-step-dot {
-        width: 18px;
-        height: 18px;
-        font-size: 8px;
+        width: 16px;
+        height: 16px;
+        font-size: 7.5px;
       }
 
       .center-citadel-node {
-        width: 72px;
-        height: 72px;
-      }
-
-      .center-citadel-node img {
         width: 64px;
         height: 64px;
       }
 
+      .center-citadel-node img {
+        width: 56px;
+        height: 56px;
+      }
+
       .citadel-ribbon {
-        font-size: 8.5px;
-        padding: 1.5px 7px;
+        font-size: 7.5px;
+        padding: 1.5px 6px;
       }
 
       .chibi-map-token {
-        width: 58px;
+        width: 52px;
       }
 
       .chibi-map-token.is-my-group {
-        width: 66px;
+        width: 60px;
       }
 
       .token-avatar-circle {
-        width: 46px;
-        height: 46px;
-        border-width: 3px;
+        width: 42px;
+        height: 42px;
+        border-width: 2.5px;
       }
 
       .chibi-map-token.is-my-group .token-avatar-circle {
-        width: 52px;
-        height: 52px;
+        width: 48px;
+        height: 48px;
       }
 
       .token-nameplate {
-        font-size: 8.5px;
-        padding: 1px 6px;
+        font-size: 8px;
+        padding: 1px 5px;
+      }
+
+      .map-floating-action-bar {
+        bottom: 6px;
+        width: 94%;
+        display: flex;
+        justify-content: center;
       }
 
       .map-action-btn {
-        padding: 9px 16px;
-        font-size: 12px;
-        min-height: 42px;
+        width: 100%;
+        max-width: 340px;
+        padding: 8px 12px;
+        font-size: 11.5px;
+        min-height: 38px;
+        border-radius: 12px;
       }
 
       /* Compact Hero Commander Box on Smartphones */
       .hero-commander-box {
         display: grid;
-        grid-template-columns: 74px 1fr;
-        gap: 10px;
+        grid-template-columns: 64px 1fr;
+        gap: 8px;
         align-items: center;
         text-align: left;
-        padding: 10px;
+        padding: 8px 10px;
       }
 
       .hero-commander-box .direction-pill {
         grid-column: 1 / -1;
         justify-self: start;
         margin-bottom: 0;
+        font-size: 10px;
+        padding: 2px 8px;
       }
 
       .hero-avatar-frame {
-        width: 68px;
-        height: 68px;
+        width: 60px;
+        height: 60px;
         margin: 0;
+      }
+
+      .hero-team-name {
+        font-size: 14px;
+      }
+
+      .hero-general-title {
+        font-size: 11px;
+        margin-bottom: 2px;
       }
 
       .hero-commander-box .stats-row-3d {
         grid-column: 1 / -1;
+        gap: 5px;
+        margin-top: 2px;
       }
 
-      /* Responsive Modals for Smartphones */
+      .stat-tile {
+        padding: 4px 6px;
+      }
+
+      .stat-tile .val {
+        font-size: 13px;
+      }
+
+      .move-forward-btn {
+        padding: 10px 12px;
+        font-size: 13.5px;
+        border-radius: 14px;
+      }
+
+      /* Responsive Modals for Smartphones (Fit 100% cleanly on 360px-430px phones) */
       .modal-backdrop {
-        padding: 8px;
+        padding: 6px;
       }
 
       .onboarding-card,
       .battle-modal-card {
-        padding: 14px 12px;
-        border-radius: 20px;
-        max-height: 95dvh;
+        padding: 10px 10px 8px;
+        border-radius: 18px;
+        max-height: 94dvh;
+        gap: 6px;
+      }
+
+      .onboard-top-badges {
+        gap: 4px !important;
+      }
+
+      .onboard-top-badges span,
+      .onboard-top-badges button {
+        font-size: 10px !important;
+        padding: 3px 8px !important;
       }
 
       .onboarding-card h2 {
-        font-size: 18px !important;
+        font-size: 15.5px !important;
+        line-height: 1.25;
+        margin: 2px 0 !important;
+      }
+
+      #onboardModalSubTitle {
+        font-size: 11px !important;
+        line-height: 1.3;
+      }
+
+      .onboard-inputs-grid {
+        grid-template-columns: 1.45fr 0.95fr !important;
+        gap: 8px !important;
+        margin: 0 auto !important;
+      }
+
+      .onboard-inputs-grid label {
+        font-size: 10.5px !important;
+        margin-bottom: 2px !important;
+      }
+
+      .onboard-inputs-grid input {
+        padding: 7px 9px !important;
+        font-size: 13px !important;
+        border-radius: 10px !important;
+        border-width: 2px !important;
+      }
+
+      #onboardTakenNotice {
+        font-size: 11px !important;
+        line-height: 1.25;
+        margin: 0 !important;
       }
 
       .direction-grid-4 {
         grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
+        gap: 6px;
+        margin: 2px 0;
       }
 
       .dir-choice-card {
-        padding: 8px 6px;
-        border-radius: 14px;
+        padding: 6px 5px;
+        border-radius: 12px;
+        border-width: 2.5px;
+      }
+
+      .dir-badge-title {
+        font-size: 9.5px;
+        padding: 2px 7px;
+        margin-bottom: 2px;
       }
 
       .dir-choice-card img {
-        width: 72px;
-        height: 72px;
+        width: 52px;
+        height: 52px;
+        margin: 2px auto 3px;
+        border-radius: 10px;
       }
 
       .dir-hero-name {
-        font-size: 12px;
+        font-size: 11.5px;
+        line-height: 1.2;
       }
 
       .dir-route-desc {
-        font-size: 9.5px;
+        display: none;
+      }
+
+      .onboard-submit-bar {
+        position: sticky;
+        bottom: -8px;
+        background: linear-gradient(180deg, rgba(255, 251, 235, 0.9) 0%, #FFFBEB 35%);
+        padding: 6px 0 2px;
+        z-index: 15;
+      }
+
+      #btnConfirmEnterBoard {
+        width: 100%;
+        font-size: 13.5px !important;
+        padding: 10px 14px !important;
+        border-radius: 14px !important;
+        justify-content: center;
+      }
+
+      #battleStageHeader {
+        font-size: 13px !important;
       }
 
       .battle-duel-stage {
-        padding: 8px 10px;
-        min-height: 88px;
+        padding: 6px 8px;
+        min-height: 64px;
         gap: 6px;
+        margin-bottom: 8px;
       }
 
       .duel-fighter img {
-        width: 56px;
-        height: 56px;
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+      }
+
+      #duelHeroNameText,
+      #duelGateName {
+        font-size: 12.5px !important;
+      }
+
+      #duelActionStatus,
+      #duelGateSubHint {
+        display: none;
       }
 
       .gate-icon-3d {
-        width: 54px;
-        height: 54px;
-        font-size: 26px;
+        width: 42px;
+        height: 42px;
+        font-size: 20px;
+        border-radius: 10px;
       }
 
       .duel-vs-badge {
-        width: 36px;
-        height: 36px;
-        font-size: 15px;
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
       }
 
       .question-prompt {
-        font-size: 15px;
+        font-size: 13.5px !important;
+        padding: 8px 10px;
+        margin-bottom: 6px;
       }
 
       .source-excerpt {
-        font-size: 13px;
-        padding: 9px 11px;
+        font-size: 12px;
+        padding: 7px 10px;
+        margin-bottom: 8px;
+      }
+
+      .options-grid {
+        gap: 6px;
       }
 
       .option-btn {
-        padding: 10px 11px;
-        font-size: 13px;
-        min-height: 46px;
+        padding: 8px 10px;
+        font-size: 12.5px;
+        min-height: 42px;
+        border-radius: 12px;
       }
 
       .matching-arena {
@@ -1857,19 +2005,40 @@
         gap: 8px;
       }
 
+      .match-item {
+        padding: 8px 10px;
+        font-size: 12px;
+        margin-bottom: 6px;
+      }
+
+      .rank-metrics-strip {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 5px;
+      }
+
+      .champ-banner-3d {
+        padding: 10px 12px;
+        gap: 8px;
+      }
+
+      .champ-banner-3d img {
+        width: 52px !important;
+        height: 52px !important;
+      }
+
       .qr-modal-grid {
         grid-template-columns: 1fr !important;
       }
 
       .voice-subtitle-banner {
-        bottom: 10px;
-        padding: 8px 12px;
-        gap: 8px;
+        bottom: 8px;
+        padding: 6px 10px;
+        gap: 6px;
         width: 95vw;
       }
 
       .voice-sub-text {
-        font-size: 11.5px;
+        font-size: 11px;
       }
     }
   </style>
@@ -2084,7 +2253,7 @@
   <div class="modal-backdrop open" id="onboardingModal">
     <div class="onboarding-card" style="position:relative;">
       <!-- Subtle Teacher PIN Access Button in Top-Right (Hidden when ?mode=student via QR) -->
-      <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
+      <div class="onboard-top-badges" style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
         <span style="background:#FEF08A; color:#991B1B; border:2px solid #F59E0B; padding:4px 12px; border-radius:999px; font-size:11.5px; font-weight:900;">
           ⚔️ NHẬP VAI XUẤT QUÂN — SA BÀN 3D ĐỊA DANH LỊCH SỬ
         </span>
@@ -2103,7 +2272,7 @@
           Nhập Tên Nhóm, Mã Phòng & Chọn Tướng Xuất Quân
         </h2>
         <p style="font-size:12.5px; color:var(--text-slate); max-width:700px; margin:0 auto;" id="onboardModalSubTitle">
-          Học sinh nhập <strong>Tên Nhóm</strong> và <strong>Mã Phòng của Cô Giáo</strong>, chọn 1 trong 4 Tướng Chibi còn trống rồi bấm <strong>"CHỐT TƯỚNG & VÀO BÀN CHỜ"</strong>!
+          Học sinh nhập <strong>Tên Nhóm</strong> và <strong>Mã Phòng của Cô Giáo</strong>, chọn 1 trong 4 Tướng Chibi còn trống rồi bấm <strong>"✋ CHỐT TƯỚNG & BẤM SẴN SÀNG"</strong> (chờ Cô Giáo bấm Bắt Đầu)!
         </p>
       </div>
 
@@ -2151,7 +2320,7 @@
       </div>
 
       <!-- STUDENT GROUP NAME & ROOM CODE INPUTS -->
-      <div style="display:grid; grid-template-columns: 1.8fr 1fr; gap:12px; max-width:660px; margin:2px auto; width:100%;">
+      <div class="onboard-inputs-grid" style="display:grid; grid-template-columns: 1.8fr 1fr; gap:12px; max-width:660px; margin:2px auto; width:100%;">
         <div>
           <label style="font-size:12px; font-weight:900; color:var(--text-ink); display:block; margin-bottom:4px;">
             🚩 NHẬP TÊN NHÓM CỦA EM:
@@ -2181,14 +2350,14 @@
       </div>
 
       <div id="onboardTakenNotice" style="text-align:center; font-size:12px; font-weight:800; color:#047857; margin:2px 0;">
-        ⚡ Học sinh chọn 1 trong 4 Tướng còn trống dưới đây rồi bấm "CHỐT TƯỚNG & VÀO BÀN CHỜ"!
+        ⚡ Học sinh chọn 1 trong 4 Tướng còn trống dưới đây rồi bấm "✋ CHỐT TƯỚNG & BẤM SẴN SÀNG"!
       </div>
 
       <div class="direction-grid-4" id="directionChoicesGrid"></div>
 
-      <div style="text-align:center; display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+      <div class="onboard-submit-bar" style="text-align:center; display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
         <button class="btn-3d btn-3d-crimson" id="btnConfirmEnterBoard" style="font-size:15px; padding:11px 28px; border-radius:18px;" onclick="confirmStartRoleplay()">
-          🛡️ CHỐT TƯỚNG & VÀO BÀN CHỜ!
+          ✋ CHỐT TƯỚNG & BẤM SẴN SÀNG!
         </button>
       </div>
     </div>
@@ -2233,7 +2402,7 @@
           <div>
             <div style="font-size:11px; font-weight:900; color:#B91C1B;">ĐỊA DANH LỊCH SỬ</div>
             <div style="font-size:15px; font-weight:900; color:var(--text-ink);" id="duelGateName">Cửa Biển Bạch Đằng</div>
-            <div style="font-size:11.5px; font-weight:700; color:#B45309;">🛡️ Sai sẽ bị đẩy lùi & đánh lại chặng!</div>
+            <div style="font-size:11.5px; font-weight:700; color:#B45309;" id="duelGateSubHint">🛡️ Sai sẽ bị đẩy lùi & đánh lại chặng!</div>
           </div>
           <div class="gate-icon-3d" id="duelGateIcon">🏯</div>
         </div>
@@ -2591,6 +2760,7 @@
     let isQrStudentMode = false;
     let myRole = 'STUDENT'; // 'STUDENT' | 'TEACHER'
     let hasClaimedCharacter = false;
+    let studentReadyAt = 0;
     let roomMatchState = {
       status: 'WAITING', // 'WAITING' | 'PLAYING'
       hostClientId: null,
@@ -3661,13 +3831,13 @@
             noticeEl.innerHTML = `⚠️ Cả 4 Tướng của Phòng <strong>#${currentRoomCode}</strong> đã có đủ 4 nhóm chọn! Hãy kiểm tra lại <strong>Mã Phòng của Cô Giáo</strong> ở ô bên trên!`;
           }
           if (confirmBtn) {
-            confirmBtn.textContent = '🛡️ CHỐT TƯỚNG & VÀO BÀN CHỜ!';
+            confirmBtn.textContent = '✋ CHỐT TƯỚNG & BẤM SẴN SÀNG!';
           }
         } else {
           noticeEl.style.color = '#047857';
-          noticeEl.innerHTML = `🟢 Phòng <strong>#${currentRoomCode}</strong> hiện có <strong>${freeDirs.length}/4 Tướng còn trống</strong> — Học sinh bấm chọn 1 Tướng rồi nhấn <strong>"CHỐT TƯỚNG & VÀO BÀN CHỜ"</strong>!`;
+          noticeEl.innerHTML = `🟢 Phòng <strong>#${currentRoomCode}</strong> hiện có <strong>${freeDirs.length}/4 Tướng còn trống</strong> — Học sinh chọn 1 Tướng rồi nhấn <strong>"✋ CHỐT TƯỚNG & BẤM SẴN SÀNG"</strong>!`;
           if (confirmBtn) {
-            confirmBtn.textContent = '🛡️ CHỐT TƯỚNG & VÀO BÀN CHỜ!';
+            confirmBtn.textContent = '✋ CHỐT TƯỚNG & BẤM SẴN SÀNG!';
           }
         }
       }
@@ -3763,6 +3933,12 @@
       const dirInfo = FOUR_DIRECTIONS[selectedDirectionKey];
       myRole = 'STUDENT';
       hasClaimedCharacter = true;
+      studentReadyAt = Date.now();
+      // STRICT RULE: When a Student joins (via QR or Room Code) and clicks "SẴN SÀNG",
+      // NEVER auto-start the match! Always enter WAITING (Ready) state until the Teacher clicks "BẮT ĐẦU"!
+      roomMatchState.status = 'WAITING';
+      roomMatchState.startedAt = 0;
+
       myGroup.direction = selectedDirectionKey;
       myGroup.teamName = rawName || dirInfo.defaultTeamName;
       myGroup.gold = 250;
@@ -3798,13 +3974,8 @@
       playSound('drum');
       launchFireworks(55);
 
-      if (roomMatchState.status === 'WAITING') {
-        playVoiceClip('cmd_member_waiting');
-        showToast(`🛡️ Đã vào bàn tại ${dirInfo.name}! Đang chờ Cô Giáo bấm "Bắt Đầu Trận Đấu"!`);
-      } else {
-        playVoiceClip('cmd_start_match');
-        showToast(`🥁 ${myGroup.teamName} đã tham chiến tại ${dirInfo.name}!`);
-      }
+      playVoiceClip('cmd_member_waiting');
+      showToast(`✅ Đã bấm SẴN SÀNG tại ${dirInfo.name}! Đang chờ Cô Giáo bấm "BẮT ĐẦU TRẬN ĐẤU"!`);
 
       updateAllUI();
     }
@@ -4043,7 +4214,7 @@
           startBtn.textContent = `🥁 CÔ GIÁO: BẮT ĐẦU (${onlineCount}/4 NHÓM)`;
           startBtn.disabled = false;
         } else {
-          startBtn.textContent = `🔥 TRẬN ĐẤU ĐANG DIỄN RA!`;
+          startBtn.textContent = `🥁 PHÁT LỆNH BẮT ĐẦU (${onlineCount}/4 NHÓM)`;
           startBtn.disabled = false;
         }
       }
@@ -4111,7 +4282,7 @@
       if (roomMatchState.status !== 'PLAYING') {
         playSound('wrong');
         playVoiceClip('cmd_member_waiting');
-        showToast('⏳ Đang chờ Cô Giáo bấm "BẮT ĐẦU TRẬN ĐẤU" trên màn hình máy chiếu mới được xuất quân!', true);
+        showToast('✋ Em đã bấm SẴN SÀNG! Hãy chờ Cô Giáo bấm "BẮT ĐẦU TRẬN ĐẤU" để xuất quân nhé!', true);
         return;
       }
 
@@ -5090,7 +5261,16 @@
     }
 
     function getRoomShareUrl(code) {
-      const base = window.location.href.split('?')[0].split('#')[0];
+      const host = window.location.hostname || '';
+      const isLocalLoopback =
+        window.location.protocol === 'file:' ||
+        host === '127.0.0.1' ||
+        host === 'localhost';
+      // When the Teacher opens the game on 127.0.0.1 / localhost / file:, smartphones scanning the QR code
+      // over 4G/Wi-Fi need a public internet URL so they don't hit 127.0.0.1 connection refused!
+      const base = isLocalLoopback
+        ? 'https://haolvq13-bot.github.io/hao-khi-dai-viet-boardgame/'
+        : window.location.href.split('?')[0].split('#')[0];
       return `${base}?room=${encodeURIComponent(code)}&mode=student`;
     }
 
@@ -5137,14 +5317,32 @@
 
     let hasAutoOpenedTeacherFinalModal = false;
 
-    function applyIncomingPlayerSync(payload) {
+    function canAcceptTeacherStartCommand(startedAtTs, meta, fromHistoryPoll = false) {
+      if (fromHistoryPoll) return false;
+      const ts = Number(startedAtTs) || 0;
+      if (!ts) return false;
+      if (roomMatchState.resetEpoch && ts <= roomMatchState.resetEpoch) return false;
+      if (meta && meta.hostDirection && meta.hostDirection !== 'TEACHER') return false;
+      // Strict Rule for Students:
+      // 1. A student MUST have already selected a General and clicked "✋ CHỐT TƯỚNG & BẤM SẴN SÀNG!"
+      // 2. The Teacher's "BẮT ĐẦU TRẬN ĐẤU" command MUST be triggered AFTER the student clicked Ready!
+      if (!isTeacherAuthenticated || myRole !== 'TEACHER') {
+        if (!hasClaimedCharacter || !studentReadyAt) return false;
+        if (ts < studentReadyAt - 800) return false;
+      }
+      return true;
+    }
+
+    function applyIncomingPlayerSync(payload, opts = {}) {
       if (!payload || payload.roomCode !== currentRoomCode) return;
+      const fromHistoryPoll = Boolean(opts && opts.fromHistoryPoll);
 
       // Handle Room Reset Command from Teacher / Host (unlocks all 4 characters immediately!)
       if (payload.type === 'ROOM_RESET_CMD') {
         const incomingEpoch = payload.resetEpoch || Date.now();
         if (incomingEpoch <= (roomMatchState.resetEpoch || 0)) return;
         hasClaimedCharacter = false;
+        studentReadyAt = 0;
         hasAutoOpenedTeacherFinalModal = false;
         closeLeaderboardModal();
         closeBattleModal();
@@ -5167,9 +5365,8 @@
         return;
       }
 
-      // Reject stale player sync packets generated prior to the latest room resetEpoch
+      // Reject stale packets generated prior to the latest room resetEpoch
       if (
-        payload.type === 'PLAYER_SYNC' &&
         roomMatchState.resetEpoch &&
         payload.roomMatchState &&
         payload.roomMatchState.resetEpoch &&
@@ -5178,7 +5375,6 @@
         return;
       }
       if (
-        payload.type === 'PLAYER_SYNC' &&
         roomMatchState.resetEpoch &&
         payload.ts &&
         payload.ts < roomMatchState.resetEpoch - 500
@@ -5188,9 +5384,22 @@
 
       if (payload.type === 'ROOM_STATE_SNAPSHOT') {
         if (payload.roomMatchState) {
-          const prevStatus = roomMatchState.status;
-          roomMatchState = { ...roomMatchState, ...payload.roomMatchState };
-          if (prevStatus !== 'PLAYING' && roomMatchState.status === 'PLAYING') {
+          const incomingMeta = payload.roomMatchState;
+          if (incomingMeta.resetEpoch && incomingMeta.resetEpoch > (roomMatchState.resetEpoch || 0)) {
+            roomMatchState.resetEpoch = incomingMeta.resetEpoch;
+          }
+          if (incomingMeta.hostClientId) {
+            roomMatchState.hostClientId = incomingMeta.hostClientId;
+            roomMatchState.hostDirection = incomingMeta.hostDirection;
+            roomMatchState.hostTeamName = incomingMeta.hostTeamName;
+          }
+          if (
+            incomingMeta.status === 'PLAYING' &&
+            roomMatchState.status !== 'PLAYING' &&
+            canAcceptTeacherStartCommand(incomingMeta.startedAt, incomingMeta, fromHistoryPoll)
+          ) {
+            roomMatchState.status = 'PLAYING';
+            roomMatchState.startedAt = incomingMeta.startedAt || Date.now();
             onRoomMatchStartedEffect();
             updateAllUI();
           }
@@ -5198,7 +5407,7 @@
         if (payload.lanes) {
           Object.values(payload.lanes).forEach((l) => {
             if (l && l.direction && l.online) {
-              applyIncomingPlayerSync({ ...l, roomCode: currentRoomCode });
+              applyIncomingPlayerSync({ ...l, roomCode: currentRoomCode }, opts);
             }
           });
         }
@@ -5210,10 +5419,9 @@
         return;
       }
 
-      // Sync Host & Room Match Status (WAITING vs PLAYING)
+      // Sync Host metadata (NOTE: PLAYER_SYNC from students NEVER transitions the room to PLAYING!)
       if (payload.roomMatchState) {
         const incomingMeta = payload.roomMatchState;
-        // Teacher Host always takes priority as Room Host
         if (
           (!roomMatchState.hostClientId && incomingMeta.hostClientId) ||
           (incomingMeta.hostDirection === 'TEACHER' && incomingMeta.hostClientId)
@@ -5222,21 +5430,19 @@
           roomMatchState.hostDirection = incomingMeta.hostDirection;
           roomMatchState.hostTeamName = incomingMeta.hostTeamName;
         }
-        if (incomingMeta.status === 'PLAYING' && roomMatchState.status !== 'PLAYING') {
-          roomMatchState.status = 'PLAYING';
-          roomMatchState.startedAt = incomingMeta.startedAt || Date.now();
-          onRoomMatchStartedEffect();
-          updateAllUI();
-        }
       }
 
       if (payload.type === 'START_MATCH_CMD') {
-        if (roomMatchState.status !== 'PLAYING') {
+        const cmdStartedAt = payload.startedAt || (payload.roomMatchState && payload.roomMatchState.startedAt) || Date.now();
+        if (
+          roomMatchState.status !== 'PLAYING' &&
+          canAcceptTeacherStartCommand(cmdStartedAt, payload.roomMatchState, fromHistoryPoll)
+        ) {
           roomMatchState.status = 'PLAYING';
-          roomMatchState.startedAt = payload.startedAt || Date.now();
+          roomMatchState.startedAt = cmdStartedAt;
           onRoomMatchStartedEffect();
+          updateAllUI();
         }
-        updateAllUI();
         return;
       }
 
@@ -5396,7 +5602,7 @@
 
     function getCloudTopicForRoom(code) {
       const cleanCode = (code || '1010').replace(/[^a-zA-Z0-9]/g, '').toLowerCase() || '1010';
-      return `hkdv_v10_room_${cleanCode}`;
+      return `hkdv_v12_room_${cleanCode}`;
     }
 
     async function pushActionToCloudRelay(payload, force = false) {
@@ -5420,7 +5626,7 @@
       if (window.location.protocol === 'file:') return;
       const topic = getCloudTopicForRoom(code || currentRoomCode);
       try {
-        const res = await fetch(`https://ntfy.sh/${topic}/json?poll=1&since=20m`, { cache: 'no-store' });
+        const res = await fetch(`https://ntfy.sh/${topic}/json?poll=1&since=90s`, { cache: 'no-store' });
         if (!res.ok) return;
         const text = await res.text();
         if (!text) return;
@@ -5432,7 +5638,8 @@
             if (wrapper && wrapper.event === 'message' && wrapper.message) {
               const data = JSON.parse(wrapper.message);
               if (data && data.roomCode === currentRoomCode) {
-                applyIncomingPlayerSync(data);
+                // Historical poll only restores claimed characters & room resets, NEVER auto-starts!
+                applyIncomingPlayerSync(data, { fromHistoryPoll: true });
               }
             }
           } catch (e) {}
@@ -5450,7 +5657,8 @@
         cloudRelayWs = null;
       }
       try {
-        const ws = new WebSocket(`wss://ntfy.sh/${topic}/ws?since=20m`);
+        // Live WebSocket stream (no ?since=20m replay of old START_MATCH_CMDs!)
+        const ws = new WebSocket(`wss://ntfy.sh/${topic}/ws`);
         cloudRelayWs = ws;
         ws.onmessage = (ev) => {
           if (!ev.data) return;
@@ -5459,7 +5667,7 @@
             if (wrapper && wrapper.event === 'message' && wrapper.message) {
               const data = JSON.parse(wrapper.message);
               if (data && data.roomCode === currentRoomCode) {
-                applyIncomingPlayerSync(data);
+                applyIncomingPlayerSync(data, { fromHistoryPoll: false });
               }
             }
           } catch (e) {}
@@ -5507,7 +5715,11 @@
             roomMatchState.hostDirection = snap._meta.hostDirection;
             roomMatchState.hostTeamName = snap._meta.hostTeamName;
           }
-          if (snap._meta.status === 'PLAYING' && roomMatchState.status !== 'PLAYING') {
+          if (
+            snap._meta.status === 'PLAYING' &&
+            roomMatchState.status !== 'PLAYING' &&
+            canAcceptTeacherStartCommand(snap._meta.startedAt, snap._meta, false)
+          ) {
             roomMatchState.status = 'PLAYING';
             roomMatchState.startedAt = snap._meta.startedAt || Date.now();
             onRoomMatchStartedEffect();
@@ -5554,16 +5766,13 @@
             roomMatchState.hostDirection = snap._meta.hostDirection;
             roomMatchState.hostTeamName = snap._meta.hostTeamName;
           }
-          if (snap._meta.status === 'PLAYING' && roomMatchState.status !== 'PLAYING') {
-            roomMatchState.status = 'PLAYING';
-            roomMatchState.startedAt = snap._meta.startedAt || now;
-          }
+          // NEVER auto-start from localStorage snapshot for a joining student!
         }
         Object.entries(snap).forEach(([k, p]) => {
           if (k === '_meta') return;
           if (p && p.direction && p.online) {
             if (p.ts && now - p.ts > STALE_TTL_MS) return;
-            applyIncomingPlayerSync(p);
+            applyIncomingPlayerSync(p, { fromHistoryPoll: true });
           }
         });
       } catch (e) {}
@@ -5588,7 +5797,11 @@
               roomMatchState.hostDirection = snap._meta.hostDirection;
               roomMatchState.hostTeamName = snap._meta.hostTeamName;
             }
-            if (snap._meta.status === 'PLAYING' && roomMatchState.status !== 'PLAYING') {
+            if (
+              snap._meta.status === 'PLAYING' &&
+              roomMatchState.status !== 'PLAYING' &&
+              canAcceptTeacherStartCommand(snap._meta.startedAt, snap._meta, false)
+            ) {
               roomMatchState.status = 'PLAYING';
               roomMatchState.startedAt = snap._meta.startedAt || Date.now();
               onRoomMatchStartedEffect();
@@ -5890,12 +6103,12 @@
             </button>
           `;
         } else {
-          badge.textContent = '🛡️ NHÓM HỌC SINH';
-          badge.style.background = '#38BDF8';
-          badge.style.color = '#0F172A';
+          badge.textContent = '✅ HỌC SINH ĐÃ SẴN SÀNG';
+          badge.style.background = '#10B981';
+          badge.style.color = '#FFFFFF';
           actionArea.innerHTML = `
             <div class="waiting-member-pill" id="waitingForHostBadge">
-              ⏳ Chờ Cô Giáo bấm BẮT ĐẦU...
+              ✋ Đã Sẵn Sàng — Chờ Cô Giáo bấm BẮT ĐẦU...
             </div>
           `;
         }
@@ -5995,18 +6208,30 @@
         document.getElementById('statStage').textContent = `Chặng ${Math.min(4, myGroup.currentStage)}/4`;
         document.getElementById('statStreak').textContent = `x${myGroup.streak}`;
 
-        if (guideBanner) {
-          guideBanner.innerHTML = `👉 Bấm nút <strong>"⚔️ BẮT ĐẦU"</strong> để Tướng Chibi hành quân qua từng nút đá tới <strong>Địa Danh Lịch Sử</strong> ➔ Trả lời đúng để phá chặng và mở đường đi tiếp!`;
-        }
-
         if (roomMatchState.status !== 'PLAYING') {
-          marchBtn.textContent = '⏳ CHỜ CÔ GIÁO BẮT ĐẦU';
+          if (guideBanner) {
+            guideBanner.innerHTML = `✅ <strong>${myGroup.teamName} đã SẴN SÀNG (${dirInfo.name})</strong>! Hãy chờ <strong>Cô Giáo bấm "🥁 BẮT ĐẦU TRẬN ĐẤU"</strong> để cả 4 nhóm đồng loạt xuất quân!`;
+          }
+          marchBtn.textContent = '✅ ĐÃ SẴN SÀNG — CHỜ CÔ GIÁO BẮT ĐẦU';
+          marchBtn.style.background = 'linear-gradient(180deg, #0EA5E9 0%, #0284C7 100%)';
+          marchBtn.style.boxShadow = '0 5px 0 #0369A1';
           marchBtn.onclick = () => marchToNextStage();
           if (floatBtn && !isMarchingAnimation) {
-            floatBtn.textContent = '⏳ ĐANG CHỜ CÔ GIÁO BẤM BẮT ĐẦU...';
+            floatBtn.textContent = '✅ ĐÃ SẴN SÀNG — CHỜ CÔ GIÁO BẤM BẮT ĐẦU...';
+            floatBtn.style.background = 'linear-gradient(180deg, #0EA5E9 0%, #0284C7 100%)';
+            floatBtn.style.boxShadow = '0 5px 0 #0369A1';
             floatBtn.onclick = () => marchToNextStage();
           }
         } else {
+          if (guideBanner) {
+            guideBanner.innerHTML = `👉 Bấm nút <strong>"⚔️ BẮT ĐẦU"</strong> để Tướng Chibi hành quân qua từng nút đá tới <strong>Địa Danh Lịch Sử</strong> ➔ Trả lời đúng để phá chặng và mở đường đi tiếp!`;
+          }
+          marchBtn.style.background = '';
+          marchBtn.style.boxShadow = '';
+          if (floatBtn) {
+            floatBtn.style.background = '';
+            floatBtn.style.boxShadow = '';
+          }
           marchBtn.onclick = () => marchToNextStage();
           if (floatBtn) floatBtn.onclick = () => marchToNextStage();
           if (myGroup.conqueredStages.includes(4)) {
