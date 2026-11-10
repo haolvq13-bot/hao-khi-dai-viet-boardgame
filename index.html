@@ -2246,22 +2246,24 @@
         <div class="options-grid" id="battleOptionsGrid"></div>
       </div>
 
-      <!-- Stage 4 Grand Reunion (Hội Ngộ Tổng Hợp Câu Hỏi & Câu Trả Lời Bằng Ghép Nối + Bảng Xếp Hạng 1-2-3-4) -->
+      <!-- Stage 4 Grand Reunion (Hội Ngộ Tổng Hợp Câu Hỏi & Câu Trả Lời Bằng Ghép Nối + Hoàn thành xong mới mở Bảng Xếp Hạng 1-2-3-4) -->
       <div id="bossMatchingQuestionArea" style="display:none;">
-        <div id="bossSynthesisTableSummary" style="display:block; margin-bottom:12px;"></div>
-        <div class="question-prompt" style="font-size:15.5px;">
-          👑 <strong>Chặng 4 — Hội Ngộ Tổng Hợp Tại Hoàng Thành Thăng Long:</strong> Hãy ghép nối tổng hợp lại các câu hỏi <em>"Dẫn chứng / biểu hiện"</em> (Cột trái) với câu trả lời <em>"Vai trò rút ra"</em> (Cột phải):
-        </div>
-        <div class="matching-arena">
-          <div>
-            <div style="font-size:12px; font-weight:900; color:#991B1B; margin-bottom:6px;">📜 CÂU HỎI: DẪN CHỨNG / BIỂU HIỆN</div>
-            <div id="matchLeftCol"></div>
+        <div id="bossMatchingInteractiveBox">
+          <div class="question-prompt" style="font-size:15.5px;">
+            👑 <strong>Chặng 4 — Hội Ngộ Tổng Hợp Tại Hoàng Thành Thăng Long:</strong> Hãy ghép nối chính xác cả 3 cặp câu hỏi <em>"Dẫn chứng / biểu hiện"</em> (Cột trái) với câu trả lời <em>"Vai trò rút ra"</em> (Cột phải) để hoàn thành toàn bộ bài thi và mở <strong>Bảng Xếp Hạng Chung Cuộc (1 • 2 • 3 • 4)</strong>:
           </div>
-          <div>
-            <div style="font-size:12px; font-weight:900; color:#047857; margin-bottom:6px;">👑 CÂU TRẢ LỜI: VAI TRÒ RÚT RA</div>
-            <div id="matchRightCol"></div>
+          <div class="matching-arena">
+            <div>
+              <div style="font-size:12px; font-weight:900; color:#991B1B; margin-bottom:6px;">📜 CÂU HỎI: DẪN CHỨNG / BIỂU HIỆN</div>
+              <div id="matchLeftCol"></div>
+            </div>
+            <div>
+              <div style="font-size:12px; font-weight:900; color:#047857; margin-bottom:6px;">👑 CÂU TRẢ LỜI: VAI TRÒ RÚT RA</div>
+              <div id="matchRightCol"></div>
+            </div>
           </div>
         </div>
+        <div id="bossSynthesisTableSummary" style="display:none; margin-top:8px;"></div>
       </div>
 
       <div class="feedback-box" id="battleFeedbackBox"></div>
@@ -2729,7 +2731,8 @@
       congrats_north_s3:     { role: 'general',  src: 'assets/voices/congrats_north_s3.mp3',     text: 'Đại thắng! Chúc mừng đạo quân phá chặng Sông Như Nguyệt thành công! Tiến thẳng về Hoàng Thành Thăng Long!' },
 
       congrats_stage4_victory: { role: 'general', src: 'assets/voices/congrats_stage4_victory.mp3', text: 'Chúc mừng đại thắng! Đạo quân đã hoàn thành Hội Ngộ Thăng Long, ghép nối chính xác toàn bộ ba vai trò của chiến tranh bảo vệ Tổ quốc!' },
-      cmd_wrong_retreat:     { role: 'general',  src: 'assets/voices/cmd_wrong_retreat.mp3',     text: 'Câu trả lời chưa chính xác! Đạo quân lùi lại hai bước để củng cố lực lượng và công phá lại chặng này!' }
+      cmd_wrong_retreat:     { role: 'general',  src: 'assets/voices/cmd_wrong_retreat.mp3',     text: 'Câu trả lời chưa chính xác! Đạo quân lùi lại hai bước để củng cố lực lượng và công phá lại chặng này!' },
+      cmd_stage4_wrong:      { role: 'general',  src: 'assets/voices/cmd_stage4_wrong.mp3',      text: 'Câu trả lời chưa chính xác!' }
     };
 
     function getAudioCtx() {
@@ -3428,6 +3431,7 @@
       const verifiedBar = document.getElementById('teacherVerifiedBar');
       const btnTopQr = document.getElementById('btnTopbarQrModal');
       const btnTopReset = document.getElementById('btnTopbarResetRoom');
+      const btnTopLb = document.getElementById('btnTopbarLeaderboard');
       const studentPill = document.getElementById('studentRoomReadonlyPill');
 
       if (isQrStudentMode && !isTeacherAuthenticated) {
@@ -3441,11 +3445,13 @@
         if (verifiedBar) verifiedBar.style.display = 'flex';
         if (btnTopQr) btnTopQr.style.display = 'inline-flex';
         if (btnTopReset) btnTopReset.style.display = 'inline-flex';
+        if (btnTopLb) btnTopLb.style.display = 'inline-flex';
         if (studentPill) studentPill.style.display = 'none';
       } else {
         if (verifiedBar) verifiedBar.style.display = 'none';
         if (btnTopQr) btnTopQr.style.display = 'none';
         if (btnTopReset) btnTopReset.style.display = 'none';
+        if (btnTopLb) btnTopLb.style.display = myGroup.conqueredStages.includes(4) ? 'inline-flex' : 'none';
         if (studentPill) studentPill.style.display = 'inline-flex';
       }
     }
@@ -3910,16 +3916,12 @@
           openBossCitadelChallenge({ completedView: true });
           return;
         }
-        if (myGroup.currentStage < 4 || roomMatchState.status !== 'PLAYING') {
-          openBossCitadelChallenge({ previewOnly: true });
-          return;
-        }
         marchToStageAndOpenQuestion(4);
       };
       centerNode.innerHTML = `
         ${isCenterTarget ? '<div class="map-go-pill" style="top:-28px; font-size:11px;">⚔️ BẮT ĐẦU HỘI NGỘ</div>' : ''}
         <img src="assets/citadel_center_3d.jpg" alt="Hoàng Thành Thăng Long 3D" />
-        <div class="citadel-ribbon">${isCenterConquered ? '🏆 CHẶNG 4 & XẾP HẠNG 1-2-3-4' : '👑 CHẶNG 4: HỘI NGỘ & XẾP HẠNG'}</div>
+        <div class="citadel-ribbon">${isCenterConquered ? '🏆 CHẶNG 4 & XẾP HẠNG 1-2-3-4' : '👑 CHẶNG 4: HỘI NGỘ THĂNG LONG'}</div>
       `;
       stagesContainer.appendChild(centerNode);
 
@@ -3990,21 +3992,15 @@
         const btn = document.createElement('button');
         btn.className = `step-nav-btn ${isDone ? 'done' : isCurr ? 'current' : isLocked ? 'locked' : ''}`;
         btn.onclick = () => {
-          if (stNum === 4) {
-            if (isDone) {
-              openBossCitadelChallenge({ completedView: true });
-              return;
-            }
-            if (isLocked || roomMatchState.status !== 'PLAYING') {
-              openBossCitadelChallenge({ previewOnly: true });
-              return;
-            }
+          if (stNum === 4 && isDone) {
+            openBossCitadelChallenge({ completedView: true });
+            return;
           }
           marchToStageAndOpenQuestion(stNum);
         };
         btn.innerHTML = `
           <span>${isDone ? '✅' : stNum === 4 ? '👑' : isLocked ? '🔒' : wp.icon} <strong>Chặng ${stNum}:</strong> ${wp.placeName}</span>
-          <span style="color:${isDone ? '#059669' : stNum === 4 ? '#B45309' : isLocked ? '#64748B' : '#DC2626'}">${isDone ? (stNum === 4 ? '🏆 Bảng Xếp Hạng' : 'Đã qua') : stNum === 4 ? '🏆 Xem & Hội Ngộ' : isLocked ? 'Chưa mở' : 'Bắt đầu ➔'}</span>
+          <span style="color:${isDone ? '#059669' : isLocked ? '#64748B' : '#DC2626'}">${isDone ? (stNum === 4 ? '🏆 Bảng Xếp Hạng' : 'Đã qua') : isLocked ? 'Chưa mở' : 'Bắt đầu ➔'}</span>
         `;
         list.appendChild(btn);
       });
@@ -4457,20 +4453,25 @@
       selectedLeftId = null;
       const isTeacher = isTeacherAuthenticated && myRole === 'TEACHER';
       const isDone4 = myGroup.conqueredStages.includes(4);
-      if (isTeacher || isDone4 || opts.viewOnly || opts.completedView) {
+      const showCompletedLeaderboard = Boolean(isTeacher || isDone4 || opts.viewOnly || opts.completedView);
+
+      if (showCompletedLeaderboard) {
         pairedRowIds = CORE_HISTORY_ROWS.map(r => r.id);
       } else {
         pairedRowIds = [];
       }
-      if (!opts.previewOnly && !opts.viewOnly && myGroup.currentStage >= 4) {
+      if (!opts.viewOnly && myGroup.currentStage >= 4) {
         myGroup.tokenWaypointIdx = 4;
         myGroup.tokenStepIdx = 15;
       }
       const dirInfo = FOUR_DIRECTIONS[myGroup.direction];
 
-      document.getElementById('battleStageHeader').innerHTML =
-        `👑 CHẶNG 4: HỘI NGỘ TỔNG HỢP & BẢNG XẾP HẠNG CHUNG CUỘC (1 • 2 • 3 • 4)`;
-      document.getElementById('battleRewardBadge').textContent = `Ghép nối 3 cặp câu hỏi & Xem Bảng Xếp Hạng 1-2-3-4!`;
+      document.getElementById('battleStageHeader').innerHTML = showCompletedLeaderboard
+        ? `👑 CHẶNG 4: ĐẠI HỘI NGỘ HOÀN TẤT — BẢNG XẾP HẠNG CHUNG CUỘC (1 • 2 • 3 • 4)`
+        : `👑 CHẶNG 4: HỘI NGỘ TỔNG HỢP TẠI HOÀNG THÀNH THĂNG LONG`;
+      document.getElementById('battleRewardBadge').textContent = showCompletedLeaderboard
+        ? `🏆 Đã hoàn thành toàn bộ câu hỏi — Xếp hạng 1 • 2 • 3 • 4!`
+        : `Ghép nối đúng cả 3 cặp câu hỏi để mở Bảng Xếp Hạng!`;
 
       document.getElementById('duelHeroImg').src = dirInfo.img;
       document.getElementById('duelHeroDirText').textContent = isTeacher
@@ -4479,13 +4480,12 @@
       document.getElementById('duelHeroNameText').textContent = isTeacher
         ? `Phòng #${currentRoomCode} — Tổng Kết Chặng 4`
         : myGroup.teamName;
-      document.getElementById('duelActionStatus').textContent =
-        isTeacher || isDone4
-          ? '🏆 Bảng Xếp Hạng & Phân Tích Đánh Giá Chung Cuộc (Hạng 1 • 2 • 3 • 4) tại Hoàng Thành Thăng Long!'
-          : '👑 Hội ngộ tổng hợp: Ghép đúng cả 3 dòng để hoàn tất Chặng 4 & vươn lên dẫn đầu Bảng Xếp Hạng!';
+      document.getElementById('duelActionStatus').textContent = showCompletedLeaderboard
+        ? '🏆 Bảng Xếp Hạng & Phân Tích Đánh Giá Chung Cuộc (Hạng 1 • 2 • 3 • 4) tại Hoàng Thành Thăng Long!'
+        : '👑 Hội ngộ tổng hợp: Ghép đúng cả 3 dòng để hoàn tất Chặng 4 & mở Bảng Xếp Hạng!';
       document.getElementById('duelGateName').textContent = 'Hội Ngộ Thăng Long';
       document.getElementById('duelGateIcon').textContent = '👑';
-      if (isTeacher || isDone4) {
+      if (showCompletedLeaderboard) {
         document.getElementById('duelGateBoss').classList.add('shattered');
       } else {
         document.getElementById('duelGateBoss').classList.remove('shattered');
@@ -4495,35 +4495,33 @@
       if (duelBanner) duelBanner.style.display = 'none';
       document.getElementById('standardBattleQuestionArea').style.display = 'none';
       document.getElementById('bossMatchingQuestionArea').style.display = 'block';
-      // ALWAYS show the Leaderboard & Multi-Criteria Evaluation right inside Stage 4!
-      renderStage4SynthesisAndInlineRanking();
+
+      const interactiveBox = document.getElementById('bossMatchingInteractiveBox');
+      const bossSummary = document.getElementById('bossSynthesisTableSummary');
+
+      // STRICT RULE: Only show the Leaderboard AFTER the student has answered all 3 pairs in Stage 4 (or on Teacher view)!
+      if (showCompletedLeaderboard) {
+        if (interactiveBox) interactiveBox.style.display = 'none';
+        renderStage4SynthesisAndInlineRanking();
+      } else {
+        if (interactiveBox) interactiveBox.style.display = 'block';
+        if (bossSummary) {
+          bossSummary.style.display = 'none';
+          bossSummary.innerHTML = '';
+        }
+      }
 
       const fb = document.getElementById('battleFeedbackBox');
-      if (opts.previewOnly && !isTeacher && !isDone4 && myGroup.currentStage < 4) {
-        fb.className = 'feedback-box show';
-        fb.style.background = '#FFFBEB';
-        fb.style.borderColor = '#F59E0B';
-        fb.style.color = '#92400E';
-        fb.innerHTML = `
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
-            <div style="font-size:13.5px; font-weight:900;">
-              👀 Bạn đang xem trước <strong>Chặng 4 & Bảng Xếp Hạng 1-2-3-4</strong>! Hãy hoàn thành Chặng ${myGroup.currentStage} để mở khóa ghép nối Chặng 4 nhé!
-            </div>
-            <button class="btn-3d btn-3d-crimson" style="padding:6px 12px; font-size:12px;" onclick="closeBattleModal(); marchToNextStage();">
-              ⚔️ Hành Quân Chặng ${myGroup.currentStage} Ngay
-            </button>
-          </div>
-        `;
-      } else {
-        fb.className = 'feedback-box';
-        fb.innerHTML = '';
-      }
+      fb.className = 'feedback-box';
+      fb.innerHTML = '';
 
       window._bossRightOrder = shuffleArray(CORE_HISTORY_ROWS.map(r => r.id));
       renderBossMatchColumns();
       if (bgmEnabled) startWarDrumBgm();
       playSound('drum');
-      playVoiceClip('intro_stage4_reunion');
+      if (!showCompletedLeaderboard) {
+        playVoiceClip('intro_stage4_reunion');
+      }
       document.getElementById('battleModal').classList.add('open');
       updateAllUI();
     }
@@ -4607,6 +4605,12 @@
           allFourLanesState[myGroup.direction].finishedAt = myGroup.finishedAt;
           allFourLanesState[myGroup.direction].elapsedSec = myGroup.elapsedSec;
 
+          const interactiveBox = document.getElementById('bossMatchingInteractiveBox');
+          if (interactiveBox) interactiveBox.style.display = 'none';
+          document.getElementById('battleStageHeader').innerHTML =
+            `👑 CHẶNG 4: ĐẠI HỘI NGỘ HOÀN TẤT — BẢNG XẾP HẠNG CHUNG CUỘC (1 • 2 • 3 • 4)`;
+          document.getElementById('battleRewardBadge').textContent =
+            `🏆 Đã hoàn thành toàn bộ câu hỏi — Xếp hạng 1 • 2 • 3 • 4!`;
           renderStage4SynthesisAndInlineRanking();
 
           const fb = document.getElementById('battleFeedbackBox');
@@ -4614,21 +4618,29 @@
           fb.innerHTML = `
             <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
               <div style="font-size:15px; font-weight:900; color:#047857;">
-                🏆 ĐẠI THẮNG HỘI NGỘ! ${myGroup.teamName.toUpperCase()} ĐÃ HOÀN TẤT CHẶNG 4 (+500🪙) & ĐƯỢC XẾP HẠNG TRÊN BẢNG VÀNG!
+                🏆 ĐẠI THẮNG HỘI NGỘ! ${myGroup.teamName.toUpperCase()} ĐÃ TRẢ LỜI XONG TOÀN BỘ CÂU HỎI (+500🪙) & MỞ BẢNG XẾP HẠNG CHUNG CUỘC!
               </div>
               <button class="btn-3d btn-3d-gold" style="padding:7px 14px; font-size:12.5px;" onclick="openLeaderboardModal()">
-                🏆 Xem Bảng Xếp Hạng & Phân Tích 1-2-3-4
+                🏆 Xem Bảng Xếp Hạng Toàn Màn Hình
               </button>
             </div>
           `;
-          showToast('🏆 CHÚC MỪNG! Đã hoàn thành Chặng 4 & cập nhật Bảng Xếp Hạng 1-2-3-4!');
+          showToast('🏆 CHÚC MỪNG! Đã hoàn thành toàn bộ câu hỏi Chặng 4 & mở Bảng Xếp Hạng 1-2-3-4!');
           updateAllUI();
         } else {
+          const fb = document.getElementById('battleFeedbackBox');
+          fb.className = 'feedback-box show success';
+          fb.innerHTML = `
+            <div style="font-size:14px; font-weight:900; color:#047857;">
+              ✅ Chính xác (${pairedRowIds.length}/3 cặp)! Hãy tiếp tục ghép nối cặp còn lại để mở Bảng Xếp Hạng Chung Cuộc!
+            </div>
+          `;
           updateAllUI();
         }
       } else {
         playSound('wrong');
-        playVoiceClip('cmd_wrong_retreat', '❌ Ghép chưa chính xác! Hãy chọn lại cặp Dẫn chứng và Vai trò rút ra!');
+        // Stage 4 wrong answer ONLY says "Câu trả lời chưa chính xác!" (NO "lùi 2 bước" voice or audio!)
+        playVoiceClip('cmd_stage4_wrong', '❌ Câu trả lời chưa chính xác! Hãy đọc kỹ và chọn lại cặp tương ứng nhé!');
         myGroup.streak = 1;
         myGroup.wrongAttempts = (myGroup.wrongAttempts || 0) + 1;
         if (!myGroup.wrongRows) myGroup.wrongRows = [];
@@ -4638,12 +4650,17 @@
         allFourLanesState[myGroup.direction].wrongAttempts = myGroup.wrongAttempts;
         allFourLanesState[myGroup.direction].totalAttempts = myGroup.totalAttempts;
         allFourLanesState[myGroup.direction].wrongRows = [...myGroup.wrongRows];
-        pairedRowIds = [];
         selectedLeftId = null;
-        window._bossRightOrder = shuffleArray(CORE_HISTORY_ROWS.map(r => r.id));
         renderBossMatchColumns();
+        const fb = document.getElementById('battleFeedbackBox');
+        fb.className = 'feedback-box show error';
+        fb.innerHTML = `
+          <div style="font-size:14px; font-weight:900; color:#B91C1B;">
+            ❌ Câu trả lời chưa chính xác! Hãy đọc kỹ từ khóa "Dẫn chứng" ở cột trái và chọn lại "Vai trò rút ra" tương ứng ở cột phải nhé!
+          </div>
+        `;
         broadcastMyLane();
-        showToast('❌ Ghép chưa đúng! Hãy ghép nối chính xác lại cả 3 dòng tại Chặng Hội Ngộ!', true);
+        showToast('❌ Câu trả lời chưa chính xác! Hãy chọn lại cặp tương ứng nhé!', true);
       }
     }
 
@@ -4999,6 +5016,11 @@
     }
 
     function openLeaderboardModal() {
+      if (!isTeacherAuthenticated && myRole === 'STUDENT' && !myGroup.conqueredStages.includes(4)) {
+        playSound('wrong');
+        showToast('⏳ Hãy hoàn thành hết toàn bộ câu hỏi đến hết Chặng 4 để mở Bảng Xếp Hạng Chung Cuộc nhé!', true);
+        return;
+      }
       renderLeaderboardModalUI();
       document.getElementById('leaderboardModal').classList.add('open');
       playSound('fanfare');
