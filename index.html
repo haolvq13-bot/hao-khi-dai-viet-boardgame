@@ -4347,14 +4347,18 @@
       const shareUrl = getRoomShareUrl(currentRoomCode);
       const qrImg = document.getElementById('teacherSidebarQrImg');
       if (qrImg) {
-        const apiQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&margin=4&data=${encodeURIComponent(shareUrl)}`;
+        const primaryQrUrl = `https://quickchart.io/qr?size=180&margin=2&text=${encodeURIComponent(shareUrl)}`;
+        const backupQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&margin=4&data=${encodeURIComponent(shareUrl)}`;
         if (qrImg.dataset.lastUrl !== shareUrl) {
           qrImg.dataset.lastUrl = shareUrl;
           qrImg.onerror = () => {
-            qrImg.onerror = null;
-            qrImg.src = generateFallbackQrDataUri(shareUrl);
+            qrImg.onerror = () => {
+              qrImg.onerror = null;
+              qrImg.src = generateFallbackQrDataUri(shareUrl);
+            };
+            qrImg.src = backupQrUrl;
           };
-          qrImg.src = apiQrUrl;
+          qrImg.src = primaryQrUrl;
         }
       }
 
@@ -5444,12 +5448,16 @@
 
       const qrImg = document.getElementById('qrCodeImage');
       if (qrImg) {
-        const apiQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=6&data=${encodeURIComponent(shareUrl)}`;
+        const primaryQrUrl = `https://quickchart.io/qr?size=220&margin=2&text=${encodeURIComponent(shareUrl)}`;
+        const backupQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=6&data=${encodeURIComponent(shareUrl)}`;
         qrImg.onerror = () => {
-          qrImg.onerror = null;
-          qrImg.src = generateFallbackQrDataUri(shareUrl);
+          qrImg.onerror = () => {
+            qrImg.onerror = null;
+            qrImg.src = generateFallbackQrDataUri(shareUrl);
+          };
+          qrImg.src = backupQrUrl;
         };
-        qrImg.src = apiQrUrl;
+        qrImg.src = primaryQrUrl;
       }
 
       const grid = document.getElementById('roomLiveStatusGrid');
