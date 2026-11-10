@@ -5329,11 +5329,7 @@
       if (syncChannel) {
         try { syncChannel.postMessage(startCmd); } catch (e) {}
       }
-      Object.values(activePeerConns).forEach((conn) => {
-        if (conn && conn.open) {
-          try { conn.send(startCmd); } catch (e) {}
-        }
-      });
+      sendToAllWebRtcPeers(startCmd);
 
       updateAllUI();
     }
@@ -5511,6 +5507,31 @@
       }
     });
 
+    let pendingPeerConnTs = {};
+
+    function sendToAllWebRtcPeers(payload) {
+      if (!payload) return;
+      const seen = new Set();
+      Object.values(activePeerConns).forEach((conn) => {
+        if (conn && conn.open && !seen.has(conn)) {
+          seen.add(conn);
+          try { conn.send(payload); } catch (e) {}
+        }
+      });
+      if (myPeer && myPeer.connections) {
+        Object.values(myPeer.connections).forEach((connList) => {
+          if (Array.isArray(connList)) {
+            connList.forEach((conn) => {
+              if (conn && conn.open && !seen.has(conn)) {
+                seen.add(conn);
+                try { conn.send(payload); } catch (e) {}
+              }
+            });
+          }
+        });
+      }
+    }
+
     function initWebRtcPeerMesh(code) {
       if (typeof Peer === 'undefined') return;
       if (myPeer) {
@@ -5518,6 +5539,7 @@
         myPeer = null;
       }
       activePeerConns = {};
+      pendingPeerConnTs = {};
 
       const cleanCode = code.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() || '1010';
       const roleSuffix = myRole === 'TEACHER'
@@ -5544,14 +5566,13 @@
           try {
             const fallbackPeer = new Peer(`hkdv-v4-${cleanCode}-${roleSuffix}-${Math.floor(Math.random() * 900 + 100)}`);
             myPeer = fallbackPeer;
+            pendingPeerConnTs = {};
             myPeer.on('open', () => connectToOtherDirectionalPeers(cleanCode));
             myPeer.on('connection', (conn) => setupPeerConnHandlers(conn));
           } catch (e2) {}
         });
       } catch (err) {}
     }
-
-    let pendingPeerConnTs = {};
 
     function connectToOtherDirectionalPeers(cleanCode) {
       if (!myPeer || myPeer.destroyed || !myPeer.open) return;
@@ -5562,7 +5583,7 @@
         if (myRole === 'STUDENT' && hasClaimedCharacter && targetRole === myGroup.direction) return;
         const targetPeerId = `hkdv-v4-${cleanCode}-${targetRole}`;
         if (activePeerConns[targetPeerId] && activePeerConns[targetPeerId].open) return;
-        if (pendingPeerConnTs[targetPeerId] && now - pendingPeerConnTs[targetPeerId] < 3800) return;
+        if (pendingPeerConnTs[targetPeerId] && now - pendingPeerConnTs[targetPeerId] < 2400) return;
         try {
           pendingPeerConnTs[targetPeerId] = now;
           const conn = myPeer.connect(targetPeerId, { reliable: true });
@@ -5573,16 +5594,6 @@
 
     function setupPeerConnHandlers(conn) {
       if (!conn) return;
-      conn.on('open', () => {
-        activePeerConns[conn.peer] = conn;
-        if (myRole === 'TEACHER') {
-          conn.send(buildRoomStateSnapshotPayload());
-        } else if (hasClaimedCharacter) {
-          conn.send(buildMySyncPayload());
-        } else {
-          conn.send({ type: 'REQUEST_SYNC', roomCode: currentRoomCode });
-        }
-      });
       conn.on('data', (data) => {
         if (!data) return;
         if (
@@ -5594,20 +5605,41 @@
           applyIncomingPlayerSync(data);
           // Teacher acts as Star Hub Relay so all connected students stay 100% in sync!
           if (myRole === 'TEACHER' && data.type === 'PLAYER_SYNC') {
-            const snap = buildRoomStateSnapshotPayload();
-            Object.values(activePeerConns).forEach((c) => {
-              if (c && c.open) {
-                try { c.send(snap); } catch (e) {}
-              }
-            });
+            sendToAllWebRtcPeers(buildRoomStateSnapshotPayload());
           }
         } else if (data.type === 'REQUEST_SYNC') {
+          if (myRole === 'TEACHER') {
+            try { conn.send(buildRoomStateSnapshotPayload()); } catch (e) {}
+          } else if (hasClaimedCharacter) {
+            try { conn.send(buildMySyncPayload()); } catch (e) {}
+          }
+        }
+      });
+      const pushInitialHandshake = () => {
+        if (!conn || !conn.open) return;
+        activePeerConns[conn.peer] = conn;
+        try {
           if (myRole === 'TEACHER') {
             conn.send(buildRoomStateSnapshotPayload());
           } else if (hasClaimedCharacter) {
             conn.send(buildMySyncPayload());
+          } else {
+            conn.send({ type: 'REQUEST_SYNC', roomCode: currentRoomCode });
           }
-        }
+        } catch (e) {}
+      };
+      conn.on('open', () => {
+        pushInitialHandshake();
+        setTimeout(pushInitialHandshake, 300);
+        setTimeout(pushInitialHandshake, 850);
+      });
+      conn.on('close', () => {
+        delete pendingPeerConnTs[conn.peer];
+        if (activePeerConns[conn.peer] === conn) delete activePeerConns[conn.peer];
+      });
+      conn.on('error', () => {
+        delete pendingPeerConnTs[conn.peer];
+        if (activePeerConns[conn.peer] === conn) delete activePeerConns[conn.peer];
       });
     }
 
@@ -5713,11 +5745,7 @@
       if (syncChannel) {
         try { syncChannel.postMessage(payload); } catch (e) {}
       }
-      Object.values(activePeerConns).forEach((conn) => {
-        if (conn && conn.open) {
-          try { conn.send(payload); } catch (e) {}
-        }
-      });
+      sendToAllWebRtcPeers(payload);
       renderTeacherHostSidebar();
       updateQrModalUI();
       updateHostLobbyOverlayUI();
@@ -5943,16 +5971,11 @@
         const cleanCode = currentRoomCode.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() || '1010';
         connectToOtherDirectionalPeers(cleanCode);
         if (hasClaimedCharacter) {
-          broadcastMyLane();
+          sendToAllWebRtcPeers(buildMySyncPayload());
         } else if (myRole === 'TEACHER') {
-          const snap = buildRoomStateSnapshotPayload();
-          Object.values(activePeerConns).forEach((c) => {
-            if (c && c.open) {
-              try { c.send(snap); } catch (e) {}
-            }
-          });
+          sendToAllWebRtcPeers(buildRoomStateSnapshotPayload());
         }
-      }, 2200);
+      }, 1200);
     });
   </script>
 </body>
