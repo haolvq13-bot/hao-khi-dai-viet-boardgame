@@ -6478,7 +6478,23 @@
       const urlMode = params.get('mode');
       if (urlMode === 'student') {
         isQrStudentMode = true;
+      } else if (urlMode === 'teacher') {
+        isTeacherAuthenticated = true;
+        try {
+          sessionStorage.setItem('hkdv_teacher_authed', '1');
+        } catch (e) {}
       }
+      // Automatic Cloud Asset Fallback when opened as standalone file without local assets/ folder
+      const cloudAssetBase = 'https://haolvq13-bot.github.io/hao-khi-dai-viet-boardgame/';
+      document.querySelectorAll('img').forEach((img) => {
+        const rawSrc = img.getAttribute('src') || '';
+        if (rawSrc.startsWith('assets/')) {
+          img.addEventListener('error', function onAssetErr() {
+            img.removeEventListener('error', onAssetErr);
+            img.src = cloudAssetBase + rawSrc;
+          });
+        }
+      });
       try {
         if (!isQrStudentMode && sessionStorage.getItem('hkdv_teacher_authed') === '1') {
           isTeacherAuthenticated = true;
