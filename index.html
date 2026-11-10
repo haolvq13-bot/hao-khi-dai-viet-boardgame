@@ -5317,8 +5317,7 @@
 
     let hasAutoOpenedTeacherFinalModal = false;
 
-    function canAcceptTeacherStartCommand(startedAtTs, meta, fromHistoryPoll = false) {
-      if (fromHistoryPoll) return false;
+    function canAcceptTeacherStartCommand(startedAtTs, meta) {
       const ts = Number(startedAtTs) || 0;
       if (!ts) return false;
       if (roomMatchState.resetEpoch && ts <= roomMatchState.resetEpoch) return false;
@@ -5328,19 +5327,23 @@
       // 2. The Teacher's "BẮT ĐẦU TRẬN ĐẤU" command MUST be triggered AFTER the student clicked Ready!
       if (!isTeacherAuthenticated || myRole !== 'TEACHER') {
         if (!hasClaimedCharacter || !studentReadyAt) return false;
-        if (ts < studentReadyAt - 800) return false;
+        if (ts < studentReadyAt) return false;
       }
       return true;
     }
 
-    function applyIncomingPlayerSync(payload, opts = {}) {
+    function applyIncomingPlayerSync(payload) {
       if (!payload || payload.roomCode !== currentRoomCode) return;
-      const fromHistoryPoll = Boolean(opts && opts.fromHistoryPoll);
 
       // Handle Room Reset Command from Teacher / Host (unlocks all 4 characters immediately!)
       if (payload.type === 'ROOM_RESET_CMD') {
         const incomingEpoch = payload.resetEpoch || Date.now();
         if (incomingEpoch <= (roomMatchState.resetEpoch || 0)) return;
+        // If this student already clicked Ready AFTER this resetEpoch was created, only record resetEpoch!
+        if (hasClaimedCharacter && studentReadyAt && incomingEpoch < studentReadyAt) {
+          roomMatchState.resetEpoch = incomingEpoch;
+          return;
+        }
         hasClaimedCharacter = false;
         studentReadyAt = 0;
         hasAutoOpenedTeacherFinalModal = false;
@@ -5357,6 +5360,10 @@
         Object.keys(FOUR_DIRECTIONS).forEach((k) => {
           allFourLanesState[k] = createInitialLaneState(k);
         });
+        if (myRole === 'STUDENT') {
+          const onboardEl = document.getElementById('onboardingModal');
+          if (onboardEl) onboardEl.classList.add('open');
+        }
         renderOnboardingDirectionCards();
         renderDioramaMap();
         renderTeacherHostSidebar();
@@ -5396,7 +5403,7 @@
           if (
             incomingMeta.status === 'PLAYING' &&
             roomMatchState.status !== 'PLAYING' &&
-            canAcceptTeacherStartCommand(incomingMeta.startedAt, incomingMeta, fromHistoryPoll)
+            canAcceptTeacherStartCommand(incomingMeta.startedAt, incomingMeta)
           ) {
             roomMatchState.status = 'PLAYING';
             roomMatchState.startedAt = incomingMeta.startedAt || Date.now();
@@ -5407,7 +5414,7 @@
         if (payload.lanes) {
           Object.values(payload.lanes).forEach((l) => {
             if (l && l.direction && l.online) {
-              applyIncomingPlayerSync({ ...l, roomCode: currentRoomCode }, opts);
+              applyIncomingPlayerSync({ ...l, roomCode: currentRoomCode });
             }
           });
         }
@@ -5436,7 +5443,7 @@
         const cmdStartedAt = payload.startedAt || (payload.roomMatchState && payload.roomMatchState.startedAt) || Date.now();
         if (
           roomMatchState.status !== 'PLAYING' &&
-          canAcceptTeacherStartCommand(cmdStartedAt, payload.roomMatchState, fromHistoryPoll)
+          canAcceptTeacherStartCommand(cmdStartedAt, payload.roomMatchState)
         ) {
           roomMatchState.status = 'PLAYING';
           roomMatchState.startedAt = cmdStartedAt;
