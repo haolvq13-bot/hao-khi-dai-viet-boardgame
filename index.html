@@ -5541,12 +5541,11 @@
       activePeerConns = {};
       pendingPeerConnTs = {};
 
+      // Only open a PeerJS WebSocket once the user is Teacher Host or has claimed one of the 4 Generals!
+      if (myRole !== 'TEACHER' && !hasClaimedCharacter) return;
+
       const cleanCode = code.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() || '1010';
-      const roleSuffix = myRole === 'TEACHER'
-        ? 'teacher'
-        : hasClaimedCharacter
-          ? myGroup.direction
-          : `lobby-${Math.floor(Math.random() * 9000 + 1000)}`;
+      const roleSuffix = myRole === 'TEACHER' ? 'teacher' : myGroup.direction;
       const myPeerId = `hkdv-v4-${cleanCode}-${roleSuffix}`;
 
       try {
@@ -5562,8 +5561,6 @@
         });
 
         myPeer.on('error', (err) => {
-          // Only create a fallback Peer ID if our own ID is already taken ('unavailable-id').
-          // Ignore 'peer-unavailable' which simply means a remote directional slot hasn't joined yet!
           if (err && err.type === 'unavailable-id') {
             try {
               const fallbackPeer = new Peer(`hkdv-v4-${cleanCode}-${roleSuffix}-${Math.floor(Math.random() * 900 + 100)}`);
@@ -5579,22 +5576,18 @@
 
     function connectToOtherDirectionalPeers(cleanCode) {
       if (!myPeer || myPeer.destroyed || !myPeer.open) return;
+      // Teacher is the Star Hub listener (`hkdv-v4-${cleanCode}-teacher`) and waits for the 4 Students to connect.
+      // Students only dial `teacher`, avoiding WebRTC Glare collisions and 0.peerjs.com burst rate-limits!
+      if (myRole === 'TEACHER' || !hasClaimedCharacter) return;
       const now = Date.now();
-      const peerTargets = (myRole === 'STUDENT' && !hasClaimedCharacter)
-        ? ['teacher']
-        : ['teacher', ...Object.keys(FOUR_DIRECTIONS)];
-      peerTargets.forEach((targetRole) => {
-        if (myRole === 'TEACHER' && targetRole === 'teacher') return;
-        if (myRole === 'STUDENT' && hasClaimedCharacter && targetRole === myGroup.direction) return;
-        const targetPeerId = `hkdv-v4-${cleanCode}-${targetRole}`;
-        if (activePeerConns[targetPeerId] && activePeerConns[targetPeerId].open) return;
-        if (pendingPeerConnTs[targetPeerId] && now - pendingPeerConnTs[targetPeerId] < 2400) return;
-        try {
-          pendingPeerConnTs[targetPeerId] = now;
-          const conn = myPeer.connect(targetPeerId, { reliable: true });
-          setupPeerConnHandlers(conn);
-        } catch (e) {}
-      });
+      const targetPeerId = `hkdv-v4-${cleanCode}-teacher`;
+      if (activePeerConns[targetPeerId] && activePeerConns[targetPeerId].open) return;
+      if (pendingPeerConnTs[targetPeerId] && now - pendingPeerConnTs[targetPeerId] < 2400) return;
+      try {
+        pendingPeerConnTs[targetPeerId] = now;
+        const conn = myPeer.connect(targetPeerId, { reliable: true });
+        setupPeerConnHandlers(conn);
+      } catch (e) {}
     }
 
     function setupPeerConnHandlers(conn) {
