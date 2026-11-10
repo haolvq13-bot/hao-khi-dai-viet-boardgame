@@ -2041,6 +2041,113 @@
         font-size: 11px;
       }
     }
+
+    /* =====================================================================
+     * STUDENT 100% FULL-SCREEN 3D MAP MODE (100vw x 100dvh PURE MAP)
+     * ===================================================================== */
+    body.student-fullscreen-map {
+      overflow: hidden !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      width: 100vw !important;
+      height: 100dvh !important;
+      background: #0F172A !important;
+    }
+
+    body.student-fullscreen-map .topbar,
+    body.student-fullscreen-map .cockpit > section.toy-panel:first-child,
+    body.student-fullscreen-map .battlefield-banner {
+      display: none !important;
+    }
+
+    body.student-fullscreen-map .cockpit {
+      display: block !important;
+      width: 100vw !important;
+      height: 100dvh !important;
+      max-width: 100vw !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    body.student-fullscreen-map .battlefield-panel {
+      width: 100vw !important;
+      height: 100dvh !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      border: none !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      background: transparent !important;
+    }
+
+    body.student-fullscreen-map .diorama-viewport {
+      width: 100vw !important;
+      height: 100dvh !important;
+      min-height: 100dvh !important;
+      max-height: 100dvh !important;
+      aspect-ratio: auto !important;
+      border: 4px solid #F59E0B !important;
+      border-radius: 0 !important;
+      margin: 0 !important;
+      background-size: 100% 100% !important;
+      background-position: center center !important;
+    }
+
+    .student-playing-top-hud {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(96%, 860px);
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.92) 0%, rgba(30, 41, 59, 0.92) 100%);
+      border: 2.5px solid #F59E0B;
+      border-radius: 16px;
+      padding: 7px 14px;
+      z-index: 80;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+      color: #FFFFFF;
+    }
+
+    .student-playing-top-hud.active {
+      display: flex;
+    }
+
+    .hud-mini-btn {
+      background: rgba(255, 255, 255, 0.14);
+      color: #FEF08A;
+      border: 1.5px solid #F59E0B;
+      border-radius: 10px;
+      padding: 5px 10px;
+      font-family: inherit;
+      font-size: 11.5px;
+      font-weight: 900;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .hud-mini-btn:hover {
+      background: #F59E0B;
+      color: #0F172A;
+    }
+
+    @media (max-width: 640px) {
+      .student-playing-top-hud {
+        top: 6px;
+        padding: 5px 9px;
+        border-radius: 12px;
+        gap: 6px;
+        width: 96%;
+      }
+      .hud-mini-btn {
+        padding: 4px 7px;
+        font-size: 10px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -2223,10 +2330,31 @@
             </div>
           </div>
 
-          <div id="lobbyActionArea" style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
+          <div id="lobbyActionArea" style="display:flex; align-items:center; gap:8px; flex-shrink:0; flex-wrap:wrap;">
             <button class="host-start-match-btn" id="btnHostStartMatch" onclick="hostTriggerStartMatch()">
               🥁 CÔ GIÁO: BẮT ĐẦU TRẬN ĐẤU!
             </button>
+          </div>
+        </div>
+
+        <!-- COMPACT TOP HUD BAR FOR STUDENT IN FULL-SCREEN 3D MAP WHEN PLAYING -->
+        <div class="student-playing-top-hud" id="studentPlayingTopHud">
+          <div style="display:flex; align-items:center; gap:8px; min-width:0;">
+            <img id="fsHudAvatar" src="assets/chibi_east_naval.jpg" alt="Avatar" style="width:34px; height:34px; border-radius:50%; border:2px solid #FDE047; object-fit:cover; background:#FFF; flex-shrink:0;" />
+            <div style="min-width:0;">
+              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                <span id="fsHudDirBadge" style="background:#0284C7; color:#FFF; font-size:10px; font-weight:900; padding:1.5px 7px; border-radius:999px;">HƯỚNG ĐÔNG</span>
+                <span id="fsHudTeamName" style="font-size:12.5px; font-weight:900; color:#FEF08A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Nhóm 1</span>
+              </div>
+              <div style="font-size:10.5px; font-weight:800; color:#E2E8F0;" id="fsHudStatsText">
+                🏯 Chặng 1/4 • 🪙 250 • 🔥 x1
+              </div>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+            <button class="hud-mini-btn" id="btnFsOpenLb" style="display:none; background:#F59E0B; color:#0F172A;" onclick="openLeaderboardModal()">🏆 Hạng 1•2•3•4</button>
+            <button class="hud-mini-btn" onclick="toggleAudio()" title="Bật/Tắt Âm Thanh">🔊 Âm thanh</button>
+            <button class="hud-mini-btn" onclick="toggleStudentBrowserFullscreen()" id="btnFsTogglePlaying">⛶ Full Màn Hình</button>
           </div>
         </div>
 
@@ -3889,6 +4017,39 @@
       });
     }
 
+    function requestStudentFullscreen() {
+      try {
+        const docEl = document.documentElement;
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+          if (docEl.requestFullscreen) {
+            docEl.requestFullscreen().catch(() => {});
+          } else if (docEl.webkitRequestFullscreen) {
+            docEl.webkitRequestFullscreen();
+          }
+        }
+      } catch (e) {}
+    }
+
+    function toggleStudentBrowserFullscreen() {
+      try {
+        const docEl = document.documentElement;
+        if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+          if (docEl.requestFullscreen) {
+            docEl.requestFullscreen().catch(() => {});
+          } else if (docEl.webkitRequestFullscreen) {
+            docEl.webkitRequestFullscreen();
+          }
+          showToast('⛶ Đã bật chế độ Toàn Màn Hình Sa Bàn 3D!');
+        } else {
+          if (document.exitFullscreen) {
+            document.exitFullscreen().catch(() => {});
+          } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+          }
+        }
+      } catch (e) {}
+    }
+
     function openOnboardingModal() {
       if (myRole === 'STUDENT' && hasClaimedCharacter && roomMatchState.status === 'PLAYING') {
         showToast('⚔️ Trận đấu đang diễn ra! Không thể đổi Tướng khi đã xuất quân!', true);
@@ -3969,6 +4130,8 @@
       // Re-initialize WebRTC Peer with the exact claimed direction (east/west/south/north)
       initWebRtcPeerMesh(currentRoomCode);
 
+      document.body.classList.add('student-fullscreen-map');
+      requestStudentFullscreen();
       document.getElementById('onboardingModal').classList.remove('open');
       if (bgmEnabled) startWarDrumBgm();
       playSound('drum');
@@ -6072,6 +6235,7 @@
 
     function updateHostLobbyOverlayUI() {
       const bar = document.getElementById('hostLobbyOverlayBar');
+      const studentPlayHud = document.getElementById('studentPlayingTopHud');
       if (!bar) return;
 
       const onlineList = Object.values(allFourLanesState).filter(
@@ -6089,6 +6253,7 @@
 
       if (roomMatchState.status === 'WAITING') {
         bar.classList.add('active');
+        if (studentPlayHud) studentPlayHud.classList.remove('active');
         const badge = document.getElementById('lobbyRoleBadge');
         const title = document.getElementById('lobbyHeaderTitle');
         const sub = document.getElementById('lobbySubStatusText');
@@ -6117,10 +6282,35 @@
             <div class="waiting-member-pill" id="waitingForHostBadge">
               ✋ Đã Sẵn Sàng — Chờ Cô Giáo bấm BẮT ĐẦU...
             </div>
+            <button class="hud-mini-btn" onclick="openOnboardingModal()">🏳️ Đổi Tướng</button>
+            <button class="hud-mini-btn" onclick="toggleStudentBrowserFullscreen()">⛶ Full Màn Hình</button>
           `;
         }
       } else {
         bar.classList.remove('active');
+        if (!isMeHost && studentPlayHud) {
+          studentPlayHud.classList.add('active');
+          const dirInfo = FOUR_DIRECTIONS[myGroup.direction] || FOUR_DIRECTIONS.east;
+          const avEl = document.getElementById('fsHudAvatar');
+          if (avEl) avEl.src = dirInfo.img;
+          const dirBadge = document.getElementById('fsHudDirBadge');
+          if (dirBadge) {
+            dirBadge.textContent = dirInfo.name;
+            dirBadge.style.background = dirInfo.color;
+          }
+          const tName = document.getElementById('fsHudTeamName');
+          if (tName) tName.textContent = myGroup.teamName;
+          const stText = document.getElementById('fsHudStatsText');
+          if (stText) {
+            stText.textContent = `🔗 Phòng #${currentRoomCode} • 🏯 Chặng ${Math.min(4, myGroup.currentStage)}/4 (${myGroup.conqueredStages.length}/4 qua) • 🪙 ${myGroup.gold} • 🔥 x${myGroup.streak}`;
+          }
+          const lbBtn = document.getElementById('btnFsOpenLb');
+          if (lbBtn) {
+            lbBtn.style.display = myGroup.conqueredStages.includes(4) ? 'inline-flex' : 'none';
+          }
+        } else if (studentPlayHud) {
+          studentPlayHud.classList.remove('active');
+        }
       }
     }
 
@@ -6164,6 +6354,7 @@
       const btnTopOnboard = document.getElementById('btnTopbarOpenOnboard');
 
       if (isTeacherAuthenticated && myRole === 'TEACHER') {
+        document.body.classList.remove('student-fullscreen-map');
         if (teacherPanel) teacherPanel.style.display = 'flex';
         if (studentPanel) studentPanel.style.display = 'none';
         if (btnTopOnboard) {
@@ -6194,6 +6385,7 @@
           }
         }
       } else {
+        document.body.classList.add('student-fullscreen-map');
         if (teacherPanel) teacherPanel.style.display = 'none';
         if (studentPanel) studentPanel.style.display = 'flex';
         if (floatBar) floatBar.style.display = 'flex';
