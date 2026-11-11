@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HÀNH TRÌNH VỀ NGUỒN — 4 Đội Leo Núi Chinh Phục Đỉnh Thiêng 3D</title>
+  <title>OLIMPIA — ĐƯỜNG LÊN ĐỈNH OLIMPIA (4 Đội Học Sinh Leo Núi)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,500;0,600;0,700;0,800;0,900;1,700&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
@@ -669,18 +669,18 @@
       to { transform: scale(1.12); }
     }
 
-    /* Central 3D Sacred Mountain Summit (Stage 4 Boss - Đỉnh Olympia Vị Trí Chiến Thắng) */
+    /* Central 3D Sacred Mountain Summit (Stage 4 Boss - Đỉnh Olimpia Vị Trí Chiến Thắng) */
     .center-citadel-node {
       position: absolute;
-      left: 79.8%;
-      top: 32.0%;
+      left: 71.0%;
+      top: 18.8%;
       transform: translate(-50%, -50%);
-      width: 48px;
-      height: 48px;
+      width: 52px;
+      height: 52px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(254, 240, 138, 0.96) 0%, rgba(245, 158, 11, 0.96) 100%);
+      background: radial-gradient(circle, rgba(254, 240, 138, 0.98) 0%, rgba(245, 158, 11, 0.98) 100%);
       border: 3px solid #FDE047;
-      box-shadow: 0 0 20px rgba(253, 224, 71, 0.9), 0 4px 0 #B45309, 0 8px 18px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 24px rgba(253, 224, 71, 0.95), 0 4px 0 #B45309, 0 8px 20px rgba(0, 0, 0, 0.55);
       cursor: pointer;
       z-index: 22;
       display: flex;
@@ -695,24 +695,105 @@
     }
 
     .center-citadel-node img {
-      width: 42px;
-      height: 42px;
+      width: 46px;
+      height: 46px;
       object-fit: cover;
       border-radius: 50%;
     }
 
     .citadel-ribbon {
       position: absolute;
-      bottom: -16px;
+      bottom: -18px;
       background: linear-gradient(90deg, #991B1B 0%, #DC2626 50%, #991B1B 100%);
       color: #FEF08A;
       border: 2px solid #FDE047;
-      padding: 1.5px 8px;
+      padding: 2px 10px;
       border-radius: 999px;
-      font-size: 9px;
+      font-size: 10px;
       font-weight: 900;
       white-space: nowrap;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.45);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.55);
+    }
+
+    /* CRISP VECTOR HTML MAP LABELS (100% RAZOR-SHARP AT ANY RESOLUTION) */
+    .olimpia-map-hud-title {
+      position: absolute;
+      left: 2.2%;
+      top: 9.2%;
+      z-index: 14;
+      pointer-events: none;
+      background: rgba(15, 23, 42, 0.85);
+      border: 2.5px solid #F59E0B;
+      border-radius: 16px;
+      padding: 10px 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(4px);
+    }
+
+    .olimpia-map-hud-title .main-t {
+      font-size: clamp(16px, 2vw, 24px);
+      font-weight: 900;
+      color: #FEF08A;
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.75);
+      line-height: 1.15;
+    }
+
+    .olimpia-map-hud-title .sub-t {
+      margin-top: 4px;
+      font-size: clamp(11px, 1.1vw, 13px);
+      font-weight: 800;
+      color: #E2E8F0;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .olimpia-stage-sign {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      z-index: 15;
+      pointer-events: none;
+      background: linear-gradient(180deg, #15803D 0%, #14532D 100%);
+      border: 2.5px solid #FEF08A;
+      border-radius: 12px;
+      padding: 5px 12px;
+      text-align: center;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.48);
+      white-space: nowrap;
+    }
+
+    .olimpia-stage-sign .s-head {
+      font-size: clamp(11px, 1.15vw, 14px);
+      font-weight: 900;
+      color: #FEF08A;
+      letter-spacing: 0.3px;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.65);
+    }
+
+    .olimpia-stage-sign .s-sub {
+      font-size: clamp(9.5px, 0.95vw, 11.5px);
+      font-weight: 800;
+      color: #FFFFFF;
+    }
+
+    .olimpia-start-banner {
+      position: absolute;
+      left: 50.0%;
+      top: 95.5%;
+      transform: translate(-50%, -50%);
+      z-index: 25;
+      pointer-events: none;
+      background: linear-gradient(90deg, #78350F 0%, #B45309 50%, #78350F 100%);
+      color: #FEF08A;
+      border: 2.5px solid #FDE047;
+      border-radius: 999px;
+      padding: 3px 18px;
+      font-size: clamp(11px, 1.2vw, 14px);
+      font-weight: 900;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.55);
+      white-space: nowrap;
     }
 
     /* 3D Student Avatar Token Moving Smoothly Along the Olympia Road */
@@ -2824,8 +2905,8 @@
     <div class="brand-block">
       <div class="brand-crest">🏆</div>
       <div class="brand-title">
-        <h1>HÀNH TRÌNH VỀ NGUỒN — ĐƯỜNG LÊN ĐỈNH OLYMPIA</h1>
-        <p>4 Đội Học Sinh Leo Núi • 3 Chặng Thử Thách & Đỉnh Olympia • Kéo Thả & Chốt Kiến Thức</p>
+        <h1>OLIMPIA — ĐƯỜNG LÊN ĐỈNH OLIMPIA</h1>
+        <p>4 Đội Học Sinh Leo Núi • 3 Chặng Thử Thách & Đỉnh Olimpia • Kéo Thả & Chốt Kiến Thức</p>
       </div>
     </div>
 
@@ -2908,14 +2989,14 @@
       <!-- MODE B: STUDENT GROUP COMMANDER & STAGE STEPPER PANEL -->
       <div id="studentCommanderPanel" style="display:flex; flex-direction:column; gap:8px; height:100%;">
         <div class="panel-header">
-          <div class="panel-title">🎓 Đội Thi Đường Lên Đỉnh Olympia</div>
+          <div class="panel-title">🎓 Đội Thi Đường Lên Đỉnh Olimpia</div>
           <span style="font-size:11px; font-weight:800; color:var(--accent-jade);" id="myOrderBadge">4 Chặng</span>
         </div>
 
         <div class="hero-commander-box">
           <span class="direction-pill" id="hudDirPill">ĐỘI 1 • LÀN ĐỎ</span>
           <div class="hero-avatar-frame">
-            <img id="hudHeroImg" src="assets/student_team1_red.jpg" alt="Olympia Student Avatar" />
+            <img id="hudHeroImg" src="assets/student_team1_red.jpg" alt="Olimpia Student Avatar" />
           </div>
           <div class="hero-team-name" id="hudTeamName">Nhóm 1</div>
           <div class="hero-general-title" id="hudGeneralTitle">Thí Sinh Đội 1</div>
@@ -2942,8 +3023,8 @@
         </button>
 
         <div class="panel-header" style="margin-top:4px;">
-          <div class="panel-title">🗺️ 4 Trạm Hành Trình Về Nguồn</div>
-          <span style="font-size:10.5px; color:var(--text-muted); font-weight:700;">Đúng mới lên trạm</span>
+          <div class="panel-title">🗺️ 4 Chặng Đường Lên Đỉnh Olimpia</div>
+          <span style="font-size:10.5px; color:var(--text-muted); font-weight:700;">Đúng mới lên chặng</span>
         </div>
 
         <div class="stage-stepper-list" id="stageStepperList"></div>
@@ -3028,6 +3109,26 @@
         <svg class="diorama-svg-roads" id="dioramaSvgRoads" viewBox="0 0 1000 625" preserveAspectRatio="none"></svg>
 
         <!-- Dynamic Stepping Stones, Stage Checkpoints & 4 Chibi Tokens Injected by JS -->
+        <div class="olimpia-map-hud-title">
+          <div class="main-t">MAP GAME: ĐƯỜNG LÊN ĐỈNH OLIMPIA</div>
+          <div class="sub-t">
+            <span>🔴 4 ĐỘI CHƠI</span>
+            <span>🟢 3 CHẶNG THỬ THÁCH</span>
+            <span>🔵 ĐƯỜNG ĐI CHUNG</span>
+          </div>
+        </div>
+        <div class="olimpia-stage-sign" style="left: 14.5%; top: 37.5%;">
+          <div class="s-head">1. CHẶNG 1: KHỞI ĐỘNG</div>
+          <div class="s-sub">[KIẾN THỨC CHUNG]</div>
+        </div>
+        <div class="olimpia-stage-sign" style="left: 38.0%; top: 34.5%;">
+          <div class="s-head">2. CHẶNG 2: VƯỢT CHƯỚNG NGẠI VẬT</div>
+          <div class="s-sub">[GIẢI MÃ CHƯỚNG NGẠI VẬT]</div>
+        </div>
+        <div class="olimpia-stage-sign" style="left: 48.0%; top: 15.5%;">
+          <div class="s-head">3. CHẶNG 3: TĂNG TỐC</div>
+          <div class="s-sub">[TƯ DUY LOGIC / BỨT PHÁ]</div>
+        </div>
         <div id="mapStagesContainer"></div>
         <div id="mapTokensContainer"></div>
 
@@ -3049,7 +3150,7 @@
       <!-- Subtle Teacher PIN Access Button in Top-Right (Hidden when ?mode=student via QR) -->
       <div class="onboard-top-badges" style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
         <span style="background:#FEF08A; color:#991B1B; border:2px solid #F59E0B; padding:4px 12px; border-radius:999px; font-size:11.5px; font-weight:900;">
-          ⛰️ HÀNH TRÌNH VỀ NGUỒN — 4 ĐỘI LEO NÚI CHINH PHỤC ĐỈNH THIÊNG
+          🏆 OLIMPIA — ĐƯỜNG LÊN ĐỈNH OLIMPIA (4 ĐỘI HỌC SINH LEO NÚI)
         </span>
         <div style="display:flex; align-items:center; gap:6px;">
           <button
@@ -3064,7 +3165,7 @@
             type="button"
             id="btnToggleTeacherAuth"
             onclick="toggleTeacherPinGate()"
-            style="background:#FFFBEB; color:#92400E; border:2px solid #F59E0B; padding:4px 11px; border-radius:999px; font-size:11.5px; font-weight:900; cursor:pointer;"
+            style="background:#FFFBEB; color:#92400E; border:2px solid #F59E0B; padding:4px 11px; border-radius:999px; font-size:11.5px; font-weight:999; cursor:pointer;"
           >
             👩‍🏫 Dành Cho Cô Giáo (PIN)
           </button>
@@ -3073,10 +3174,10 @@
 
       <div style="text-align:center;">
         <h2 style="font-size:22px; font-weight:900; color:#991B1B; margin:4px 0 2px;" id="onboardModalMainTitle">
-          HÀNH TRÌNH VỀ NGUỒN — Nhập Tên Nhóm & Chọn Đội Leo Núi
+          OLIMPIA — Nhập Tên Nhóm & Chọn Đội Thi Đấu
         </h2>
         <p style="font-size:12.5px; color:var(--text-slate); max-width:700px; margin:0 auto;" id="onboardModalSubTitle">
-          Học sinh nhập <strong>Tên Nhóm (chính là Tên Đội)</strong> và <strong>Mã Phòng của Cô Giáo</strong>, chọn 1 trong 4 Đội Leo Núi còn trống rồi bấm <strong>"✋ CHỐT ĐỘI & BẤM SẴN SÀNG"</strong> (chờ Cô Giáo bấm Bắt Đầu)!
+          Học sinh nhập <strong>Tên Nhóm (chính là Tên Đội)</strong> và <strong>Mã Phòng của Cô Giáo</strong>, chọn 1 trong 4 Đội Học Sinh còn trống rồi bấm <strong>"✋ CHỐT ĐỘI & BẤM SẴN SÀNG"</strong> (chờ Cô Giáo bấm Bắt Đầu)!
         </p>
       </div>
 
@@ -3226,7 +3327,7 @@
       <div id="bossMatchingQuestionArea" style="display:none;">
         <div id="bossMatchingInteractiveBox">
           <div class="question-prompt" style="font-size:15.5px;">
-            ⛰️ <strong>FINAL: Đỉnh Olympia — Vị Trí Chiến Thắng (Kéo - Thả Ghép Nối):</strong> Em hãy <strong>giữ và kéo thẻ <em>"Ý nghĩa rút ra"</em> (Cột phải / bên dưới) thả vào đúng ô <em>"Dẫn chứng/biểu hiện"</em> tương ứng</strong> để chinh phục Đỉnh Olympia và mở <strong>Bảng Xếp Hạng & Bảng Chốt Kiến Thức</strong>:
+            ⛰️ <strong>FINAL: Đỉnh Olimpia — Vị Trí Chiến Thắng (Kéo - Thả Ghép Nối):</strong> Em hãy <strong>giữ và kéo thẻ <em>"Ý nghĩa rút ra"</em> (Cột phải / bên dưới) thả vào đúng ô <em>"Dẫn chứng/biểu hiện"</em> tương ứng</strong> để chinh phục Đỉnh Olimpia và mở <strong>Bảng Xếp Hạng & Bảng Chốt Kiến Thức</strong>:
           </div>
           <div class="stage4-dnd-container matching-arena">
             <div>
@@ -3393,38 +3494,38 @@
     ];
 
     /* =====================================================================
-     * 2. MAP GAME: ĐƯỜNG LÊN ĐỈNH OLYMPIA ("HÀNH TRÌNH VỀ NGUỒN" — 4 ĐỘI CHƠI)
+     * 2. MAP GAME: ĐƯỜNG LÊN ĐỈNH OLIMPIA ("OLIMPIA" — 4 ĐỘI CHƠI)
      *    - BỤC BẮT ĐẦU (ĐỘI 1 ĐỎ, ĐỘI 2 XANH DƯƠNG, ĐỘI 3 XANH LÁ, ĐỘI 4 VÀNG)
-     *    - 3 CHẶNG THỬ THÁCH TRÊN ĐƯỜNG ĐI CHUNG + FINAL: ĐỈNH OLYMPIA
+     *    - 3 CHẶNG THỬ THÁCH TRÊN ĐƯỜNG ĐI CHUNG + FINAL: ĐỈNH OLIMPIA
      * ===================================================================== */
     const STAGE_STEP_MAP = { 0: 0, 1: 4, 2: 8, 3: 12, 4: 15 };
 
     const OLYMPIA_SHARED_WAYPOINTS = [
-      { x: 49.5, y: 88.0, stepIdx: 0,  placeName: 'Bục Bắt Đầu',                    title: 'Bắt Đầu — Đường Đi Chung', icon: '🏁' },
-      { x: 30.2, y: 71.5, stepIdx: 4,  placeName: 'Chặng 1: Khởi Động',             title: '1. Chặng 1: Khởi Động [Kiến thức chung]', icon: '⛺' },
-      { x: 69.8, y: 55.8, stepIdx: 8,  placeName: 'Chặng 2: Vượt Chướng Ngại Vật',  title: '2. Chặng 2: Vượt Chướng Ngại Vật [Giải mã]', icon: '🌉' },
-      { x: 83.2, y: 42.2, stepIdx: 12, placeName: 'Chặng 3: Tăng Tốc',              title: '3. Chặng 3: Tăng Tốc [Tư duy logic/Bất ngờ]', icon: '⚡' },
-      { x: 79.8, y: 32.0, stepIdx: 15, placeName: 'FINAL: Đỉnh Olympia',            title: 'FINAL: Đỉnh Olympia — Vị Trí Chiến Thắng', icon: '🏆' }
+      { x: 50.0, y: 85.0, stepIdx: 0,  placeName: 'Bục Bắt Đầu',                    title: 'Bắt Đầu — Đường Đi Chung', icon: '🏁' },
+      { x: 24.5, y: 58.5, stepIdx: 4,  placeName: 'Chặng 1: Khởi Động',             title: '1. Chặng 1: Khởi Động [Kiến thức chung]', icon: '⛺' },
+      { x: 48.0, y: 49.0, stepIdx: 8,  placeName: 'Chặng 2: Vượt Chướng Ngại Vật',  title: '2. Chặng 2: Vượt Chướng Ngại Vật [Giải mã]', icon: '🌉' },
+      { x: 64.5, y: 35.5, stepIdx: 12, placeName: 'Chặng 3: Tăng Tốc',              title: '3. Chặng 3: Tăng Tốc [Tư duy logic/Bất ngờ]', icon: '⚡' },
+      { x: 71.0, y: 18.8, stepIdx: 15, placeName: 'FINAL: Đỉnh Olimpia',            title: 'FINAL: Đỉnh Olimpia — Vị Trí Chiến Thắng', icon: '🏆' }
     ];
 
     function buildOlympiaSharedSteps(startX, startY, laneOffsetX, laneOffsetY) {
       const base = [
         { x: startX, y: startY }, // 0: Bục Bắt Đầu của từng Đội (Đội 1, Đội 2, Đội 3, Đội 4)
-        { x: 34.0,   y: 90.0 },   // 1: Đường Đi Chung (Đỏ)
-        { x: 22.5,   y: 88.2 },   // 2: Khúc cua Khởi Động
-        { x: 24.5,   y: 78.5 },   // 3: Lều Trại Khởi Động
-        { x: 30.2,   y: 71.5 },   // 4: CHẶNG 1: KHỞI ĐỘNG (POINT 1)
-        { x: 38.0,   y: 64.5 },   // 5: Đường Đèo Xanh
-        { x: 46.5,   y: 59.0 },   // 6: Tiếp cận Cầu Vượt Trở Ngại
-        { x: 55.2,   y: 55.2 },   // 7: Cầu Vượt Trở Ngại
-        { x: 69.8,   y: 55.8 },   // 8: CHẶNG 2: VƯỢT CHƯỚNG NGẠI VẬT (POINT 2)
-        { x: 76.5,   y: 51.8 },   // 9: Đường dốc Tăng Tốc
-        { x: 81.5,   y: 47.8 },   // 10: Vách núi Tăng Tốc
-        { x: 85.0,   y: 44.8 },   // 11: Khúc cua Tăng Tốc
-        { x: 83.2,   y: 42.2 },   // 12: CHẶNG 3: TĂNG TỐC
-        { x: 76.2,   y: 38.0 },   // 13: Vòng cung lên Đỉnh Olympia
-        { x: 74.2,   y: 34.5 },   // 14: Áp sát Đỉnh Olympia
-        { x: 79.8,   y: 32.0 }    // 15: FINAL: ĐỈNH OLYMPIA (VỊ TRÍ CHIẾN THẮNG)
+        { x: 30.0,   y: 86.2 },   // 1: Đường Đi Chung
+        { x: 20.5,   y: 80.5 },   // 2: Khúc cua thứ nhất
+        { x: 22.8,   y: 72.0 },   // 3: Đường lên Lều Trại Khởi Động
+        { x: 24.5,   y: 58.5 },   // 4: CHẶNG 1: KHỞI ĐỘNG
+        { x: 31.5,   y: 54.8 },   // 5: Tiếp cận Cầu Treo
+        { x: 38.0,   y: 53.0 },   // 6: Giữa Cầu Treo Vượt Chướng Ngại Vật
+        { x: 43.5,   y: 50.5 },   // 7: Qua Cầu Treo
+        { x: 48.0,   y: 49.0 },   // 8: CHẶNG 2: VƯỢT CHƯỚNG NGẠI VẬT
+        { x: 58.0,   y: 48.8 },   // 9: Đường đèo lên vách núi
+        { x: 70.5,   y: 43.2 },   // 10: Khúc cua vách đá Tăng Tốc
+        { x: 62.5,   y: 38.5 },   // 11: Đường dốc Tăng Tốc
+        { x: 64.5,   y: 35.5 },   // 12: CHẶNG 3: TĂNG TỐC
+        { x: 71.2,   y: 28.5 },   // 13: Khúc cua áp chót
+        { x: 65.5,   y: 23.0 },   // 14: Đường vàng lên Đỉnh Olimpia
+        { x: 71.0,   y: 18.8 }    // 15: FINAL: ĐỈNH OLIMPIA (VỊ TRÍ CHIẾN THẮNG)
       ];
       return base.map((pt, idx) => {
         if (idx === 0) return pt;
@@ -3439,49 +3540,49 @@
       east: {
         key: 'east',
         name: 'ĐỘI 1',
-        armyTitle: 'Làn Đỏ • Đường Lên Đỉnh Olympia',
+        armyTitle: 'Làn Đỏ • Đường Lên Đỉnh Olimpia',
         generalName: 'Thí Sinh Đội 1 (Áo Đỏ)',
-        weaponEffect: '🔴 Đội 1 bứt phá tốc độ — Tiến lên Đỉnh Olympia!',
+        weaponEffect: '🔴 Đội 1 bứt phá tốc độ — Tiến lên Đỉnh Olimpia!',
         img: 'assets/student_team1_red.jpg',
         color: '#DC2626',
         defaultTeamName: 'Nhóm 1',
-        pathSteps: buildOlympiaSharedSteps(41.8, 88.2, -1.8, -0.8),
+        pathSteps: buildOlympiaSharedSteps(42.8, 84.5, -1.2, -0.5),
         waypoints: OLYMPIA_SHARED_WAYPOINTS
       },
       west: {
         key: 'west',
         name: 'ĐỘI 2',
-        armyTitle: 'Làn Xanh Dương • Đường Lên Đỉnh Olympia',
+        armyTitle: 'Làn Xanh Dương • Đường Lên Đỉnh Olimpia',
         generalName: 'Thí Sinh Đội 2 (Áo Xanh Dương)',
-        weaponEffect: '🔵 Đội 2 vượt chướng ngại vật — Tiến lên Đỉnh Olympia!',
+        weaponEffect: '🔵 Đội 2 vượt chướng ngại vật — Tiến lên Đỉnh Olimpia!',
         img: 'assets/student_team2_blue.jpg',
         color: '#2563EB',
         defaultTeamName: 'Nhóm 2',
-        pathSteps: buildOlympiaSharedSteps(47.2, 85.2, -0.6, -0.3),
+        pathSteps: buildOlympiaSharedSteps(50.0, 79.5, -0.4, -0.2),
         waypoints: OLYMPIA_SHARED_WAYPOINTS
       },
       south: {
         key: 'south',
         name: 'ĐỘI 3',
-        armyTitle: 'Làn Xanh Lá • Đường Lên Đỉnh Olympia',
+        armyTitle: 'Làn Xanh Lá • Đường Lên Đỉnh Olimpia',
         generalName: 'Thí Sinh Đội 3 (Áo Xanh Lá)',
-        weaponEffect: '🟢 Đội 3 tăng tốc thần tốc — Tiến lên Đỉnh Olympia!',
+        weaponEffect: '🟢 Đội 3 tăng tốc thần tốc — Tiến lên Đỉnh Olimpia!',
         img: 'assets/student_team3_green.jpg',
         color: '#16A34A',
         defaultTeamName: 'Nhóm 3',
-        pathSteps: buildOlympiaSharedSteps(52.8, 86.2, 0.6, 0.3),
+        pathSteps: buildOlympiaSharedSteps(50.0, 89.2, 0.4, 0.2),
         waypoints: OLYMPIA_SHARED_WAYPOINTS
       },
       north: {
         key: 'north',
         name: 'ĐỘI 4',
-        armyTitle: 'Làn Vàng • Đường Lên Đỉnh Olympia',
+        armyTitle: 'Làn Vàng • Đường Lên Đỉnh Olimpia',
         generalName: 'Thí Sinh Đội 4 (Áo Vàng)',
-        weaponEffect: '🟡 Đội 4 chinh phục vòng nguyệt quế — Tiến lên Đỉnh Olympia!',
+        weaponEffect: '🟡 Đội 4 chinh phục vòng nguyệt quế — Tiến lên Đỉnh Olimpia!',
         img: 'assets/student_team4_yellow.jpg',
         color: '#D97706',
         defaultTeamName: 'Nhóm 4',
-        pathSteps: buildOlympiaSharedSteps(58.2, 88.2, 1.8, 0.8),
+        pathSteps: buildOlympiaSharedSteps(57.2, 84.5, 1.2, 0.5),
         waypoints: OLYMPIA_SHARED_WAYPOINTS
       }
     };
@@ -3751,7 +3852,7 @@
         roleEl.textContent = '📜 NỮ SỬ GIA DẪN CHUYỆN';
       } else {
         roleEl.className = 'voice-role-tag';
-        roleEl.textContent = '🎙️ MC ĐƯỜNG LÊN ĐỈNH OLYMPIA';
+        roleEl.textContent = '🎙️ MC ĐƯỜNG LÊN ĐỈNH OLIMPIA';
       }
       textEl.textContent = subtitleText;
       banner.classList.add('active');
@@ -4923,9 +5024,9 @@
         marchToStageAndOpenQuestion(4);
       };
       centerNode.innerHTML = `
-        ${isCenterTarget ? '<div class="map-go-pill" style="top:-28px; font-size:11px;">🏆 CHINH PHỤC ĐỈNH OLYMPIA</div>' : ''}
-        <img src="assets/olympia_crest_3d.jpg" alt="Vòng Nguyệt Quế Đỉnh Olympia" />
-        <div class="citadel-ribbon">${isCenterConquered ? '🏆 ĐỈNH OLYMPIA & XẾP HẠNG' : '🏆 FINAL: ĐỈNH OLYMPIA'}</div>
+        ${isCenterTarget ? '<div class="map-go-pill" style="top:-28px; font-size:11px;">🏆 CHINH PHỤC ĐỈNH OLIMPIA</div>' : ''}
+        <img src="assets/olympia_crest_3d.jpg" alt="Vòng Nguyệt Quế Đỉnh Olimpia" />
+        <div class="citadel-ribbon">${isCenterConquered ? '🏆 ĐỈNH OLIMPIA & XẾP HẠNG' : '🏆 FINAL: ĐỈNH OLIMPIA'}</div>
       `;
       stagesContainer.appendChild(centerNode);
 
@@ -5626,23 +5727,23 @@
       const dirInfo = FOUR_DIRECTIONS[myGroup.direction];
 
       document.getElementById('battleStageHeader').innerHTML = showCompletedLeaderboard
-        ? `🏆 FINAL: ĐỈNH OLYMPIA — BẢNG XẾP HẠNG & BẢNG CHỐT KIẾN THỨC`
-        : `🏆 FINAL: ĐỈNH OLYMPIA — VỊ TRÍ CHIẾN THẮNG (KÉO THẢ 3 CẶP KIẾN THỨC)`;
+        ? `🏆 FINAL: ĐỈNH OLIMPIA — BẢNG XẾP HẠNG & BẢNG CHỐT KIẾN THỨC`
+        : `🏆 FINAL: ĐỈNH OLIMPIA — VỊ TRÍ CHIẾN THẮNG (KÉO THẢ 3 CẶP KIẾN THỨC)`;
       document.getElementById('battleRewardBadge').textContent = showCompletedLeaderboard
         ? `🏆 Bảng Xếp Hạng 4 Đội & Bảng Chuẩn Kiến Thức!`
-        : `✋ Kéo thả đúng cả 3 cặp để lên Đỉnh Olympia!`;
+        : `✋ Kéo thả đúng cả 3 cặp để lên Đỉnh Olimpia!`;
 
       document.getElementById('duelHeroImg').src = dirInfo.img;
       document.getElementById('duelHeroDirText').textContent = isTeacher
-        ? '👩‍🏫 CÔ GIÁO CHỦ PHÒNG • GIÁM SÁT 4 ĐỘI LEO NÚI'
+        ? '👩‍🏫 CÔ GIÁO CHỦ PHÒNG • GIÁM SÁT 4 ĐỘI OLIMPIA'
         : `${dirInfo.name} • ${dirInfo.armyTitle}`;
       document.getElementById('duelHeroNameText').textContent = isTeacher
-        ? `Phòng #${currentRoomCode} — Tổng Kết Hành Trình Về Nguồn`
+        ? `Phòng #${currentRoomCode} — Tổng Kết Đường Lên Đỉnh Olimpia`
         : myGroup.teamName;
       document.getElementById('duelActionStatus').textContent = showCompletedLeaderboard
-        ? '🏆 Bảng Xếp Hạng 4 Đội & Bảng Chuẩn Kiến Thức tại Đỉnh Olympia!'
+        ? '🏆 Bảng Xếp Hạng 4 Đội & Bảng Chuẩn Kiến Thức tại Đỉnh Olimpia!'
         : '⛰️ Kéo thẻ "Ý nghĩa rút ra" thả vào đúng ô "Dẫn chứng/biểu hiện" tương ứng!';
-      document.getElementById('duelGateName').textContent = 'Đỉnh Olympia';
+      document.getElementById('duelGateName').textContent = 'Đỉnh Olimpia';
       document.getElementById('duelGateIcon').textContent = '🏆';
       if (showCompletedLeaderboard) {
         document.getElementById('duelGateBoss').classList.add('shattered');
@@ -5788,7 +5889,7 @@
         renderBossMatchColumns();
 
         if (pairedRowIds.length === CORE_HISTORY_ROWS.length) {
-          triggerStageBreakExplosion('Đỉnh Olympia', 500, '🏆 CHINH PHỤC ĐỈNH OLYMPIA THÀNH CÔNG!');
+          triggerStageBreakExplosion('Đỉnh Olimpia', 500, '🏆 CHINH PHỤC ĐỈNH OLIMPIA THÀNH CÔNG!');
           playSound('fanfare');
           playVoiceClip('congrats_stage4_victory');
           document.getElementById('duelHeroFighter').classList.add('hero-charge');
@@ -5817,7 +5918,7 @@
           const interactiveBox = document.getElementById('bossMatchingInteractiveBox');
           if (interactiveBox) interactiveBox.style.display = 'none';
           document.getElementById('battleStageHeader').innerHTML =
-            `🏆 FINAL: ĐỈNH OLYMPIA — BẢNG XẾP HẠNG & BẢNG CHỐT KIẾN THỨC`;
+            `🏆 FINAL: ĐỈNH OLIMPIA — BẢNG XẾP HẠNG & BẢNG CHỐT KIẾN THỨC`;
           document.getElementById('battleRewardBadge').textContent =
             `🏆 Bảng Xếp Hạng 4 Đội & Bảng Chuẩn Kiến Thức!`;
           renderStage4SynthesisAndInlineRanking();
@@ -5827,7 +5928,7 @@
           fb.innerHTML = `
             <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
               <div style="font-size:15px; font-weight:900; color:#047857;">
-                🏆 CHÚC MỪNG ${myGroup.teamName.toUpperCase()} ĐÃ LÊN TỚI ĐỈNH OLYMPIA (+500🪙)!
+                🏆 CHÚC MỪNG ${myGroup.teamName.toUpperCase()} ĐÃ LÊN TỚI ĐỈNH OLIMPIA (+500🪙)!
               </div>
               <div style="display:flex; gap:8px; flex-wrap:wrap;">
                 <button class="btn-3d btn-3d-emerald" style="padding:7px 14px; font-size:12.5px;" onclick="openKnowledgeSummaryModal()">
