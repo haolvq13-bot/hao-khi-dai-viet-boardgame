@@ -2549,6 +2549,13 @@
     }
 
     @media (max-width: 720px) {
+      body:has(#battleModal.open) .voice-subtitle-banner {
+        display: none !important;
+      }
+      #battleModal .battle-modal-card {
+        padding: 10px 10px !important;
+        max-height: 96dvh !important;
+      }
       .options-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
         gap: 6px !important;
