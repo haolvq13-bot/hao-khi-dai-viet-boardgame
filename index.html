@@ -2549,6 +2549,10 @@
     }
 
     @media (max-width: 720px) {
+      .guide-rules-3col {
+        grid-template-columns: 1fr !important;
+        gap: 6px !important;
+      }
       body:has(#battleModal.open) .voice-subtitle-banner {
         display: none !important;
       }
@@ -3285,122 +3289,151 @@
         </div>
       </div>
 
-      <!-- STUDENT GROUP NAME & ROOM CODE INPUTS -->
-      <div class="onboard-inputs-grid" style="display:grid; grid-template-columns: 1.8fr 1fr; gap:12px; max-width:660px; margin:2px auto; width:100%;">
-        <div>
-          <label style="font-size:12px; font-weight:900; color:var(--text-ink); display:block; margin-bottom:4px;">
-            🚩 TÊN ĐỘI / TÊN NHÓM CỦA EM:
-          </label>
-          <input
-            type="text"
-            id="inputOnboardTeamName"
-            value="Nhóm 1"
-            placeholder="Nhập tên nhóm của em (VD: Nhóm 1)..."
-            style="width:100%; padding:9px 14px; font-family:inherit; font-size:14.5px; font-weight:800; border:3px solid var(--primary-gold); border-radius:14px; background:#FFFFFF; color:var(--text-ink);"
-          />
+      <!-- STUDENT STEP 1: GROUP NAME, ROOM CODE & CHARACTER SELECTION -->
+      <div id="onboardStep1SelectView">
+        <div class="onboard-inputs-grid" style="display:grid; grid-template-columns: 1.8fr 1fr; gap:12px; max-width:660px; margin:2px auto; width:100%;">
+          <div>
+            <label style="font-size:12px; font-weight:900; color:var(--text-ink); display:block; margin-bottom:4px;">
+              🚩 TÊN ĐỘI / TÊN NHÓM CỦA EM:
+            </label>
+            <input
+              type="text"
+              id="inputOnboardTeamName"
+              value="Nhóm 1"
+              placeholder="Nhập tên nhóm của em (VD: Nhóm 1)..."
+              style="width:100%; padding:9px 14px; font-family:inherit; font-size:14.5px; font-weight:800; border:3px solid var(--primary-gold); border-radius:14px; background:#FFFFFF; color:var(--text-ink);"
+            />
+          </div>
+          <div>
+            <label style="font-size:12px; font-weight:900; color:#047857; display:block; margin-bottom:4px;">
+              🔗 MÃ PHÒNG CỦA CÔ GIÁO:
+            </label>
+            <input
+              type="text"
+              id="inputOnboardRoomCode"
+              value="1010"
+              maxlength="8"
+              placeholder="VD: 1010"
+              oninput="onRoomInputChanged(this.value)"
+              style="width:100%; padding:9px 12px; font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:900; text-align:center; border:3px solid #10B981; border-radius:14px; background:#ECFDF5; color:#065F46;"
+            />
+          </div>
         </div>
-        <div>
-          <label style="font-size:12px; font-weight:900; color:#047857; display:block; margin-bottom:4px;">
-            🔗 MÃ PHÒNG CỦA CÔ GIÁO:
-          </label>
-          <input
-            type="text"
-            id="inputOnboardRoomCode"
-            value="1010"
-            maxlength="8"
-            placeholder="VD: 1010"
-            oninput="onRoomInputChanged(this.value)"
-            style="width:100%; padding:9px 12px; font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:900; text-align:center; border:3px solid #10B981; border-radius:14px; background:#ECFDF5; color:#065F46;"
-          />
+
+        <div id="onboardTakenNotice" style="text-align:center; font-size:12px; font-weight:800; color:#047857; margin:4px 0;">
+          ⛰️ Bước 1: Chọn 1 trong 4 Nhân Vật Học Sinh còn trống dưới đây ➔ Bấm "📖 TIẾP TỤC: XEM HƯỚNG DẪN"!
+        </div>
+
+        <div class="direction-grid-4" id="directionChoicesGrid"></div>
+
+        <div class="onboard-submit-bar" style="text-align:center; display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-top:6px;">
+          <button class="btn-3d btn-3d-crimson" id="btnConfirmEnterBoard" style="font-size:15px; padding:11px 28px; border-radius:18px;" onclick="proceedToRulesGuideStep()">
+            📖 TIẾP TỤC: ĐỌC HƯỚNG DẪN LUẬT CHƠI ➔
+          </button>
         </div>
       </div>
 
-      <div id="onboardTakenNotice" style="text-align:center; font-size:12px; font-weight:800; color:#047857; margin:2px 0;">
-        ⛰️ Học sinh chọn 1 trong 4 Đội Leo Núi còn trống dưới đây rồi bấm "✋ CHỐT ĐỘI & BẤM SẴN SÀNG"!
-      </div>
+      <!-- STUDENT STEP 2: READ CONCISE RULES GUIDE THEN CLICK "SẴN SÀNG" -->
+      <div id="onboardStep2GuideView" style="display:none; max-width:740px; margin:4px auto 0; width:100%;">
+        <div style="background:linear-gradient(135deg,#FEF3C7 0%,#FFFBEB 100%); border:2.5px solid #F59E0B; border-radius:16px; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <img id="guidePreviewAvatar" src="assets/student_team1_red.jpg" alt="Avatar" style="width:46px; height:46px; border-radius:50%; border:2.5px solid #DC2626; background:#FFF; object-fit:cover;" />
+            <div>
+              <div style="font-size:11px; font-weight:900; color:#B45309;" id="guidePreviewRoleBadge">ĐỘI 1 • ĐANG ĐỌC HƯỚNG DẪN</div>
+              <div style="font-size:16px; font-weight:900; color:#0F172A;" id="guidePreviewTeamName">Nhóm 1</div>
+            </div>
+          </div>
+          <span style="background:#DBEAFE; color:#1E40AF; border:1.5px solid #3B82F6; padding:4px 10px; border-radius:999px; font-size:11.5px; font-weight:900;">
+            📖 Bước 2/2: Đọc hướng dẫn rồi bấm Sẵn Sàng
+          </span>
+        </div>
 
-      <div class="direction-grid-4" id="directionChoicesGrid"></div>
+        <div style="display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:10px; margin-bottom:12px;" class="guide-rules-3col">
+          <div style="background:#F8FAFC; border:2px solid #CBD5E1; border-radius:14px; padding:11px 12px;">
+            <div style="font-size:13px; font-weight:900; color:#0369A1; margin-bottom:4px;">1️⃣ Lộ Trình 4 Chặng</div>
+            <div style="font-size:12px; font-weight:700; color:#334155; line-height:1.45;">
+              Vượt qua <strong>Chặng 1 (Khởi Động)</strong> ➔ <strong>Chặng 2 (Vượt Chướng Ngại Vật)</strong> ➔ <strong>Chặng 3 (Tăng Tốc)</strong> ➔ <strong>Chặng 4 (Đỉnh Olimpia)</strong>.
+            </div>
+          </div>
+          <div style="background:#F8FAFC; border:2px solid #CBD5E1; border-radius:14px; padding:11px 12px;">
+            <div style="font-size:13px; font-weight:900; color:#047857; margin-bottom:4px;">2️⃣ Cách Kéo - Thả</div>
+            <div style="font-size:12px; font-weight:700; color:#334155; line-height:1.45;">
+              • <strong>Chặng 1, 2, 3</strong>: Kéo 1 trong 3 đáp án ngang (<strong>A, B, C</strong>) thả vào Ô Đáp Án.<br/>
+              • <strong>Chặng 4</strong>: Kéo 3 thẻ <em>Ý nghĩa</em> thả vào 3 ô <em>Dẫn chứng</em>.
+            </div>
+          </div>
+          <div style="background:#F8FAFC; border:2px solid #CBD5E1; border-radius:14px; padding:11px 12px;">
+            <div style="font-size:13px; font-weight:900; color:#B91C1B; margin-bottom:4px;">3️⃣ Tính Điểm & Xuất Quân</div>
+            <div style="font-size:12px; font-weight:700; color:#334155; line-height:1.45;">
+              Trả lời đúng được cộng điểm & tiến lên trạm tiếp theo; sai sẽ lùi 2 bước. <strong>Khi tất cả các đội cùng bấm Sẵn Sàng, Cô Giáo sẽ bấm Bắt Đầu!</strong>
+            </div>
+          </div>
+        </div>
 
-      <div class="onboard-submit-bar" style="text-align:center; display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
-        <button class="btn-3d btn-3d-crimson" id="btnConfirmEnterBoard" style="font-size:15px; padding:11px 28px; border-radius:18px;" onclick="confirmStartRoleplay()">
-          ✋ CHỐT ĐỘI & BẤM SẴN SÀNG!
-        </button>
+        <div style="text-align:center; display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
+          <button class="btn-3d" type="button" style="font-size:13px; padding:10px 16px; border-radius:14px;" onclick="returnToSelectCharacterStep()">
+            ⬅️ Đổi Nhân Vật Khác
+          </button>
+          <button class="btn-3d btn-3d-emerald" type="button" id="btnConfirmReadyAfterGuide" style="font-size:15px; padding:11px 28px; border-radius:16px;" onclick="confirmStartRoleplay()">
+            ✅ ĐÃ HIỂU HƯỚNG DẪN — BẤM SẴN SÀNG!
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- =================================================================== -->
-  <!-- MODAL 1: 3D MOUNTAIN CHECKPOINT DRAG & DROP + STAGE 4 SUMMIT        -->
+  <!-- MODAL 1: CLEAN, MINIMALIST OLIMPIA QUESTION MODAL                   -->
   <!-- =================================================================== -->
   <div class="modal-backdrop" id="battleModal">
     <div class="battle-modal-card">
-      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; gap:8px; flex-wrap:wrap;">
-        <div style="font-size:15px; font-weight:900; color:#991B1B;" id="battleStageHeader">
-          ⛰️ ĐỘI 1 — CHINH PHỤC TRẠM 1/4
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; gap:8px;">
+        <div style="display:flex; align-items:center; gap:8px; min-width:0;">
+          <img id="duelHeroImg" src="assets/student_team1_red.jpg" alt="Avatar" style="width:32px; height:32px; border-radius:50%; border:2px solid #F59E0B; object-fit:cover; background:#FFF; flex-shrink:0;" />
+          <div style="font-size:14.5px; font-weight:900; color:#991B1B; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="battleStageHeader">
+            ⛰️ CHẶNG 1/4: KHỞI ĐỘNG
+          </div>
         </div>
-        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-          <button class="btn-3d" id="btnReplayStageVoice" style="padding:4px 10px; font-size:11.5px; border-color:#0284C7; background:#E0F2FE; color:#0369A1;" onclick="replayCurrentStageNarration()" title="Nghe lại giọng đọc thuyết minh lịch sử của trạm này">
-            🔊 Đọc Lời Thoại
+        <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+          <button class="btn-3d" id="btnReplayStageVoice" style="padding:4px 9px; font-size:11px; border-color:#0284C7; background:#E0F2FE; color:#0369A1;" onclick="replayCurrentStageNarration()">
+            🔊 Nghe
           </button>
-          <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; font-weight:800; background:#FEF3C7; color:#92400E; padding:4px 9px; border-radius:999px; border:2px solid #F59E0B;" id="battleRewardBadge">
-            Kéo thả đúng đáp án để leo lên trạm tiếp theo!
-          </span>
-          <button class="btn-3d" style="padding:4px 10px; font-size:11.5px;" onclick="closeBattleModal()" title="Tạm đóng để quan sát bản đồ 3D">
-            🗺️ Xem Bản Đồ
+          <span style="display:none;" id="battleRewardBadge"></span>
+          <button class="btn-3d" style="padding:4px 9px; font-size:11px;" onclick="closeBattleModal()">
+            ✕ Đóng
           </button>
         </div>
       </div>
 
-      <!-- 3D Climber Duel Banner -->
-      <div class="battle-duel-stage">
-        <div class="duel-fighter" id="duelHeroFighter">
-          <img id="duelHeroImg" src="assets/student_team1_red.jpg" alt="Olympia Student" />
-          <div>
-            <div style="font-size:11px; font-weight:900; color:#0369A1;" id="duelHeroDirText">ĐỘI 1</div>
-            <div style="font-size:15px; font-weight:900; color:var(--text-ink);" id="duelHeroNameText">Nhóm 1</div>
-            <div style="font-size:11.5px; font-weight:700; color:#15803D;" id="duelActionStatus">⛰️ Kéo thả đáp án đúng vào ô Trạm để tiếp tục leo núi!</div>
-          </div>
-        </div>
-
-        <div class="duel-vs-badge">⛰️</div>
-
-        <div class="gate-boss-box" id="duelGateBoss">
-          <div>
-            <div style="font-size:11px; font-weight:900; color:#B91C1B;">TRẠM LEO NÚI LỊCH SỬ</div>
-            <div style="font-size:15px; font-weight:900; color:var(--text-ink);" id="duelGateName">Cửa Biển Bạch Đằng</div>
-            <div style="font-size:11.5px; font-weight:700; color:#B45309;" id="duelGateSubHint">🛡️ Sai sẽ tụt 2 bậc đá & thử sức lại!</div>
-          </div>
-          <div class="gate-icon-3d" id="duelGateIcon">⛺</div>
-        </div>
+      <!-- Hidden Legacy Duel Banner Elements (Kept in DOM only for ID safety, 0 visual clutter) -->
+      <div class="battle-duel-stage" style="display:none !important;">
+        <div id="duelHeroFighter"><span id="duelHeroDirText"></span><span id="duelHeroNameText"></span><span id="duelActionStatus"></span></div>
+        <div id="duelGateBoss"><span id="duelGateName"></span><span id="duelGateSubHint"></span><span id="duelGateIcon"></span></div>
       </div>
 
-      <!-- Standard Question Area (Stages 1, 2, 3 — WITH DRAG AND DROP TARGET BOX & 3 HORIZONTAL OPTIONS!) -->
+      <!-- Standard Question Area (Stages 1, 2, 3 — CLEAN 3-PART LAYOUT) -->
       <div id="standardBattleQuestionArea">
-        <div class="question-prompt" id="battleQuestionPrompt"></div>
-        <div class="source-excerpt" id="battleSourceExcerpt"></div>
+        <div class="question-prompt" id="battleQuestionPrompt" style="margin-bottom:6px; font-size:14.5px;"></div>
+        <div class="source-excerpt" id="battleSourceExcerpt" style="margin-bottom:10px; font-size:14px;"></div>
         <div class="stage123-drop-box" id="stage123DropZone">
-          📥 <span><strong>Ô ĐÁP ÁN TRẠM LEO NÚI:</strong> Kéo 1 trong 3 thẻ đáp án ngang (A, B, C) bên dưới thả vào ô này (hoặc chạm vào thẻ)!</span>
+          📥 <span>Kéo đáp án <strong>A, B hoặc C</strong> thả vào đây (hoặc chạm chọn)</span>
         </div>
         <div class="options-grid" id="battleOptionsGrid"></div>
       </div>
 
-      <!-- Stage 4 Grand Reunion (KÉO THẢ 3 CẶP DẪN CHỨNG & Ý NGHĨA RÚT RA GỌN TRÊN 1 MÀN HÌNH ĐIỆN THOẠI & MÁY TÍNH) -->
+      <!-- Stage 4 Grand Reunion (CLEAN 2-TRAY DRAG & DROP) -->
       <div id="bossMatchingQuestionArea" style="display:none;">
         <div id="bossMatchingInteractiveBox">
-          <div class="question-prompt" style="font-size:13.5px; padding:7px 11px; margin-bottom:8px;">
-            🏆 <strong>FINAL: Đỉnh Olimpia (Kéo - Thả 3 Cặp):</strong> Giữ & kéo thẻ <strong><em>"Ý nghĩa rút ra"</em> (Khay ngang bên trên)</strong> thả xuống đúng ô <strong><em>"Dẫn chứng/biểu hiện"</em> (Bên dưới)</strong> — hoặc chạm thẻ rồi chạm ô!
-          </div>
           <div class="stage4-dnd-container">
             <div class="stage4-top-tray-box">
-              <div style="font-size:11.5px; font-weight:900; color:#065F46; margin-bottom:6px; display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap;">
-                <span>✋ BƯỚC 1 — KHAY 3 THẺ KÉO NGANG: Ý NGHĨA RÚT RA (KÉO XUỐNG HOẶC CHẠM CHỌN)</span>
-                <span style="font-size:10.5px; background:#FEF3C7; color:#92400E; padding:1.5px 7px; border-radius:999px; border:1px solid #F59E0B;">3 thẻ nằm ngang — Không cần cuộn trang</span>
+              <div style="font-size:11.5px; font-weight:900; color:#065F46; margin-bottom:6px;">
+                ✋ 1. KÉO THẺ "Ý NGHĨA RÚT RA" (HOẶC CHẠM CHỌN):
               </div>
               <div id="matchRightCol"></div>
             </div>
             <div class="stage4-bottom-targets-box">
               <div style="font-size:11.5px; font-weight:900; color:#991B1B; margin-bottom:6px;">
-                📜 BƯỚC 2 — 3 HỘP ĐÍCH: DẪN CHỨNG / BIỂU HIỆN (THẢ THẺ Ý NGHĨA VÀO Ô TƯƠNG ỨNG)
+                📜 2. THẢ VÀO Ô "DẪN CHỨNG LỊCH SỬ" TƯƠNG ỨNG:
               </div>
               <div id="matchLeftCol"></div>
             </div>
@@ -3733,6 +3766,7 @@
       currentStage: 1,
       conqueredStages: [],
       masteredRowIds: [],
+      isReady: false,
       questionRoute: generateRandomizedRoute('east')
     };
 
@@ -3753,6 +3787,7 @@
         elapsedSec: 0,
         isPlayer: false,
         online: false,
+        isReady: false,
         claimedBy: null
       };
     }
@@ -4816,13 +4851,13 @@
             noticeEl.innerHTML = `⚠️ Cả 4 Đội của Phòng <strong>#${currentRoomCode}</strong> đã có đủ 4 nhóm chọn! Hãy kiểm tra lại <strong>Mã Phòng của Cô Giáo</strong> ở ô bên trên!`;
           }
           if (confirmBtn) {
-            confirmBtn.textContent = '✋ CHỐT ĐỘI & BẤM SẴN SÀNG!';
+            confirmBtn.textContent = '📖 TIẾP TỤC: ĐỌC HƯỚNG DẪN LUẬT CHƠI ➔';
           }
         } else {
           noticeEl.style.color = '#047857';
-          noticeEl.innerHTML = `🟢 Phòng <strong>#${currentRoomCode}</strong> hiện có <strong>${freeDirs.length}/4 Đội còn trống</strong> — Học sinh chọn 1 Đội rồi nhấn <strong>"✋ CHỐT ĐỘI & BẤM SẴN SÀNG"</strong>!`;
+          noticeEl.innerHTML = `🟢 Phòng <strong>#${currentRoomCode}</strong> hiện có <strong>${freeDirs.length}/4 Đội còn trống</strong> — Chọn 1 Đội rồi bấm <strong>"📖 TIẾP TỤC: ĐỌC HƯỚNG DẪN LUẬT CHƠI ➔"</strong>!`;
           if (confirmBtn) {
-            confirmBtn.textContent = '✋ CHỐT ĐỘI & BẤM SẴN SÀNG!';
+            confirmBtn.textContent = '📖 TIẾP TỤC: ĐỌC HƯỚNG DẪN LUẬT CHƠI ➔';
           }
         }
       }
@@ -4909,15 +4944,19 @@
 
     function openOnboardingModal() {
       if (myRole === 'STUDENT' && hasClaimedCharacter && roomMatchState.status === 'PLAYING') {
-        showToast('⚔️ Trận đấu đang diễn ra! Không thể đổi Tướng khi đã xuất quân!', true);
+        showToast('⚔️ Trận đấu đang diễn ra! Không thể đổi Đội khi đã xuất quân!', true);
         return;
       }
+      const step1 = document.getElementById('onboardStep1SelectView');
+      const step2 = document.getElementById('onboardStep2GuideView');
+      if (step1) step1.style.display = 'block';
+      if (step2) step2.style.display = 'none';
       syncTeacherAuthUI();
       renderOnboardingDirectionCards();
       document.getElementById('onboardingModal').classList.add('open');
     }
 
-    function confirmStartRoleplay() {
+    function proceedToRulesGuideStep() {
       clearWalkTimers();
       isMarchingAnimation = false;
       const rawName = document.getElementById('inputOnboardTeamName').value.trim();
@@ -4927,12 +4966,11 @@
         connectToOnlineRoom(rawRoom);
       }
 
-      // Re-check if another player locked this character
       if (isDirectionTakenByOther(selectedDirectionKey)) {
         const freeDir = Object.keys(FOUR_DIRECTIONS).find(k => !isDirectionTakenByOther(k));
         if (!freeDir) {
           playSound('wrong');
-          showToast(`⚠️ Phòng #${currentRoomCode} đã đủ 4 nhóm chọn Tướng! Hãy kiểm tra Mã Phòng hoặc nhờ Cô Giáo mở khóa ván mới!`, true);
+          showToast(`⚠️ Phòng #${currentRoomCode} đã đủ 4 nhóm chọn Đội! Hãy kiểm tra Mã Phòng hoặc nhờ Cô Giáo mở khóa ván mới!`, true);
           renderOnboardingDirectionCards();
           return;
         }
@@ -4941,7 +4979,6 @@
         showToast(`⚡ ${oldName} vừa có nhóm vào trước chọn! Hệ thống chuyển bạn sang ${FOUR_DIRECTIONS[freeDir].name}!`);
       }
 
-      // If switching away from a previously claimed direction by me, free the old slot
       Object.keys(allFourLanesState).forEach((k) => {
         if (k !== selectedDirectionKey && allFourLanesState[k].claimedBy === myClientId) {
           allFourLanesState[k] = createInitialLaneState(k);
@@ -4951,9 +4988,7 @@
       const dirInfo = FOUR_DIRECTIONS[selectedDirectionKey];
       myRole = 'STUDENT';
       hasClaimedCharacter = true;
-      studentReadyAt = Date.now();
-      // STRICT RULE: When a Student joins (via QR or Room Code) and clicks "SẴN SÀNG",
-      // NEVER auto-start the match! Always enter WAITING (Ready) state until the Teacher clicks "BẮT ĐẦU"!
+      studentReadyAt = 0; // Not ready yet — reading rules guide!
       roomMatchState.status = 'WAITING';
       roomMatchState.startedAt = 0;
 
@@ -4969,22 +5004,85 @@
       myGroup.elapsedSec = 0;
       myGroup.tokenWaypointIdx = 0;
       myGroup.tokenStepIdx = 0;
-      myGroup.stepBubbleText = '';
+      myGroup.stepBubbleText = '📖 Đang đọc hướng dẫn...';
       myGroup.currentStage = 1;
       myGroup.conqueredStages = [];
       myGroup.masteredRowIds = [];
+      myGroup.isReady = false;
       myGroup.questionRoute = generateRandomizedRoute(selectedDirectionKey);
 
       allFourLanesState[selectedDirectionKey] = {
         ...createInitialLaneState(selectedDirectionKey),
         teamName: myGroup.teamName,
         gold: myGroup.gold,
+        stepBubbleText: myGroup.stepBubbleText,
         isPlayer: true,
         online: true,
+        isReady: false,
         claimedBy: myClientId
       };
 
-      // Re-initialize WebRTC Peer with the exact claimed direction (east/west/south/north)
+      initWebRtcPeerMesh(currentRoomCode);
+
+      const avEl = document.getElementById('guidePreviewAvatar');
+      if (avEl) {
+        avEl.src = dirInfo.img;
+        avEl.style.borderColor = dirInfo.color;
+      }
+      const badgeEl = document.getElementById('guidePreviewRoleBadge');
+      if (badgeEl) {
+        badgeEl.textContent = `${dirInfo.name} • ĐANG ĐỌC HƯỚNG DẪN`;
+        badgeEl.style.color = dirInfo.color;
+      }
+      const nameEl = document.getElementById('guidePreviewTeamName');
+      if (nameEl) nameEl.textContent = myGroup.teamName;
+
+      const step1 = document.getElementById('onboardStep1SelectView');
+      const step2 = document.getElementById('onboardStep2GuideView');
+      if (step1) step1.style.display = 'none';
+      if (step2) step2.style.display = 'block';
+
+      playSound('step');
+      showToast(`📖 Đã chọn ${dirInfo.name} (${myGroup.teamName})! Hãy đọc nhanh hướng dẫn rồi bấm SẴN SÀNG nhé!`);
+      broadcastMyLane();
+    }
+
+    function returnToSelectCharacterStep() {
+      const step1 = document.getElementById('onboardStep1SelectView');
+      const step2 = document.getElementById('onboardStep2GuideView');
+      if (step1) step1.style.display = 'block';
+      if (step2) step2.style.display = 'none';
+      renderOnboardingDirectionCards();
+      playSound('step');
+    }
+
+    function confirmStartRoleplay() {
+      if (!hasClaimedCharacter) {
+        proceedToRulesGuideStep();
+      }
+      clearWalkTimers();
+      isMarchingAnimation = false;
+      const dirInfo = FOUR_DIRECTIONS[myGroup.direction] || FOUR_DIRECTIONS[selectedDirectionKey];
+      myRole = 'STUDENT';
+      hasClaimedCharacter = true;
+      studentReadyAt = Date.now();
+      roomMatchState.status = 'WAITING';
+      roomMatchState.startedAt = 0;
+
+      myGroup.isReady = true;
+      myGroup.stepBubbleText = '✅ Đã Sẵn Sàng!';
+
+      allFourLanesState[myGroup.direction] = {
+        ...createInitialLaneState(myGroup.direction),
+        teamName: myGroup.teamName,
+        gold: myGroup.gold,
+        stepBubbleText: myGroup.stepBubbleText,
+        isPlayer: true,
+        online: true,
+        isReady: true,
+        claimedBy: myClientId
+      };
+
       initWebRtcPeerMesh(currentRoomCode);
 
       document.body.classList.add('student-fullscreen-map');
@@ -4995,7 +5093,7 @@
       launchFireworks(55);
 
       playVoiceClip('cmd_member_waiting');
-      showToast(`✅ Đã bấm SẴN SÀNG tại ${dirInfo.name}! Đang chờ Cô Giáo bấm "BẮT ĐẦU TRẬN ĐẤU"!`);
+      showToast(`✅ Đã bấm SẴN SÀNG tại ${dirInfo.name}! Đang chờ tất cả các đội Sẵn Sàng để Cô Giáo bấm "BẮT ĐẦU TRẬN ĐẤU"!`);
 
       updateAllUI();
     }
@@ -5201,26 +5299,46 @@
       }
 
       const startBtn = document.getElementById('btnTeacherStartMatchSidebar');
-      const onlineCount = Object.values(allFourLanesState).filter(l => l.online).length;
+      const onlineList = Object.values(allFourLanesState).filter(l => l.online);
+      const onlineCount = onlineList.length;
+      const readyCount = onlineList.filter(l => l.isReady !== false).length;
+      const canTeacherStart = onlineCount > 0 && readyCount === onlineCount;
+
       const countEl = document.getElementById('teacherJoinedCountText');
-      if (countEl) countEl.textContent = `🟢 ${onlineCount}/4 đội đã vào`;
+      if (countEl) countEl.textContent = `🟢 ${readyCount}/${onlineCount} đội Sẵn Sàng (${onlineCount}/4 vào)`;
 
       const masteryBadge = document.getElementById('masteryBadge');
       if (masteryBadge && myRole === 'TEACHER') {
-        masteryBadge.textContent = `Đội đã vào: ${onlineCount}/4`;
+        masteryBadge.textContent = `Sẵn sàng: ${readyCount}/${onlineCount} (${onlineCount}/4 đội)`;
       }
       const floatBtn = document.getElementById('btnMapFloatingGo');
       if (floatBtn && myRole === 'TEACHER' && roomMatchState.status === 'WAITING') {
-        floatBtn.textContent = `🥁 CÔ GIÁO: BẮT ĐẦU LEO NÚI (${onlineCount}/4 ĐỘI)!`;
+        floatBtn.textContent = canTeacherStart
+          ? `🥁 CÔ GIÁO: BẮT ĐẦU LEO NÚI (${readyCount}/${onlineCount} SẴN SÀNG)!`
+          : `🔒 CHỜ CÁC ĐỘI SẴN SÀNG (${readyCount}/${onlineCount})...`;
+        floatBtn.disabled = !canTeacherStart;
       }
 
       if (startBtn) {
         if (roomMatchState.status === 'WAITING') {
-          startBtn.textContent = `🥁 CÔ GIÁO: BẮT ĐẦU (${onlineCount}/4 ĐỘI)`;
-          startBtn.disabled = false;
+          if (!canTeacherStart) {
+            startBtn.textContent = onlineCount === 0
+              ? `🔒 CHỜ HỌC SINH VÀO & SẴN SÀNG (0/4)`
+              : `🔒 CHỜ ĐỌC HƯỚNG DẪN (${readyCount}/${onlineCount} SẴN SÀNG)`;
+            startBtn.disabled = true;
+            startBtn.style.opacity = '0.55';
+            startBtn.style.cursor = 'not-allowed';
+          } else {
+            startBtn.textContent = `🥁 CÔ GIÁO: BẮT ĐẦU (${readyCount}/${onlineCount} SẴN SÀNG)`;
+            startBtn.disabled = false;
+            startBtn.style.opacity = '1';
+            startBtn.style.cursor = 'pointer';
+          }
         } else {
-          startBtn.textContent = `🥁 PHÁT LỆNH BẮT ĐẦU (${onlineCount}/4 ĐỘI)`;
+          startBtn.textContent = `🥁 ĐANG THI ĐẤU (${onlineCount}/4 ĐỘI)`;
           startBtn.disabled = false;
+          startBtn.style.opacity = '1';
+          startBtn.style.cursor = 'pointer';
         }
       }
 
@@ -5518,7 +5636,7 @@
       document.getElementById('duelHeroFighter').classList.remove('hero-charge');
 
       const duelBanner = document.querySelector('#battleModal .battle-duel-stage');
-      if (duelBanner) duelBanner.style.display = 'flex';
+      if (duelBanner) duelBanner.style.display = 'none';
       document.getElementById('standardBattleQuestionArea').style.display = 'block';
       document.getElementById('bossMatchingQuestionArea').style.display = 'none';
 
@@ -5532,7 +5650,7 @@
       const dropBox = document.getElementById('stage123DropZone');
       if (dropBox) {
         dropBox.className = 'stage123-drop-box';
-        dropBox.innerHTML = `📥 <span><strong>Ô THẢ ĐÁP ÁN:</strong> Kéo 1 trong 3 thẻ đáp án ngang (A, B, C) bên dưới thả vào đây (hoặc chạm vào thẻ)!</span>`;
+        dropBox.innerHTML = `📥 <span>Kéo đáp án <strong>A, B hoặc C</strong> thả vào đây (hoặc chạm chọn)</span>`;
         wireHtml5DropZone(dropBox, (draggedBtn) => {
           if (draggedBtn && !draggedBtn.disabled) {
             submitBattleAnswer(draggedBtn, draggedBtn.dataset.correct === '1');
@@ -5551,7 +5669,6 @@
         btn.innerHTML = `
           <div class="option-btn-top-row">
             <span class="option-letter">${letters[idx]}</span>
-            <span class="drag-handle-pill">✋ KÉO THẢ</span>
           </div>
           <div style="flex:1; width:100%;">${opt.text}</div>
         `;
@@ -5596,8 +5713,8 @@
         return {
           stageNum,
           targetRow,
-          prompt: `[${wp.placeName}] Từ "Dẫn chứng / biểu hiện" lịch sử dưới đây, hãy KÉO THẢ 1 trong 3 thẻ "Ý nghĩa rút ra" (A, B, C) vào Ô Thả Đáp Án:`,
-          excerpt: `📜 Dẫn chứng / biểu hiện: "${targetRow.evidence}"`,
+          prompt: `❓ Chọn "Ý nghĩa rút ra" đúng với dẫn chứng lịch sử dưới đây:`,
+          excerpt: `📜 "${targetRow.evidence}"`,
           options: shuffleArray([
             { text: targetRow.role, isCorrect: true },
             { text: otherRows[0].role, isCorrect: false },
@@ -5610,8 +5727,8 @@
         return {
           stageNum,
           targetRow,
-          prompt: `[${wp.placeName}] Để làm rõ cho "Ý nghĩa rút ra" dưới đây, hãy KÉO THẢ 1 trong 3 thẻ "Dẫn chứng / biểu hiện" (A, B, C) vào Ô Thả Đáp Án:`,
-          excerpt: `👑 Ý nghĩa rút ra: "${targetRow.role}"`,
+          prompt: `❓ Chọn "Dẫn chứng lịch sử" đúng với ý nghĩa dưới đây:`,
+          excerpt: `👑 "${targetRow.role}"`,
           options: shuffleArray([
             { text: targetRow.evidence, isCorrect: true },
             { text: otherRows[0].evidence, isCorrect: false },
@@ -5628,8 +5745,8 @@
       return {
         stageNum,
         targetRow,
-        prompt: `[${wp.placeName}] KÉO THẢ 1 trong 3 cặp từ khóa (A, B, C) vào vị trí (1) và (2) để vượt qua chặng thi:`,
-        excerpt: `📜 Dẫn chứng/biểu hiện: ${maskedEv}<br/>👑 Ý nghĩa rút ra: ${maskedRl}`,
+        prompt: `❓ Chọn cặp từ khóa đúng điền vào vị trí (1) và (2):`,
+        excerpt: `📜 ${maskedEv}<br/>👑 ${maskedRl}`,
         options: shuffleArray([
           { text: `(1) "${kw1}"  ↔  (2) "${kw2}"`, isCorrect: true },
           { text: `(1) "${otherRows[0].keywords[0]}"  ↔  (2) "${otherRows[0].keywords[1]}"`, isCorrect: false },
@@ -5870,12 +5987,12 @@
         dropSlot.className = `stage4-drop-slot ${isPaired ? 'paired' : selectedLeftId === row.id ? 'drag-over' : ''}`;
         dropSlot.dataset.targetId = row.id;
         dropSlot.innerHTML = isPaired
-          ? `✅ <span><strong>Ý nghĩa rút ra:</strong> ${row.role}</span>`
+          ? `✅ <span>${row.role}</span>`
           : selectedLeftId === row.id
-            ? `👉 <span>Đang chọn ô này — Hãy chạm hoặc kéo 1 thẻ <strong>"Ý nghĩa rút ra"</strong> ở khay trên thả vào đây!</span>`
+            ? `👉 <span>Chạm 1 thẻ Ý nghĩa ở trên</span>`
             : selectedRightId
-              ? `📥 <span>Chạm vào đây để thả thẻ <strong>"Ý nghĩa rút ra"</strong> đang chọn!</span>`
-              : `📥 <span>Kéo thẻ <strong>"Ý nghĩa rút ra"</strong> ở trên thả vào đây (hoặc chạm chọn)</span>`;
+              ? `📥 <span>Chạm để ghép vào đây</span>`
+              : `📥 <span>Thả Ý nghĩa vào đây</span>`;
 
         if (!isPaired) {
           card.onclick = () => {
@@ -5902,7 +6019,7 @@
 
         const evTitle = document.createElement('div');
         evTitle.className = 'stage4-evidence-text';
-        evTitle.innerHTML = `${row.eraIcon} <strong>Dẫn chứng:</strong> ${row.evidence}`;
+        evTitle.innerHTML = `${row.eraIcon} ${row.evidence}`;
 
         card.appendChild(evTitle);
         card.appendChild(dropSlot);
@@ -5919,8 +6036,7 @@
         chip.dataset.id = row.id;
         chip.dataset.dragValue = row.id;
         chip.innerHTML = `
-          <span class="drag-grip-icon" style="font-size:11px; font-weight:900; color:#92400E;">${isPaired ? '✅ Đã ghép' : isChipSelected ? '👉 Đang chọn' : '✋ Kéo/Chạm'}</span>
-          <span style="flex:1;">👑 ${row.role}</span>
+          <span style="flex:1;">${isPaired ? '✅' : isChipSelected ? '👉' : '👑'} ${row.role}</span>
         `;
         if (!isPaired) {
           chip.onclick = () => {
@@ -6629,6 +6745,7 @@
         elapsedSec: payload.elapsedSec || prevLane.elapsedSec || 0,
         isPlayer: false,
         online: true,
+        isReady: payload.isReady !== false,
         claimedBy: payload.claimedBy || ('remote_' + payload.direction)
       };
 
@@ -6697,6 +6814,19 @@
         showToast('🔒 Chỉ Cô Giáo (Chủ Phòng) mới được bấm BẮT ĐẦU TRẬN ĐẤU!', true);
         return;
       }
+      const onlineList = Object.values(allFourLanesState).filter(l => l.online);
+      const readyList = onlineList.filter(l => l.isReady !== false);
+      if (onlineList.length === 0) {
+        playSound('wrong');
+        showToast('⏳ Chưa có đội nào vào phòng! Hãy chờ học sinh chọn nhân vật, đọc hướng dẫn và bấm SẴN SÀNG!', true);
+        return;
+      }
+      if (readyList.length < onlineList.length) {
+        playSound('wrong');
+        const readingNames = onlineList.filter(l => l.isReady === false).map(l => l.teamName).join(', ');
+        showToast(`⏳ Chưa thể bắt đầu! Đang chờ (${readingNames}) đọc xong hướng dẫn và bấm SẴN SÀNG (${readyList.length}/${onlineList.length})!`, true);
+        return;
+      }
       roomMatchState.status = 'PLAYING';
       roomMatchState.startedAt = Date.now();
       roomMatchState.hostClientId = myClientId;
@@ -6741,6 +6871,7 @@
         finishedAt: myGroup.finishedAt,
         elapsedSec: myGroup.elapsedSec,
         online: hasClaimedCharacter,
+        isReady: Boolean(myGroup.isReady),
         claimedBy: hasClaimedCharacter ? myClientId : null,
         roomMatchState: { ...roomMatchState },
         ts: Date.now()
@@ -6772,7 +6903,7 @@
       if (!payload || window.location.protocol === 'file:') return;
       if (payload.type === 'PLAYER_SYNC' && !force) {
         if (isMarchingAnimation) return;
-        const syncKey = `${payload.roomCode}:${payload.direction}:${payload.teamName}:${payload.stageProgress}:${payload.wrongAttempts}:${payload.totalAttempts}:${payload.finishedAt}`;
+        const syncKey = `${payload.roomCode}:${payload.direction}:${payload.teamName}:${payload.isReady}:${payload.stageProgress}:${payload.wrongAttempts}:${payload.totalAttempts}:${payload.finishedAt}`;
         if (syncKey === lastCloudPushedSyncKey) return;
         lastCloudPushedSyncKey = syncKey;
       }
@@ -7210,6 +7341,7 @@
         elapsedSec: payload.elapsedSec,
         isPlayer: true,
         online: true,
+        isReady: Boolean(myGroup.isReady),
         claimedBy: myClientId
       };
 
@@ -7252,19 +7384,31 @@
         const sub = document.getElementById('lobbySubStatusText');
         const actionArea = document.getElementById('lobbyActionArea');
 
-        const joinedNames = onlineList.map(l => `${FOUR_DIRECTIONS[l.direction].name}: ${l.teamName}`).join(' • ');
-        title.textContent = `SẢNH CHỜ PHÒNG #${currentRoomCode} (${onlineCount}/4 ĐỘI ĐÃ VÀO)`;
+        const readyList = onlineList.filter(l => l.isReady !== false);
+        const readyCount = readyList.length;
+        const canTeacherStart = onlineCount > 0 && readyCount === onlineCount;
+
+        const joinedNames = onlineList.map(l => {
+          const stIcon = l.isReady !== false ? '✅ Sẵn sàng' : '📖 Đang đọc HD';
+          return `${FOUR_DIRECTIONS[l.direction].name}: ${l.teamName} (${stIcon})`;
+        }).join(' • ');
+        title.textContent = `SẢNH CHỜ PHÒNG #${currentRoomCode} (${readyCount}/${onlineCount} ĐỘI SẴN SÀNG • ${onlineCount}/4 ĐỘI VÀO)`;
         sub.textContent = joinedNames
-          ? `Đã vào bàn: ${joinedNames}`
-          : 'Đang chờ 4 nhóm học sinh nhập Mã Phòng và chọn Đội...';
+          ? `Trạng thái: ${joinedNames}`
+          : 'Đang chờ các nhóm học sinh chọn nhân vật, đọc hướng dẫn và bấm Sẵn Sàng...';
 
         if (isMeHost) {
           badge.textContent = '👩‍🏫 CÔ GIÁO (CHỦ PHÒNG)';
           badge.style.background = '#F59E0B';
           badge.style.color = '#0F172A';
+          const btnText = !canTeacherStart
+            ? (onlineCount === 0
+                ? `🔒 CHỜ HỌC SINH CHỌN ĐỘI & SẴN SÀNG (0/4)`
+                : `🔒 CHỜ ĐỌC HƯỚNG DẪN & BẤM SẴN SÀNG (${readyCount}/${onlineCount})`)
+            : `🥁 CÔ GIÁO: BẮT ĐẦU TRẬN ĐẤU (${readyCount}/${onlineCount} SẴN SÀNG)!`;
           actionArea.innerHTML = `
-            <button class="host-start-match-btn" id="btnHostStartMatch" onclick="hostTriggerStartMatch()">
-              🥁 CÔ GIÁO: BẮT ĐẦU TRẬN ĐẤU (${onlineCount}/4)
+            <button class="host-start-match-btn" id="btnHostStartMatch" ${!canTeacherStart ? 'disabled style="opacity:0.55; cursor:not-allowed; filter:grayscale(0.35);"' : ''} onclick="hostTriggerStartMatch()">
+              ${btnText}
             </button>
           `;
         } else {
