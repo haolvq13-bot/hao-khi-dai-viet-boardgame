@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OLIMPIA — ĐƯỜNG LÊN ĐỈNH OLIMPIA (4 Đội Học Sinh Leo Núi)</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏆</text></svg>" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,500;0,600;0,700;0,800;0,900;1,700&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
@@ -5480,6 +5481,13 @@
           const dz = document.querySelector('#stage123DropZone');
           if (dz && !dz.classList.contains('paired')) return dz;
         }
+        if (dropSelector === '.stage4-drop-slot') {
+          const parentCard = targetEl.closest('.stage4-evidence-card');
+          if (parentCard) {
+            const slotInCard = parentCard.querySelector('.stage4-drop-slot');
+            if (slotInCard && !slotInCard.classList.contains('paired')) return slotInCard;
+          }
+        }
       }
       // Bounding-box proximity tolerance (38px) so dropping near the drop box always registers smoothly
       const candidates = Array.from(document.querySelectorAll(dropSelector)).filter(
@@ -5949,7 +5957,7 @@
 
       if (showCompletedLeaderboard) {
         pairedRowIds = CORE_HISTORY_ROWS.map(r => r.id);
-      } else {
+      } else if (opts.forceResetPairs || pairedRowIds.length >= CORE_HISTORY_ROWS.length) {
         pairedRowIds = [];
       }
       if (!opts.viewOnly && myGroup.currentStage >= 4) {
@@ -6030,10 +6038,12 @@
         const card = document.createElement('div');
         card.className = `match-item stage4-evidence-card ${isPaired ? 'paired' : selectedLeftId === row.id ? 'selected' : ''}`;
         card.dataset.id = row.id;
+        card.dataset.rowId = row.id;
 
         const dropSlot = document.createElement('div');
         dropSlot.className = `stage4-drop-slot ${isPaired ? 'paired' : selectedLeftId === row.id ? 'drag-over' : ''}`;
         dropSlot.dataset.targetId = row.id;
+        dropSlot.dataset.rowId = row.id;
         dropSlot.innerHTML = isPaired
           ? `✅ <span>${row.role}</span>`
           : selectedLeftId === row.id
@@ -6082,6 +6092,7 @@
         const chip = document.createElement('div');
         chip.className = `match-item stage4-drag-chip ${isPaired ? 'paired' : isChipSelected ? 'selected-chip' : ''}`;
         chip.dataset.id = row.id;
+        chip.dataset.rowId = row.id;
         chip.dataset.dragValue = row.id;
         chip.innerHTML = `
           <span style="flex:1;">${isPaired ? '✅' : isChipSelected ? '👉' : '👑'} ${row.role}</span>
@@ -6919,7 +6930,7 @@
     }
 
     // Cross-Browser / Local Server Room Hub Sync (/api/room) + Cloud PubSub Relay (wss://ntfy.sh)
-    let isRoomHubAvailable = true;
+    let isRoomHubAvailable = Boolean(window.ROOM_HUB_ENABLED);
     let cloudRelayWs = null;
     let lastCloudPushedSyncKey = '';
     let cloudTopicName = '';
@@ -6930,10 +6941,10 @@
     }
 
     async function pushActionToCloudRelay(payload, force = false) {
-      if (!payload || window.location.protocol === 'file:') return;
+      if (!window.ENABLE_NTFY_HTTP_FALLBACK || !payload || window.location.protocol === 'file:') return;
       if (payload.type === 'PLAYER_SYNC' && !force) {
         if (isMarchingAnimation) return;
-        const syncKey = `${payload.roomCode}:${payload.direction}:${payload.teamName}:${payload.isReady}:${payload.stageProgress}:${payload.wrongAttempts}:${payload.totalAttempts}:${payload.finishedAt}`;
+        const syncKey = `${payload.roomCode}:${payload.direction}:${payload.teamName}:${payload.isReady}:${payload.stageProgress}`;
         if (syncKey === lastCloudPushedSyncKey) return;
         lastCloudPushedSyncKey = syncKey;
       }
@@ -6947,7 +6958,7 @@
     }
 
     async function pollCloudRelayHistory(code) {
-      if (window.location.protocol === 'file:') return;
+      if (!window.ENABLE_NTFY_HTTP_FALLBACK || window.location.protocol === 'file:') return;
       const topic = getCloudTopicForRoom(code || currentRoomCode);
       try {
         const res = await fetch(`https://ntfy.sh/${topic}/json?poll=1&since=90s`, { cache: 'no-store' });
@@ -6962,7 +6973,6 @@
             if (wrapper && wrapper.event === 'message' && wrapper.message) {
               const data = JSON.parse(wrapper.message);
               if (data && data.roomCode === currentRoomCode) {
-                // Historical poll only restores claimed characters & room resets, NEVER auto-starts!
                 applyIncomingPlayerSync(data, { fromHistoryPoll: true });
               }
             }
@@ -6972,7 +6982,7 @@
     }
 
     function initCloudPubSubRelay(code) {
-      if (window.location.protocol === 'file:') return;
+      if (!window.ENABLE_NTFY_HTTP_FALLBACK || window.location.protocol === 'file:') return;
       const topic = getCloudTopicForRoom(code);
       if (cloudRelayWs && cloudTopicName === topic && cloudRelayWs.readyState <= 1) return;
       cloudTopicName = topic;
@@ -7211,18 +7221,24 @@
 
     function connectToOtherDirectionalPeers(cleanCode) {
       if (!myPeer || myPeer.destroyed || !myPeer.open) return;
-      // Teacher is the Star Hub listener (`hkdv-v4-${cleanCode}-teacher`) and waits for the 4 Students to connect.
-      // Students only dial `teacher`, avoiding WebRTC Glare collisions and 0.peerjs.com burst rate-limits!
       if (myRole === 'TEACHER' || !hasClaimedCharacter) return;
       const now = Date.now();
-      const targetPeerId = `hkdv-v4-${cleanCode}-teacher`;
-      if (activePeerConns[targetPeerId] && activePeerConns[targetPeerId].open) return;
-      if (pendingPeerConnTs[targetPeerId] && now - pendingPeerConnTs[targetPeerId] < 2400) return;
-      try {
-        pendingPeerConnTs[targetPeerId] = now;
-        const conn = myPeer.connect(targetPeerId, { reliable: true });
-        setupPeerConnHandlers(conn);
-      } catch (e) {}
+      // Connect to Teacher Star Hub + other active directional peers so all 4 teams & Teacher stay 100% synced!
+      const targets = [`hkdv-v4-${cleanCode}-teacher`];
+      Object.keys(FOUR_DIRECTIONS).forEach((dirKey) => {
+        if (dirKey !== myGroup.direction) {
+          targets.push(`hkdv-v4-${cleanCode}-${dirKey}`);
+        }
+      });
+      targets.forEach((targetPeerId) => {
+        if (activePeerConns[targetPeerId] && activePeerConns[targetPeerId].open) return;
+        if (pendingPeerConnTs[targetPeerId] && now - pendingPeerConnTs[targetPeerId] < 3200) return;
+        try {
+          pendingPeerConnTs[targetPeerId] = now;
+          const conn = myPeer.connect(targetPeerId, { reliable: true });
+          setupPeerConnHandlers(conn);
+        } catch (e) {}
+      });
     }
 
     function setupPeerConnHandlers(conn) {
