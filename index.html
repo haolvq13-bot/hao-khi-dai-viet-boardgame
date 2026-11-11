@@ -441,46 +441,34 @@
       z-index: 8;
     }
 
-    /* Intermediate 3D Stepping Stones Along the Winding S-Curve Roads */
+    /* Intermediate 3D Stepping Stones Along the Winding S-Curve Roads (Hidden unless actively stepping for crisp Olympia Map) */
     .road-step-dot {
       position: absolute;
-      transform: translate(-50%, -50%);
-      width: 24px;
-      height: 24px;
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 0;
+      pointer-events: none;
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
-      background: linear-gradient(180deg, #FFFFFF 0%, #E2E8F0 100%);
-      border: 2.5px solid #64748B;
-      box-shadow: 0 3px 0 #334155, 0 4px 8px rgba(0, 0, 0, 0.38);
+      background: linear-gradient(180deg, #FEF08A 0%, #F59E0B 100%);
+      border: 2.5px solid #DC2626;
+      box-shadow: 0 3px 0 #991B1B, 0 4px 8px rgba(0, 0, 0, 0.38);
       z-index: 12;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 9.5px;
+      font-size: 9px;
       font-weight: 900;
-      color: #334155;
+      color: #991B1B;
       transition: all 0.25s ease;
-      cursor: pointer;
-    }
-
-    .road-step-dot.my-lane-dot {
-      border-color: #D97706;
-      background: linear-gradient(180deg, #FEF9C3 0%, #FDE047 100%);
-      color: #92400E;
-    }
-
-    .road-step-dot.passed-dot {
-      border-color: #047857;
-      background: linear-gradient(180deg, #6EE7B7 0%, #10B981 100%);
-      color: #FFFFFF;
-      box-shadow: 0 3px 0 #065F46, 0 0 12px rgba(16, 185, 129, 0.8);
-      transform: translate(-50%, -50%) scale(1.08);
     }
 
     .road-step-dot.active-stepping {
+      opacity: 1;
       border-color: #DC2626;
       background: linear-gradient(180deg, #FEF08A 0%, #F59E0B 100%);
-      box-shadow: 0 0 0 5px rgba(254, 240, 138, 0.75), 0 4px 12px rgba(220, 38, 38, 0.8);
-      transform: translate(-50%, -58%) scale(1.32);
+      box-shadow: 0 0 0 5px rgba(254, 240, 138, 0.8), 0 4px 12px rgba(220, 38, 38, 0.85);
+      transform: translate(-50%, -58%) scale(1.25);
       z-index: 25;
     }
 
@@ -488,9 +476,9 @@
     .stage-node {
       position: absolute;
       transform: translate(-50%, -50%);
-      width: 52px;
-      height: 52px;
-      border-radius: 15px;
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
       background: linear-gradient(180deg, #FFFFFF 0%, #F1F5F9 100%);
       border: 3px solid #64748B;
       box-shadow: 0 4px 0 #334155, 0 6px 14px rgba(0, 0, 0, 0.45);
@@ -685,14 +673,14 @@
     .center-citadel-node {
       position: absolute;
       left: 79.8%;
-      top: 24.5%;
+      top: 32.0%;
       transform: translate(-50%, -50%);
-      width: 82px;
-      height: 82px;
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
-      background: radial-gradient(circle, #FEF08A 0%, #F59E0B 100%);
-      border: 4px solid #FDE047;
-      box-shadow: 0 0 28px rgba(253, 224, 71, 0.9), 0 7px 0 #B45309, 0 12px 28px rgba(0, 0, 0, 0.55);
+      background: radial-gradient(circle, rgba(254, 240, 138, 0.96) 0%, rgba(245, 158, 11, 0.96) 100%);
+      border: 3px solid #FDE047;
+      box-shadow: 0 0 20px rgba(253, 224, 71, 0.9), 0 4px 0 #B45309, 0 8px 18px rgba(0, 0, 0, 0.5);
       cursor: pointer;
       z-index: 22;
       display: flex;
@@ -707,31 +695,31 @@
     }
 
     .center-citadel-node img {
-      width: 88px;
-      height: 88px;
+      width: 42px;
+      height: 42px;
       object-fit: cover;
       border-radius: 50%;
     }
 
     .citadel-ribbon {
       position: absolute;
-      bottom: -14px;
+      bottom: -16px;
       background: linear-gradient(90deg, #991B1B 0%, #DC2626 50%, #991B1B 100%);
       color: #FEF08A;
       border: 2px solid #FDE047;
-      padding: 2px 10px;
+      padding: 1.5px 8px;
       border-radius: 999px;
-      font-size: 10.5px;
+      font-size: 9px;
       font-weight: 900;
       white-space: nowrap;
       box-shadow: 0 3px 8px rgba(0,0,0,0.45);
     }
 
-    /* 3D Chibi Avatar Token Moving Smoothly Along the Road */
+    /* 3D Student Avatar Token Moving Smoothly Along the Olympia Road */
     .chibi-map-token {
       position: absolute;
-      transform: translate(-50%, -78%);
-      width: 76px;
+      transform: translate(-50%, -82%);
+      width: 62px;
       z-index: 30;
       pointer-events: none;
       transition: left 0.42s linear, top 0.42s linear;
@@ -742,38 +730,38 @@
 
     .chibi-map-token.is-my-group {
       z-index: 40;
-      width: 86px;
+      width: 70px;
     }
 
     .token-nameplate {
-      background: rgba(15, 23, 42, 0.92);
+      background: rgba(15, 23, 42, 0.94);
       color: #FFFFFF;
       border: 2px solid #FDE047;
       border-radius: 999px;
-      padding: 2px 8px;
-      font-size: 10px;
-      font-weight: 800;
+      padding: 1.5px 7px;
+      font-size: 9.5px;
+      font-weight: 900;
       white-space: nowrap;
-      margin-bottom: 3px;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.45);
+      margin-bottom: 2px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.5);
     }
 
     .token-avatar-circle {
-      width: 62px;
-      height: 62px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       background: #FFFFFF;
-      border: 4px solid #F59E0B;
-      box-shadow: 0 6px 0 rgba(15, 23, 42, 0.4), 0 10px 20px rgba(0,0,0,0.45);
+      border: 3.5px solid #F59E0B;
+      box-shadow: 0 5px 0 rgba(15, 23, 42, 0.42), 0 8px 18px rgba(0,0,0,0.48);
       overflow: hidden;
       animation: chibiWalkBob 1.2s ease-in-out infinite;
     }
 
     .chibi-map-token.is-my-group .token-avatar-circle {
-      width: 70px;
-      height: 70px;
+      width: 56px;
+      height: 56px;
       border-color: #DC2626;
-      box-shadow: 0 0 0 4px #FDE047, 0 10px 24px rgba(220, 38, 38, 0.65);
+      box-shadow: 0 0 0 3.5px #FDE047, 0 8px 20px rgba(220, 38, 38, 0.65);
     }
 
     /* Active Walking Hop Animation when Moving Between Stages */
@@ -2834,22 +2822,22 @@
   <!-- TOP COMMAND BAR -->
   <header class="topbar">
     <div class="brand-block">
-      <div class="brand-crest">⛰️</div>
+      <div class="brand-crest">🏆</div>
       <div class="brand-title">
-        <h1>HÀNH TRÌNH VỀ NGUỒN — 4 ĐỘI LEO NÚI LỊCH SỬ</h1>
-        <p>Chinh Phục Đỉnh Thiêng 3D • 4 Đội Thi Đấu QR Online • Kéo Thả & Chốt Kiến Thức</p>
+        <h1>HÀNH TRÌNH VỀ NGUỒN — ĐƯỜNG LÊN ĐỈNH OLYMPIA</h1>
+        <p>4 Đội Học Sinh Leo Núi • 3 Chặng Thử Thách & Đỉnh Olympia • Kéo Thả & Chốt Kiến Thức</p>
       </div>
     </div>
 
     <div class="topbar-controls">
       <button class="btn-3d btn-3d-gold" id="btnTopbarOpenOnboard" onclick="openOnboardingModal()">
-        ⛺ Chọn Đội / Phòng
+        🎓 Chọn Đội / Phòng
       </button>
       <span id="studentRoomReadonlyPill" style="font-family:'JetBrains Mono',monospace; font-size:12.5px; font-weight:900; background:#ECFDF5; color:#065F46; border:2px solid #10B981; padding:6px 12px; border-radius:12px;">
         🔗 Phòng: <strong id="studentRoomBadgeText" style="color:#DC2626;">#1010</strong>
       </span>
       <button class="btn-3d" id="btnTopbarQrModal" onclick="openJoinRoomModal()" style="display:none; border-color:#10B981; background:#ECFDF5; color:#065F46;">
-        📱 Phòng QR Online: <span id="roomCodeBadge" style="color:#DC2626; font-weight:900;">#1010</span>
+        📱 Phòng QR: <span id="roomCodeBadge" style="color:#DC2626; font-weight:900;">#1010</span>
         <span id="onlineCountBadge" style="background:#10B981; color:#FFF; padding:1px 7px; border-radius:999px; font-size:11px; margin-left:4px;">🟢 0/4</span>
       </button>
       <button class="btn-3d btn-3d-gold" id="btnTopbarLeaderboard" onclick="openLeaderboardModal()" style="border-color:#D97706;">
@@ -2861,14 +2849,11 @@
       <button class="btn-3d" id="btnThemeToggle" onclick="toggleThemeMode()" style="border-color:#6366F1; background:#EEF2FF; color:#312E81;">
         🌙 Chế độ: SÁNG
       </button>
-      <button class="btn-3d" id="btnBgmToggle" onclick="toggleWarDrumBgm()" style="border-color:#D97706; background:#FEF3C7; color:#92400E;">
-        🥁 Nhạc Trống: BẬT
-      </button>
       <button class="btn-3d" id="btnAudioToggle" onclick="toggleAudio()">
         🔊 Âm thanh: BẬT
       </button>
       <button class="btn-3d btn-3d-crimson" id="btnTopbarResetRoom" style="display:none;" onclick="teacherUnlockAllCharactersInRoom(true)">
-        🔓 Mở Khóa / Ván Mới
+        🔓 Ván Mới
       </button>
     </div>
   </header>
@@ -2923,17 +2908,17 @@
       <!-- MODE B: STUDENT GROUP COMMANDER & STAGE STEPPER PANEL -->
       <div id="studentCommanderPanel" style="display:flex; flex-direction:column; gap:8px; height:100%;">
         <div class="panel-header">
-          <div class="panel-title">⛺ Trại Xuất Phát Đội Leo Núi</div>
-          <span style="font-size:11px; font-weight:800; color:var(--accent-jade);" id="myOrderBadge">Đề: Ngẫu nhiên</span>
+          <div class="panel-title">🎓 Đội Thi Đường Lên Đỉnh Olympia</div>
+          <span style="font-size:11px; font-weight:800; color:var(--accent-jade);" id="myOrderBadge">4 Chặng</span>
         </div>
 
         <div class="hero-commander-box">
-          <span class="direction-pill" id="hudDirPill">ĐỘI 1 • ĐƯỜNG ĐÔNG NAM</span>
+          <span class="direction-pill" id="hudDirPill">ĐỘI 1 • LÀN ĐỎ</span>
           <div class="hero-avatar-frame">
-            <img id="hudHeroImg" src="assets/chibi_east_naval.jpg" alt="3D Climber Avatar" />
+            <img id="hudHeroImg" src="assets/student_team1_red.jpg" alt="Olympia Student Avatar" />
           </div>
           <div class="hero-team-name" id="hudTeamName">Nhóm 1</div>
-          <div class="hero-general-title" id="hudGeneralTitle">Hành Trình Về Nguồn</div>
+          <div class="hero-general-title" id="hudGeneralTitle">Thí Sinh Đội 1</div>
 
           <div class="stats-row-3d">
             <div class="stat-tile">
@@ -3020,7 +3005,7 @@
         <!-- COMPACT TOP HUD BAR FOR STUDENT IN FULL-SCREEN 3D MAP WHEN PLAYING -->
         <div class="student-playing-top-hud" id="studentPlayingTopHud">
           <div style="display:flex; align-items:center; gap:8px; min-width:0;">
-            <img id="fsHudAvatar" src="assets/chibi_east_naval.jpg" alt="Avatar" style="width:34px; height:34px; border-radius:50%; border:2px solid #FDE047; object-fit:cover; background:#FFF; flex-shrink:0;" />
+            <img id="fsHudAvatar" src="assets/student_team1_red.jpg" alt="Avatar" style="width:34px; height:34px; border-radius:50%; border:2px solid #FDE047; object-fit:cover; background:#FFF; flex-shrink:0;" />
             <div style="min-width:0;">
               <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
                 <span id="fsHudDirBadge" style="background:#0284C7; color:#FFF; font-size:10px; font-weight:900; padding:1.5px 7px; border-radius:999px;">ĐỘI 1</span>
@@ -3207,7 +3192,7 @@
       <!-- 3D Climber Duel Banner -->
       <div class="battle-duel-stage">
         <div class="duel-fighter" id="duelHeroFighter">
-          <img id="duelHeroImg" src="assets/chibi_east_naval.jpg" alt="Chibi Climber" />
+          <img id="duelHeroImg" src="assets/student_team1_red.jpg" alt="Olympia Student" />
           <div>
             <div style="font-size:11px; font-weight:900; color:#0369A1;" id="duelHeroDirText">ĐỘI 1</div>
             <div style="font-size:15px; font-weight:900; color:var(--text-ink);" id="duelHeroNameText">Nhóm 1</div>
@@ -3419,7 +3404,7 @@
       { x: 30.2, y: 71.5, stepIdx: 4,  placeName: 'Chặng 1: Khởi Động',             title: '1. Chặng 1: Khởi Động [Kiến thức chung]', icon: '⛺' },
       { x: 69.8, y: 55.8, stepIdx: 8,  placeName: 'Chặng 2: Vượt Chướng Ngại Vật',  title: '2. Chặng 2: Vượt Chướng Ngại Vật [Giải mã]', icon: '🌉' },
       { x: 83.2, y: 42.2, stepIdx: 12, placeName: 'Chặng 3: Tăng Tốc',              title: '3. Chặng 3: Tăng Tốc [Tư duy logic/Bất ngờ]', icon: '⚡' },
-      { x: 79.8, y: 24.5, stepIdx: 15, placeName: 'FINAL: Đỉnh Olympia',            title: 'FINAL: Đỉnh Olympia — Vị Trí Chiến Thắng', icon: '🏆' }
+      { x: 79.8, y: 32.0, stepIdx: 15, placeName: 'FINAL: Đỉnh Olympia',            title: 'FINAL: Đỉnh Olympia — Vị Trí Chiến Thắng', icon: '🏆' }
     ];
 
     function buildOlympiaSharedSteps(startX, startY, laneOffsetX, laneOffsetY) {
@@ -3437,9 +3422,9 @@
         { x: 81.5,   y: 47.8 },   // 10: Vách núi Tăng Tốc
         { x: 85.0,   y: 44.8 },   // 11: Khúc cua Tăng Tốc
         { x: 83.2,   y: 42.2 },   // 12: CHẶNG 3: TĂNG TỐC
-        { x: 76.2,   y: 37.2 },   // 13: Vòng cung lên Đỉnh Olympia
-        { x: 73.8,   y: 31.2 },   // 14: Áp sát Đỉnh Olympia
-        { x: 79.8,   y: 24.5 }    // 15: FINAL: ĐỈNH OLYMPIA (VỊ TRÍ CHIẾN THẮNG)
+        { x: 76.2,   y: 38.0 },   // 13: Vòng cung lên Đỉnh Olympia
+        { x: 74.2,   y: 34.5 },   // 14: Áp sát Đỉnh Olympia
+        { x: 79.8,   y: 32.0 }    // 15: FINAL: ĐỈNH OLYMPIA (VỊ TRÍ CHIẾN THẮNG)
       ];
       return base.map((pt, idx) => {
         if (idx === 0) return pt;
@@ -3455,9 +3440,9 @@
         key: 'east',
         name: 'ĐỘI 1',
         armyTitle: 'Làn Đỏ • Đường Lên Đỉnh Olympia',
-        generalName: 'Đội Leo Núi Số 1',
+        generalName: 'Thí Sinh Đội 1 (Áo Đỏ)',
         weaponEffect: '🔴 Đội 1 bứt phá tốc độ — Tiến lên Đỉnh Olympia!',
-        img: 'assets/chibi_west_cavalry.jpg',
+        img: 'assets/student_team1_red.jpg',
         color: '#DC2626',
         defaultTeamName: 'Nhóm 1',
         pathSteps: buildOlympiaSharedSteps(41.8, 88.2, -1.8, -0.8),
@@ -3467,9 +3452,9 @@
         key: 'west',
         name: 'ĐỘI 2',
         armyTitle: 'Làn Xanh Dương • Đường Lên Đỉnh Olympia',
-        generalName: 'Đội Leo Núi Số 2',
+        generalName: 'Thí Sinh Đội 2 (Áo Xanh Dương)',
         weaponEffect: '🔵 Đội 2 vượt chướng ngại vật — Tiến lên Đỉnh Olympia!',
-        img: 'assets/chibi_east_naval.jpg',
+        img: 'assets/student_team2_blue.jpg',
         color: '#2563EB',
         defaultTeamName: 'Nhóm 2',
         pathSteps: buildOlympiaSharedSteps(47.2, 85.2, -0.6, -0.3),
@@ -3479,9 +3464,9 @@
         key: 'south',
         name: 'ĐỘI 3',
         armyTitle: 'Làn Xanh Lá • Đường Lên Đỉnh Olympia',
-        generalName: 'Đội Leo Núi Số 3',
+        generalName: 'Thí Sinh Đội 3 (Áo Xanh Lá)',
         weaponEffect: '🟢 Đội 3 tăng tốc thần tốc — Tiến lên Đỉnh Olympia!',
-        img: 'assets/chibi_south_elephant.jpg',
+        img: 'assets/student_team3_green.jpg',
         color: '#16A34A',
         defaultTeamName: 'Nhóm 3',
         pathSteps: buildOlympiaSharedSteps(52.8, 86.2, 0.6, 0.3),
@@ -3491,9 +3476,9 @@
         key: 'north',
         name: 'ĐỘI 4',
         armyTitle: 'Làn Vàng • Đường Lên Đỉnh Olympia',
-        generalName: 'Đội Leo Núi Số 4',
+        generalName: 'Thí Sinh Đội 4 (Áo Vàng)',
         weaponEffect: '🟡 Đội 4 chinh phục vòng nguyệt quế — Tiến lên Đỉnh Olympia!',
-        img: 'assets/chibi_north_shield.jpg',
+        img: 'assets/student_team4_yellow.jpg',
         color: '#D97706',
         defaultTeamName: 'Nhóm 4',
         pathSteps: buildOlympiaSharedSteps(58.2, 88.2, 1.8, 0.8),
@@ -3766,7 +3751,7 @@
         roleEl.textContent = '📜 NỮ SỬ GIA DẪN CHUYỆN';
       } else {
         roleEl.className = 'voice-role-tag';
-        roleEl.textContent = '🎙️ TƯỚNG QUÂN HÔ LỆNH';
+        roleEl.textContent = '🎙️ MC ĐƯỜNG LÊN ĐỈNH OLYMPIA';
       }
       textEl.textContent = subtitleText;
       banner.classList.add('active');
@@ -4259,9 +4244,10 @@
 
     function toggleAudio() {
       audioEnabled = !audioEnabled;
+      bgmEnabled = audioEnabled;
       document.getElementById('btnAudioToggle').textContent = audioEnabled ? '🔊 Âm thanh: BẬT' : '🔇 Âm thanh: TẮT';
       if (audioEnabled) {
-        if (bgmEnabled) startWarDrumBgm();
+        startWarDrumBgm();
         playSound('drum');
         playVoiceClip('cmd_test_audio');
       } else {
@@ -4590,7 +4576,7 @@
       updateAllUI();
       if (showFeedback) {
         playSound('drum');
-        showToast(`🔓 Đã mở khóa sạch cả 4 Tướng tại Phòng #${currentRoomCode}! Học sinh có thể chọn lại ngay!`);
+        showToast(`🔓 Đã mở khóa sạch cả 4 Đội tại Phòng #${currentRoomCode}! Học sinh có thể chọn lại ngay!`);
       }
     }
 
@@ -4608,7 +4594,7 @@
       connectToOnlineRoom(randomCode);
       teacherUnlockAllCharactersInRoom(false);
       playSound('fanfare');
-      showToast(`🎲 Đã tạo Mã Phòng Mới #${randomCode} (Cả 4 Tướng đều còn trống)!`);
+      showToast(`🎲 Đã tạo Mã Phòng Mới #${randomCode} (Cả 4 Đội đều còn trống)!`);
       if (fromSidebar) {
         updateAllUI();
       }
@@ -4635,7 +4621,7 @@
       playSound('drum');
       launchFireworks(55);
       playVoiceClip('cmd_host_waiting');
-      showToast(`👩‍🏫 Cô Giáo đã tạo Phòng #${currentRoomCode}! 4 Tướng đã mở khóa để học sinh vào chọn!`);
+      showToast(`👩‍🏫 Cô Giáo đã tạo Phòng #${currentRoomCode}! 4 Đội đã mở khóa để học sinh vào chọn!`);
       updateAllUI();
     }
 
@@ -4654,22 +4640,22 @@
           noticeEl.style.color = '#B91C1B';
           if (isTeacherAuthenticated) {
             noticeEl.innerHTML = `
-              ⚠️ Cả 4 Tướng của Phòng #${currentRoomCode} đã có nhóm chọn!
+              ⚠️ Cả 4 Đội của Phòng #${currentRoomCode} đã có nhóm chọn!
               <button onclick="teacherUnlockAllCharactersInRoom(true)" style="margin-left:6px; padding:3px 10px; font-size:11.5px; font-weight:900; border-radius:8px; border:2px solid #DC2626; background:#FEF2F2; color:#991B1B; cursor:pointer;">
-                🔓 Cô Giáo: Mở Khóa 4 Tướng
+                🔓 Cô Giáo: Mở Khóa 4 Đội
               </button>
             `;
           } else {
-            noticeEl.innerHTML = `⚠️ Cả 4 Tướng của Phòng <strong>#${currentRoomCode}</strong> đã có đủ 4 nhóm chọn! Hãy kiểm tra lại <strong>Mã Phòng của Cô Giáo</strong> ở ô bên trên!`;
+            noticeEl.innerHTML = `⚠️ Cả 4 Đội của Phòng <strong>#${currentRoomCode}</strong> đã có đủ 4 nhóm chọn! Hãy kiểm tra lại <strong>Mã Phòng của Cô Giáo</strong> ở ô bên trên!`;
           }
           if (confirmBtn) {
-            confirmBtn.textContent = '✋ CHỐT TƯỚNG & BẤM SẴN SÀNG!';
+            confirmBtn.textContent = '✋ CHỐT ĐỘI & BẤM SẴN SÀNG!';
           }
         } else {
           noticeEl.style.color = '#047857';
-          noticeEl.innerHTML = `🟢 Phòng <strong>#${currentRoomCode}</strong> hiện có <strong>${freeDirs.length}/4 Tướng còn trống</strong> — Học sinh chọn 1 Tướng rồi nhấn <strong>"✋ CHỐT TƯỚNG & BẤM SẴN SÀNG"</strong>!`;
+          noticeEl.innerHTML = `🟢 Phòng <strong>#${currentRoomCode}</strong> hiện có <strong>${freeDirs.length}/4 Đội còn trống</strong> — Học sinh chọn 1 Đội rồi nhấn <strong>"✋ CHỐT ĐỘI & BẤM SẴN SÀNG"</strong>!`;
           if (confirmBtn) {
-            confirmBtn.textContent = '✋ CHỐT TƯỚNG & BẤM SẴN SÀNG!';
+            confirmBtn.textContent = '✋ CHỐT ĐỘI & BẤM SẴN SÀNG!';
           }
         }
       }
@@ -4688,8 +4674,8 @@
         card.onclick = () => {
           if (takenByOther) {
             playSound('wrong');
-            playVoiceClip('cmd_char_locked', `🔒 Tướng ${dir.generalName} đã được "${laneInfo.teamName}" chọn trước! Em hãy chọn một Tướng khác còn trống nhé!`);
-            showToast(`🔒 ${dir.name} (${dir.generalName}) đã được "${laneInfo.teamName}" chọn! Em hãy chọn Tướng còn trống nhé!`, true);
+            playVoiceClip('cmd_char_locked', `🔒 ${dir.name} (${dir.generalName}) đã được "${laneInfo.teamName}" chọn trước! Em hãy chọn một Đội khác còn trống nhé!`);
+            showToast(`🔒 ${dir.name} (${dir.generalName}) đã được "${laneInfo.teamName}" chọn! Em hãy chọn Đội còn trống nhé!`, true);
             return;
           }
           selectedDirectionKey = dir.key;
@@ -4858,43 +4844,28 @@
 
       const isTeacherView = myRole === 'TEACHER';
 
-      // 0. Subtle glowing highlight along the Olympia shared lanes in SVG
+      // 0. Keep the illustrated Olympia Map 100% crisp & unobstructed:
+      // Only draw a subtle glowing trail when a student is actively marching!
       let svgHtml = '';
-      Object.values(FOUR_DIRECTIONS).forEach((dir) => {
-        const isMyLane = !isTeacherView && dir.key === myGroup.direction;
-        const pts = dir.pathSteps.map(p => `${p.x * 10},${p.y * 6.25}`).join(' ');
-        if (isMyLane) {
-          svgHtml += `<polyline points="${pts}" fill="none" stroke="rgba(254, 240, 138, 0.7)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />`;
-        }
-        svgHtml += `<polyline points="${pts}" fill="none" stroke="${dir.color}" stroke-width="${isMyLane ? 5 : 3}" stroke-dasharray="8 8" stroke-opacity="${isMyLane ? '0.95' : '0.55'}" stroke-linecap="round" stroke-linejoin="round" />`;
-      });
+      if (!isTeacherView && isMarchingAnimation) {
+        const myDir = FOUR_DIRECTIONS[myGroup.direction] || FOUR_DIRECTIONS.east;
+        const pts = myDir.pathSteps.map(p => `${p.x * 10},${p.y * 6.25}`).join(' ');
+        svgHtml += `<polyline points="${pts}" fill="none" stroke="rgba(254, 240, 138, 0.65)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />`;
+      }
       svgRoads.innerHTML = svgHtml;
 
-      // 1. Render ONE Clean Set of Shared Stepping Stones + 3 Olympia Checkpoints along ĐƯỜNG ĐI CHUNG
+      // 1. Only show the active stepping stone while walking so static map stays 100% clean
       const stageIndices = [0, 4, 8, 12, 15];
-      const maxPassedStep = isTeacherView
-        ? Math.max(0, ...Object.values(allFourLanesState).map(l => typeof l.tokenStepIdx === 'number' ? l.tokenStepIdx : STAGE_STEP_MAP[Math.min(4, l.stageProgress || 0)]))
-        : myGroup.tokenStepIdx;
-
       const sharedRefSteps = buildOlympiaSharedSteps(49.5, 88.0, 0, 0);
       sharedRefSteps.forEach((pt, sIdx) => {
         if (stageIndices.includes(sIdx)) return;
-        const isPassed = sIdx <= maxPassedStep;
         const isCurrentStone = !isTeacherView && myGroup.tokenStepIdx === sIdx && isMarchingAnimation;
+        if (!isCurrentStone) return;
         const dot = document.createElement('div');
-        dot.className = `road-step-dot my-lane-dot ${isPassed ? 'passed-dot' : ''} ${isCurrentStone ? 'active-stepping' : ''}`;
+        dot.className = 'road-step-dot active-stepping';
         dot.style.left = pt.x + '%';
         dot.style.top = pt.y + '%';
-        dot.title = `Đường Đi Chung • Bước hành trình #${sIdx}`;
-        dot.innerHTML = isPassed ? '✓' : sIdx;
-        dot.onclick = () => {
-          if (isTeacherView) {
-            showToast('👩‍🏫 Màn hình Cô Giáo đang giám sát 4 đội trên Đường Đi Chung lên Đỉnh Olympia!');
-            return;
-          }
-          const targetStage = sIdx <= 4 ? 1 : sIdx <= 8 ? 2 : sIdx <= 12 ? 3 : 4;
-          marchToStageAndOpenQuestion(targetStage);
-        };
+        dot.innerHTML = '👣';
         stagesContainer.appendChild(dot);
       });
 
@@ -4953,12 +4924,12 @@
       };
       centerNode.innerHTML = `
         ${isCenterTarget ? '<div class="map-go-pill" style="top:-28px; font-size:11px;">🏆 CHINH PHỤC ĐỈNH OLYMPIA</div>' : ''}
-        <img src="assets/citadel_center_3d.jpg" alt="Đỉnh Olympia 3D" />
-        <div class="citadel-ribbon">${isCenterConquered ? '🏆 ĐỈNH OLYMPIA & XẾP HẠNG 1-2-3-4' : '🏆 FINAL: ĐỈNH OLYMPIA'}</div>
+        <img src="assets/olympia_crest_3d.jpg" alt="Vòng Nguyệt Quế Đỉnh Olympia" />
+        <div class="citadel-ribbon">${isCenterConquered ? '🏆 ĐỈNH OLYMPIA & XẾP HẠNG' : '🏆 FINAL: ĐỈNH OLYMPIA'}</div>
       `;
       stagesContainer.appendChild(centerNode);
 
-      // 3. Update All 4 Team Tokens (ĐỘI 1 Đỏ, ĐỘI 2 Xanh Dương, ĐỘI 3 Xanh Lá, ĐỘI 4 Vàng)
+      // 3. Update All 4 Student Team Tokens (ĐỘI 1 Đỏ, ĐỘI 2 Xanh Dương, ĐỘI 3 Xanh Lá, ĐỘI 4 Vàng)
       const liveRankMap = {};
       try {
         computeFourGroupsRankingAndAnalysis().forEach((r) => {
@@ -4977,7 +4948,7 @@
         const bubbleText = isMe ? myGroup.stepBubbleText : (laneState.stepBubbleText || '');
         const rankInfo = liveRankMap[dir.key];
         const rankBadgeStr = (isOnline && (roomMatchState.status === 'PLAYING' || laneState.stageProgress > 0) && rankInfo)
-          ? `${rankInfo.medalIcon} Hạng ${rankInfo.rank} • `
+          ? `${rankInfo.medalIcon}#${rankInfo.rank} `
           : '';
 
         let ox = 0, oy = 0;
@@ -4995,15 +4966,15 @@
           tokensContainer.appendChild(token);
         }
 
-        const displayTeamName = isOnline ? laneState.teamName : `${dir.defaultTeamName} (Chờ vào)`;
+        const displayTeamName = isOnline ? laneState.teamName : dir.name;
         token.className = `chibi-map-token ${isMe ? 'is-my-group' : ''} ${(isMe && isMarchingAnimation) || bubbleText ? 'walking' : ''}`;
         token.style.left = (pt.x + ox) + '%';
         token.style.top = (pt.y + oy) + '%';
-        token.style.opacity = isOnline ? '1' : '0.82';
+        token.style.opacity = isOnline ? '1' : '0.92';
         token.innerHTML = `
           ${bubbleText ? `<div class="token-step-bubble">${bubbleText}</div>` : ''}
           <div class="token-nameplate" style="border-color:${dir.color}">
-            ${rankBadgeStr}${isMe ? '⭐ ' : isOnline ? '🟢 ' : '⚪ '}${displayTeamName} ${isOnline && rankInfo ? `• ${rankInfo.evalTotalScore}đ` : ''}
+            ${rankBadgeStr}${isMe ? '⭐ ' : isOnline ? '🟢 ' : ''}${displayTeamName}${isOnline && rankInfo && stepIdx > 0 ? ` • ${rankInfo.evalTotalScore}đ` : ''}
           </div>
           <div class="token-avatar-circle" style="border-color:${dir.color}">
             <img src="${dir.img}" alt="${dir.generalName}" />
@@ -7100,10 +7071,10 @@
         const actionArea = document.getElementById('lobbyActionArea');
 
         const joinedNames = onlineList.map(l => `${FOUR_DIRECTIONS[l.direction].name}: ${l.teamName}`).join(' • ');
-        title.textContent = `SẢNH CHỜ PHÒNG #${currentRoomCode} (${onlineCount}/4 NHÓM ĐÃ VÀO)`;
+        title.textContent = `SẢNH CHỜ PHÒNG #${currentRoomCode} (${onlineCount}/4 ĐỘI ĐÃ VÀO)`;
         sub.textContent = joinedNames
           ? `Đã vào bàn: ${joinedNames}`
-          : 'Đang chờ 4 nhóm học sinh nhập Mã Phòng và chọn Tướng...';
+          : 'Đang chờ 4 nhóm học sinh nhập Mã Phòng và chọn Đội...';
 
         if (isMeHost) {
           badge.textContent = '👩‍🏫 CÔ GIÁO (CHỦ PHÒNG)';
@@ -7122,7 +7093,7 @@
             <div class="waiting-member-pill" id="waitingForHostBadge">
               ✋ Đã Sẵn Sàng — Chờ Cô Giáo bấm BẮT ĐẦU...
             </div>
-            <button class="hud-mini-btn" onclick="openOnboardingModal()">🏳️ Đổi Tướng</button>
+            <button class="hud-mini-btn" onclick="openOnboardingModal()">🏳️ Đổi Đội</button>
             <button class="hud-mini-btn" onclick="toggleStudentBrowserFullscreen()">⛶ Full Màn Hình</button>
           `;
         }
@@ -7213,11 +7184,7 @@
           masteryBadge.textContent = `Đội đã vào: ${onlineCount}/4`;
         }
         if (floatBar && floatBtn) {
-          if (roomMatchState.status !== 'PLAYING') {
-            floatBar.style.display = 'flex';
-            floatBtn.textContent = `🥁 CÔ GIÁO: BẮT ĐẦU TRẬN ĐẤU (${onlineCount}/4 ĐỘI)!`;
-            floatBtn.onclick = () => hostTriggerStartMatch();
-          } else if (finishedCount > 0) {
+          if (finishedCount > 0) {
             floatBar.style.display = 'flex';
             floatBtn.textContent = `🏆 XEM BẢNG XẾP HẠNG & BẢNG CHỐT KIẾN THỨC (${finishedCount}/4 ĐỘI ĐÃ LÊN ĐỈNH)`;
             floatBtn.onclick = () => openLeaderboardModal();
@@ -7289,11 +7256,7 @@
           }
         }
 
-        const routeLabels = myGroup.questionRoute
-          .slice(0, 3)
-          .map(r => CORE_HISTORY_ROWS[r.rowIndex].eraIcon)
-          .join(' ➔ ');
-        document.getElementById('myOrderBadge').textContent = `Đề: ${routeLabels} ➔ ⛰️`;
+        document.getElementById('myOrderBadge').textContent = `Đã qua: ${myGroup.conqueredStages.length}/4`;
         if (masteryBadge) {
           masteryBadge.textContent = `Đã qua: ${myGroup.conqueredStages.length}/4 Chặng`;
         }
