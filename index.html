@@ -715,50 +715,9 @@
       box-shadow: 0 3px 8px rgba(0,0,0,0.55);
     }
 
-    /* CRISP VECTOR HTML MAP LABELS (100% RAZOR-SHARP AT ANY RESOLUTION) */
+    /* CRISP VECTOR HTML MAP LABELS (REMOVED TO KEEP TOP-LEFT OF MAP 100% UNOBSTRUCTED) */
     .olimpia-map-hud-title {
-      position: absolute;
-      left: 1.6%;
-      top: 10.5%;
-      z-index: 14;
-      pointer-events: none;
-      background: rgba(15, 23, 42, 0.88);
-      border: 2px solid #F59E0B;
-      border-radius: 14px;
-      padding: 7px 13px;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
-      backdrop-filter: blur(4px);
-      transition: top 0.2s ease;
-    }
-
-    .host-lobby-overlay-bar.active ~ .olimpia-map-hud-title,
-    .student-playing-top-hud.active ~ .olimpia-map-hud-title {
-      top: 15.8%;
-    }
-
-    .olimpia-map-hud-title .main-t {
-      font-size: clamp(13px, 1.5vw, 19px);
-      font-weight: 900;
-      color: #FEF08A;
-      letter-spacing: 0.4px;
-      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.75);
-      line-height: 1.15;
-    }
-
-    .olimpia-map-hud-title .sub-t {
-      margin-top: 3px;
-      font-size: clamp(10px, 0.95vw, 12px);
-      font-weight: 800;
-      color: #E2E8F0;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    @media (max-width: 640px) {
-      .olimpia-map-hud-title {
-        display: none;
-      }
+      display: none !important;
     }
 
     /* 3D Student Avatar Token Moving Smoothly Along the Olympia Road */
@@ -2143,39 +2102,43 @@
 
     .student-playing-top-hud {
       position: absolute;
-      top: 10px;
+      top: 6px;
       left: 50%;
       transform: translateX(-50%);
-      width: min(96%, 860px);
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.92) 0%, rgba(30, 41, 59, 0.92) 100%);
-      border: 2.5px solid #F59E0B;
-      border-radius: 16px;
-      padding: 7px 14px;
+      width: auto;
+      max-width: 96%;
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(6px);
+      border: 2px solid #F59E0B;
+      border-radius: 999px;
+      padding: 4px 10px;
       z-index: 80;
       display: none;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+      gap: 8px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
       color: #FFFFFF;
+      white-space: nowrap;
     }
 
     .student-playing-top-hud.active {
-      display: flex;
+      display: inline-flex;
     }
 
     .hud-mini-btn {
       background: rgba(255, 255, 255, 0.14);
       color: #FEF08A;
       border: 1.5px solid #F59E0B;
-      border-radius: 10px;
-      padding: 5px 10px;
+      border-radius: 999px;
+      padding: 4px 8px;
       font-family: inherit;
-      font-size: 11.5px;
+      font-size: 11px;
       font-weight: 900;
       cursor: pointer;
       white-space: nowrap;
       transition: all 0.15s ease;
+      line-height: 1;
     }
 
     .hud-mini-btn:hover {
@@ -2185,14 +2148,14 @@
 
     @media (max-width: 640px) {
       .student-playing-top-hud {
-        top: 6px;
-        padding: 5px 9px;
-        border-radius: 12px;
-        gap: 6px;
-        width: 96%;
+        top: 5px;
+        padding: 3px 8px;
+        border-radius: 999px;
+        gap: 5px;
+        max-width: 97%;
       }
       .hud-mini-btn {
-        padding: 4px 7px;
+        padding: 4px 6px;
         font-size: 10px;
       }
     }
@@ -2386,11 +2349,25 @@
     .option-btn.draggable-option {
       cursor: grab;
       position: relative;
-      touch-action: pan-y;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     .option-btn.draggable-option:active {
       cursor: grabbing;
+    }
+
+    .option-btn.selected-chip {
+      border-color: #0284C7 !important;
+      background: #E0F2FE !important;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.35), 0 4px 0 #0369A1 !important;
+      transform: translateY(-2px);
+    }
+
+    body.dark-theme .option-btn.selected-chip {
+      background: #0C4A6E !important;
+      color: #F8FAFC !important;
     }
 
     .drag-handle-pill {
@@ -3080,8 +3057,8 @@
 
           <div class="stats-row-3d">
             <div class="stat-tile">
-              <div class="val" id="statGold">250</div>
-              <div class="lbl">🪙 Điểm</div>
+              <div class="val" id="statGold">0</div>
+              <div class="lbl">⭐ Điểm (10đ/câu)</div>
             </div>
             <div class="stat-tile">
               <div class="val" id="statStage">Trạm 1/4</div>
@@ -3101,7 +3078,7 @@
 
         <div class="panel-header" style="margin-top:4px;">
           <div class="panel-title">🗺️ 4 Chặng Đường Lên Đỉnh Olimpia</div>
-          <span style="font-size:10.5px; color:var(--text-muted); font-weight:700;">Đúng mới lên chặng</span>
+          <span style="font-size:10.5px; color:var(--text-muted); font-weight:700;">10 điểm / chặng</span>
         </div>
 
         <div class="stage-stepper-list" id="stageStepperList"></div>
@@ -3141,14 +3118,14 @@
           <div class="mountain-firefly f6"></div>
         </div>
 
-        <!-- HOST WAITING LOBBY OVERLAY BANNER (CÔ GIÁO TẠO PHÒNG & BẤM BẮT ĐẦU MỚI ĐƯỢC CHƠI) -->
+        <!-- HOST WAITING LOBBY OVERLAY BANNER (ONLY FOR TEACHER HOST) -->
         <div class="host-lobby-overlay-bar" id="hostLobbyOverlayBar">
           <div style="flex:1; min-width:0;">
             <div style="display:flex; align-items:center; gap:8px; margin-bottom:3px; flex-wrap:wrap;">
               <span id="lobbyRoleBadge" style="background:#F59E0B; color:#0F172A; font-size:11px; font-weight:900; padding:2px 9px; border-radius:999px; white-space:nowrap;">👩‍🏫 CÔ GIÁO CHỦ PHÒNG</span>
-              <span style="font-size:13.5px; font-weight:900; color:#FEF08A; white-space:nowrap;" id="lobbyHeaderTitle">SẢNH CHỜ HÀNH TRÌNH VỀ NGUỒN — PHÒNG #1010</span>
+              <span style="font-size:13.5px; font-weight:900; color:#FEF08A;" id="lobbyHeaderTitle">SẢNH CHỜ HÀNH TRÌNH VỀ NGUỒN — PHÒNG #1010</span>
             </div>
-            <div style="font-size:11.5px; color:#E2E8F0; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="lobbySubStatusText">
+            <div style="font-size:11.5px; color:#E2E8F0; font-weight:700; overflow:hidden; text-overflow:ellipsis;" id="lobbySubStatusText">
               Học sinh nhập Tên Nhóm & chọn 1 trong 4 Đội Leo Núi. Khi Cô Giáo bấm "BẮT ĐẦU", cả 4 đội sẽ đồng loạt leo núi!
             </div>
           </div>
@@ -3160,25 +3137,22 @@
           </div>
         </div>
 
-        <!-- COMPACT TOP HUD BAR FOR STUDENT IN FULL-SCREEN 3D MAP WHEN PLAYING -->
+        <!-- ULTRA-SLEEK SINGLE-LINE PILL BAR FOR STUDENT IN FULL-SCREEN 3D MAP (NEVER WRAPS OR COVERS MAP) -->
         <div class="student-playing-top-hud" id="studentPlayingTopHud">
-          <div style="display:flex; align-items:center; gap:8px; min-width:0;">
-            <img id="fsHudAvatar" src="assets/student_team1_red.jpg" alt="Avatar" style="width:34px; height:34px; border-radius:50%; border:2px solid #FDE047; object-fit:cover; background:#FFF; flex-shrink:0;" />
-            <div style="min-width:0;">
-              <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-                <span id="fsHudDirBadge" style="background:#0284C7; color:#FFF; font-size:10px; font-weight:900; padding:1.5px 7px; border-radius:999px;">ĐỘI 1</span>
-                <span id="fsHudTeamName" style="font-size:12.5px; font-weight:900; color:#FEF08A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Nhóm 1</span>
-              </div>
-              <div style="font-size:10.5px; font-weight:800; color:#E2E8F0;" id="fsHudStatsText">
-                ⛰️ Trạm 1/4 • 🪙 250 • 🔥 x1
-              </div>
-            </div>
+          <div style="display:flex; align-items:center; gap:6px; min-width:0; overflow:hidden;">
+            <img id="fsHudAvatar" src="assets/student_team1_red.jpg" alt="Avatar" style="width:26px; height:26px; border-radius:50%; border:2px solid #FDE047; object-fit:cover; background:#FFF; flex-shrink:0;" />
+            <span id="fsHudDirBadge" style="background:#DC2626; color:#FFF; font-size:10px; font-weight:900; padding:2px 7px; border-radius:999px; flex-shrink:0;">ĐỘI 1</span>
+            <span id="fsHudTeamName" style="font-size:12px; font-weight:900; color:#FEF08A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:110px;">Nhóm 1</span>
+            <span style="font-size:11px; font-weight:900; color:#6EE7B7; background:rgba(16,185,129,0.18); border:1px solid #10B981; padding:2px 7px; border-radius:999px; flex-shrink:0;" id="fsHudStatsText">
+              ⛰️ 1/4 • ⭐ 0đ
+            </span>
           </div>
-          <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
-            <button class="hud-mini-btn" id="btnFsOpenLb" style="display:none; background:#F59E0B; color:#0F172A;" onclick="openLeaderboardModal()">🏆 Hạng 1•2•3•4</button>
-            <button class="hud-mini-btn" id="btnStudentThemeToggle" onclick="toggleThemeMode()" title="Đổi Chế Độ Sáng / Tối">🌙 Sáng/Tối</button>
-            <button class="hud-mini-btn" onclick="toggleAudio()" title="Bật/Tắt Âm Thanh">🔊 Âm thanh</button>
-            <button class="hud-mini-btn" onclick="toggleStudentBrowserFullscreen()" id="btnFsTogglePlaying">⛶ Full Màn Hình</button>
+          <div style="display:flex; align-items:center; gap:4px; flex-shrink:0;">
+            <button class="hud-mini-btn" id="btnFsChangeTeam" style="display:none;" onclick="openOnboardingModal()" title="Đổi Đội">🏳️ Đổi Đội</button>
+            <button class="hud-mini-btn" id="btnFsOpenLb" style="display:none; background:#F59E0B; color:#0F172A;" onclick="openLeaderboardModal()" title="Bảng Xếp Hạng">🏆 Hạng</button>
+            <button class="hud-mini-btn" id="btnStudentThemeToggle" onclick="toggleThemeMode()" title="Đổi Chế Độ Sáng / Tối">🌙</button>
+            <button class="hud-mini-btn" onclick="toggleAudio()" title="Bật/Tắt Âm Thanh">🔊</button>
+            <button class="hud-mini-btn" onclick="toggleStudentBrowserFullscreen()" id="btnFsTogglePlaying" title="Toàn Màn Hình">⛶</button>
           </div>
         </div>
 
@@ -3186,14 +3160,6 @@
         <svg class="diorama-svg-roads" id="dioramaSvgRoads" viewBox="0 0 1000 625" preserveAspectRatio="none"></svg>
 
         <!-- Dynamic Stepping Stones, Stage Checkpoints & 4 Chibi Tokens Injected by JS -->
-        <div class="olimpia-map-hud-title">
-          <div class="main-t">MAP GAME: ĐƯỜNG LÊN ĐỈNH OLIMPIA</div>
-          <div class="sub-t">
-            <span>🔴 4 ĐỘI CHƠI</span>
-            <span>🟢 3 CHẶNG THỬ THÁCH</span>
-            <span>🔵 ĐƯỜNG ĐI CHUNG</span>
-          </div>
-        </div>
         <div id="mapStagesContainer"></div>
         <div id="mapTokensContainer"></div>
 
@@ -3363,9 +3329,9 @@
             </div>
           </div>
           <div style="background:#F8FAFC; border:2px solid #CBD5E1; border-radius:14px; padding:11px 12px;">
-            <div style="font-size:13px; font-weight:900; color:#B91C1B; margin-bottom:4px;">3️⃣ Tính Điểm & Xuất Quân</div>
+            <div style="font-size:13px; font-weight:900; color:#B91C1B; margin-bottom:4px;">3️⃣ Tính Điểm & Xếp Hạng</div>
             <div style="font-size:12px; font-weight:700; color:#334155; line-height:1.45;">
-              Trả lời đúng được cộng điểm & tiến lên trạm tiếp theo; sai sẽ lùi 2 bước. <strong>Khi tất cả các đội cùng bấm Sẵn Sàng, Cô Giáo sẽ bấm Bắt Đầu!</strong>
+              Mỗi câu đúng được <strong>+10 điểm</strong>; sai sẽ lùi 2 bước. <strong>Đội nào về đích trước sẽ đứng đầu!</strong> Khi tất cả cùng bấm Sẵn Sàng, Cô Giáo sẽ bấm Bắt Đầu!
             </div>
           </div>
         </div>
@@ -3752,7 +3718,7 @@
     let myGroup = {
       direction: 'east',
       teamName: 'Nhóm 1',
-      gold: 250,
+      gold: 0,
       streak: 1,
       maxStreak: 1,
       wrongAttempts: 0,
@@ -3777,7 +3743,7 @@
         stageProgress: 0,
         tokenStepIdx: 0,
         stepBubbleText: '',
-        gold: 250,
+        gold: 0,
         streak: 1,
         maxStreak: 1,
         wrongAttempts: 0,
@@ -4509,9 +4475,9 @@
       launchFireworks(135);
 
       const overlay = document.getElementById('stageBreakOverlay');
-      document.getElementById('stageBreakSub').textContent = weaponText || '⚔️ TUYỆT CHIÊU CÔNG THÀNH ĐẠI THẮNG!';
-      document.getElementById('stageBreakTitle').textContent = `💥 PHÁ CHẶNG THÀNH CÔNG: ${placeName.toUpperCase()}!`;
-      document.getElementById('stageBreakReward').textContent = `+${rewardGold} 🪙 Chiến Công • Mở khóa đường tiến quân tới địa danh tiếp theo!`;
+      document.getElementById('stageBreakSub').textContent = weaponText || '⚔️ TUYỆT CHIÊU VƯỢT CHẶNG ĐẠI THẮNG!';
+      document.getElementById('stageBreakTitle').textContent = `💥 VƯỢT CHẶNG THÀNH CÔNG: ${placeName.toUpperCase()}!`;
+      document.getElementById('stageBreakReward').textContent = `+${rewardGold} ⭐ Điểm • Mở khóa đường leo núi tới chặng tiếp theo!`;
       overlay.classList.add('active');
       setTimeout(() => {
         overlay.classList.remove('active');
@@ -4678,7 +4644,7 @@
       }
       const stuBtn = document.getElementById('btnStudentThemeToggle');
       if (stuBtn) {
-        stuBtn.innerHTML = isDark ? '☀️ Sáng' : '🌙 Tối';
+        stuBtn.innerHTML = isDark ? '☀️' : '🌙';
       }
       const onbBtn = document.getElementById('btnOnboardThemeToggle');
       if (onbBtn) {
@@ -4994,7 +4960,7 @@
 
       myGroup.direction = selectedDirectionKey;
       myGroup.teamName = rawName || dirInfo.defaultTeamName;
-      myGroup.gold = 250;
+      myGroup.gold = 0;
       myGroup.streak = 1;
       myGroup.maxStreak = 1;
       myGroup.wrongAttempts = 0;
@@ -5505,15 +5471,50 @@
       document.querySelectorAll('.dragging-now').forEach(el => el.classList.remove('dragging-now'));
     }
 
+    function findBestDropZone(clientX, clientY, dropSelector) {
+      const targetEl = document.elementFromPoint(clientX, clientY);
+      if (targetEl) {
+        const direct = targetEl.closest(dropSelector);
+        if (direct && !direct.classList.contains('paired')) return direct;
+        if (dropSelector === '#stage123DropZone' && targetEl.closest('#battleSourceExcerpt, #battleQuestionPrompt')) {
+          const dz = document.querySelector('#stage123DropZone');
+          if (dz && !dz.classList.contains('paired')) return dz;
+        }
+      }
+      // Bounding-box proximity tolerance (38px) so dropping near the drop box always registers smoothly
+      const candidates = Array.from(document.querySelectorAll(dropSelector)).filter(
+        el => !el.classList.contains('paired') && el.offsetParent !== null
+      );
+      let bestZone = null;
+      let bestDist = 38;
+      candidates.forEach((zone) => {
+        const rect = zone.getBoundingClientRect();
+        const dx = clientX < rect.left ? rect.left - clientX : clientX > rect.right ? clientX - rect.right : 0;
+        const dy = clientY < rect.top ? rect.top - clientY : clientY > rect.bottom ? clientY - rect.bottom : 0;
+        const dist = Math.hypot(dx, dy);
+        if (dist <= bestDist) {
+          bestDist = dist;
+          bestZone = zone;
+        }
+      });
+      return bestZone;
+    }
+
     /**
      * Universal Touch/Pointer + HTML5 Drag-and-Drop helper:
-     * Works on Mobile Touchscreens, Tablets, Interactive Whiteboards, and Desktop Mice!
+     * Uses window-level pointer tracking for ALL pointer types (Mouse + Touch + Pen)
+     * so dragging from an answer card to a separate drop zone works 100% reliably!
      */
     function attachUniversalDragAndDrop(dragEl, dropSelector, onDropCallback, ghostText) {
-      // 1. HTML5 Desktop Drag & Drop
+      // 1. HTML5 Drag & Drop support (for synthetic drag/drop or desktop fallback)
       dragEl.setAttribute('draggable', 'true');
       dragEl.addEventListener('dragstart', (e) => {
-        if (dragEl.disabled || dragEl.classList.contains('paired')) {
+        if (dragEl._hasActivePointer) {
+          // Prevent native HTML5 drag from stealing window pointermove events during real mouse/touch drag!
+          e.preventDefault();
+          return;
+        }
+        if (dragEl.disabled || dragEl.dataset.disabled === '1' || dragEl.classList.contains('paired')) {
           e.preventDefault();
           return;
         }
@@ -5529,28 +5530,17 @@
         document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
       });
 
-      // 2. Mobile / Touch / Pen Pointer Drag & Drop with Floating Ghost Card
+      // 2. Unified Window-Level Pointer Drag & Drop (Mouse, Touch & Smartboard Pen)
       let startX = 0;
       let startY = 0;
       let isPointerDragging = false;
       let activePointerId = null;
 
-      dragEl.addEventListener('pointerdown', (e) => {
-        if (dragEl.disabled || dragEl.classList.contains('paired')) return;
-        if (e.pointerType === 'mouse' && e.button !== 0) return;
-        // Let native HTML5 drag handle mouse unless touch/pen, or support pointer drag for all
-        if (e.pointerType === 'mouse') return;
-        startX = e.clientX;
-        startY = e.clientY;
-        isPointerDragging = false;
-        activePointerId = e.pointerId;
-      }, { passive: true });
-
-      dragEl.addEventListener('pointermove', (e) => {
+      const onWinPointerMove = (e) => {
         if (activePointerId !== e.pointerId) return;
         const dx = e.clientX - startX;
         const dy = e.clientY - startY;
-        if (!isPointerDragging && Math.hypot(dx, dy) > 8) {
+        if (!isPointerDragging && Math.hypot(dx, dy) > 5) {
           isPointerDragging = true;
           dragEl.classList.add('dragging-now');
           clearFloatingGhost();
@@ -5560,49 +5550,70 @@
           document.body.appendChild(activeFloatingGhost);
         }
         if (isPointerDragging && activeFloatingGhost) {
-          e.preventDefault();
+          if (e.cancelable) e.preventDefault();
           activeFloatingGhost.style.left = `${e.clientX}px`;
           activeFloatingGhost.style.top = `${e.clientY}px`;
           document.querySelectorAll(dropSelector).forEach(z => z.classList.remove('drag-over'));
-          const targetEl = document.elementFromPoint(e.clientX, e.clientY);
-          const dropZone = targetEl ? targetEl.closest(dropSelector) : null;
-          if (dropZone && !dropZone.classList.contains('paired')) {
+          const dropZone = findBestDropZone(e.clientX, e.clientY, dropSelector);
+          if (dropZone) {
             dropZone.classList.add('drag-over');
           }
         }
-      }, { passive: false });
+      };
 
-      const finishPointerDrag = (e) => {
-        if (activePointerId !== e.pointerId) return;
+      const cleanupWinPointer = () => {
+        window.removeEventListener('pointermove', onWinPointerMove, { passive: false });
+        window.removeEventListener('pointerup', onWinPointerUp);
+        window.removeEventListener('pointercancel', onWinPointerCancel);
+        dragEl._hasActivePointer = false;
         activePointerId = null;
-        if (!isPointerDragging) return;
+      };
+
+      const onWinPointerUp = (e) => {
+        if (activePointerId !== e.pointerId) return;
+        const wasDragging = isPointerDragging;
         isPointerDragging = false;
-        const targetEl = document.elementFromPoint(e.clientX, e.clientY);
-        const dropZone = targetEl ? targetEl.closest(dropSelector) : null;
+        cleanupWinPointer();
+        if (!wasDragging) return;
+        dragEl._suppressClickUntil = Date.now() + 380;
+        const dropZone = findBestDropZone(e.clientX, e.clientY, dropSelector);
         clearFloatingGhost();
         if (dropZone && !dropZone.classList.contains('paired')) {
           onDropCallback(dragEl, dropZone);
         }
       };
 
-      dragEl.addEventListener('pointerup', finishPointerDrag);
-      dragEl.addEventListener('pointercancel', () => {
-        activePointerId = null;
+      const onWinPointerCancel = (e) => {
+        if (activePointerId !== e.pointerId) return;
         isPointerDragging = false;
+        cleanupWinPointer();
         clearFloatingGhost();
+      };
+
+      dragEl.addEventListener('pointerdown', (e) => {
+        if (dragEl.disabled || dragEl.dataset.disabled === '1' || dragEl.classList.contains('paired')) return;
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
+        startX = e.clientX;
+        startY = e.clientY;
+        isPointerDragging = false;
+        activePointerId = e.pointerId;
+        dragEl._hasActivePointer = true;
+        window.addEventListener('pointermove', onWinPointerMove, { passive: false });
+        window.addEventListener('pointerup', onWinPointerUp);
+        window.addEventListener('pointercancel', onWinPointerCancel);
       });
     }
 
     function wireHtml5DropZone(zoneEl, onHtml5Drop) {
-      zoneEl.addEventListener('dragover', (e) => {
+      zoneEl.ondragover = (e) => {
         if (zoneEl.classList.contains('paired')) return;
         e.preventDefault();
         zoneEl.classList.add('drag-over');
-      });
-      zoneEl.addEventListener('dragleave', () => {
+      };
+      zoneEl.ondragleave = () => {
         zoneEl.classList.remove('drag-over');
-      });
-      zoneEl.addEventListener('drop', (e) => {
+      };
+      zoneEl.ondrop = (e) => {
         e.preventDefault();
         zoneEl.classList.remove('drag-over');
         if (zoneEl.classList.contains('paired')) return;
@@ -5610,8 +5621,10 @@
         if (dragged) {
           onHtml5Drop(dragged, zoneEl);
         }
-      });
+      };
     }
+
+    let selectedStage123OptionEl = null;
 
     function openStageBattleModal(stageNum, opts = {}) {
       const dirInfo = FOUR_DIRECTIONS[myGroup.direction];
@@ -5620,11 +5633,12 @@
       const rowData = CORE_HISTORY_ROWS[routeStep.rowIndex];
 
       activeStageBattle = buildStageQuestion(stageNum, rowData, routeStep.mode);
+      selectedStage123OptionEl = null;
 
       document.getElementById('battleStageHeader').innerHTML =
-        `⛰️ ${myGroup.teamName.toUpperCase()} — CHẶNG ${stageNum}/4: ${wp.placeName.toUpperCase()}`;
+        `⛰️ ${myGroup.teamName.toUpperCase()} — CHẶNG ${stageNum}/4: ${wp.placeName.toUpperCase()} (+10 ĐIỂM)`;
       document.getElementById('battleRewardBadge').textContent =
-        `✋ Kéo thả đáp án đúng để leo tiếp!`;
+        `✋ Kéo thả đáp án đúng (+10 điểm)!`;
 
       document.getElementById('duelHeroImg').src = dirInfo.img;
       document.getElementById('duelHeroDirText').textContent = `${dirInfo.name} • ${dirInfo.armyTitle}`;
@@ -5650,9 +5664,15 @@
       const dropBox = document.getElementById('stage123DropZone');
       if (dropBox) {
         dropBox.className = 'stage123-drop-box';
-        dropBox.innerHTML = `📥 <span>Kéo đáp án <strong>A, B hoặc C</strong> thả vào đây (hoặc chạm chọn)</span>`;
+        dropBox.style.cursor = 'pointer';
+        dropBox.innerHTML = `📥 <span>Kéo đáp án <strong>A, B hoặc C</strong> thả vào đây (hoặc chạm chọn rồi chạm ô này)</span>`;
+        dropBox.onclick = () => {
+          if (selectedStage123OptionEl && selectedStage123OptionEl.dataset.disabled !== '1') {
+            submitBattleAnswer(selectedStage123OptionEl, selectedStage123OptionEl.dataset.correct === '1');
+          }
+        };
         wireHtml5DropZone(dropBox, (draggedBtn) => {
-          if (draggedBtn && !draggedBtn.disabled) {
+          if (draggedBtn && draggedBtn.dataset.disabled !== '1') {
             submitBattleAnswer(draggedBtn, draggedBtn.dataset.correct === '1');
           }
         });
@@ -5662,22 +5682,42 @@
       grid.innerHTML = '';
       const letters = ['A', 'B', 'C'];
       activeStageBattle.options.slice(0, 3).forEach((opt, idx) => {
-        const btn = document.createElement('button');
+        const btn = document.createElement('div');
+        btn.setAttribute('role', 'button');
+        btn.setAttribute('tabindex', '0');
         btn.className = 'option-btn draggable-option';
         btn.dataset.correct = opt.isCorrect ? '1' : '0';
         btn.dataset.dragValue = String(idx);
+        btn.dataset.letter = letters[idx];
         btn.innerHTML = `
           <div class="option-btn-top-row">
             <span class="option-letter">${letters[idx]}</span>
+            <span style="font-size:10px; font-weight:900; color:#B45309; opacity:0.85;">✋ Kéo lên ô trên</span>
           </div>
           <div style="flex:1; width:100%;">${opt.text}</div>
         `;
-        btn.onclick = () => submitBattleAnswer(btn, opt.isCorrect);
+        btn.onclick = () => {
+          if (btn._suppressClickUntil && Date.now() < btn._suppressClickUntil) return;
+          if (btn.dataset.disabled === '1') return;
+          // If already selected and clicked again, or tapped to select then drop:
+          if (selectedStage123OptionEl === btn) {
+            submitBattleAnswer(btn, opt.isCorrect);
+            return;
+          }
+          selectedStage123OptionEl = btn;
+          document.querySelectorAll('#battleOptionsGrid .option-btn').forEach(el => el.classList.remove('selected-chip'));
+          btn.classList.add('selected-chip');
+          playSound('step');
+          if (dropBox) {
+            dropBox.classList.add('drag-over');
+            dropBox.innerHTML = `👉 <span>Đã chọn <strong>Đáp án ${letters[idx]}</strong> — <strong>Chạm vào ô này để thả</strong> (hoặc chạm lại thẻ ${letters[idx]})!</span>`;
+          }
+        };
         attachUniversalDragAndDrop(
           btn,
           '#stage123DropZone',
           (draggedEl) => {
-            if (!draggedEl.disabled) {
+            if (draggedEl.dataset.disabled !== '1') {
               submitBattleAnswer(draggedEl, draggedEl.dataset.correct === '1');
             }
           },
@@ -5758,7 +5798,10 @@
     function submitBattleAnswer(clickedBtn, isCorrect) {
       clearFloatingGhost();
       const allBtns = document.querySelectorAll('#battleOptionsGrid .option-btn');
-      allBtns.forEach(b => (b.disabled = true));
+      allBtns.forEach((b) => {
+        b.disabled = true;
+        b.dataset.disabled = '1';
+      });
 
       const stageNum = activeStageBattle.stageNum;
       const row = activeStageBattle.targetRow;
@@ -5773,20 +5816,23 @@
         clickedBtn.classList.add('correct');
         if (dropBox) {
           dropBox.classList.add('dropped-correct');
-          dropBox.innerHTML = `✅ <span><strong>ĐÃ THẢ ĐÁP ÁN CHÍNH XÁC:</strong> ${clickedBtn.innerText.replace('✋ KÉO THẢ', '').trim()}</span>`;
+          dropBox.innerHTML = `✅ <span><strong>ĐÃ THẢ ĐÁP ÁN CHÍNH XÁC (+10 ĐIỂM):</strong> ${clickedBtn.innerText.replace('✋ Kéo lên ô trên', '').replace('✋ KÉO THẢ', '').trim()}</span>`;
         }
         document.getElementById('duelHeroFighter').classList.add('hero-charge');
         document.getElementById('duelGateBoss').classList.add('shattered');
         document.getElementById('duelActionStatus').textContent = dirInfo.weaponEffect;
 
-        const reward = stageNum * 120 + (myGroup.streak - 1) * 30;
-        myGroup.gold += reward;
-        myGroup.streak += 1;
-        myGroup.maxStreak = Math.max(myGroup.maxStreak || 1, myGroup.streak);
-
         if (!myGroup.conqueredStages.includes(stageNum)) {
           myGroup.conqueredStages.push(stageNum);
         }
+        const reward = 10;
+        myGroup.gold = myGroup.conqueredStages.length * 10;
+        myGroup.streak += 1;
+        myGroup.maxStreak = Math.max(myGroup.maxStreak || 1, myGroup.streak);
+        myGroup.finishedAt = Date.now();
+        const baseStart = roomMatchState.startedAt || (myGroup.finishedAt - 10000);
+        myGroup.elapsedSec = Number(Math.max(1.0, (myGroup.finishedAt - baseStart) / 1000).toFixed(1));
+
         const nextStage = Math.min(4, stageNum + 1);
         myGroup.currentStage = nextStage;
 
@@ -5804,6 +5850,8 @@
         allFourLanesState[myGroup.direction].totalAttempts = myGroup.totalAttempts;
         allFourLanesState[myGroup.direction].wrongAttempts = myGroup.wrongAttempts;
         allFourLanesState[myGroup.direction].wrongRows = [...(myGroup.wrongRows || [])];
+        allFourLanesState[myGroup.direction].finishedAt = myGroup.finishedAt;
+        allFourLanesState[myGroup.direction].elapsedSec = myGroup.elapsedSec;
 
         triggerStageBreakExplosion(wp.placeName, reward, dirInfo.weaponEffect);
         playApplauseWinSfx(0.36);
@@ -5813,7 +5861,7 @@
         fb.className = 'feedback-box show success';
         fb.innerHTML = `
           <div style="font-size:15.5px; font-weight:900; color:#047857;">
-            💥 CHÚC MỪNG ${myGroup.teamName.toUpperCase()}! VƯỢT CHẶNG THÀNH CÔNG: ${wp.placeName.toUpperCase()} (+${reward}🪙)! Đang leo núi tiếp tới ${dirInfo.waypoints[nextStage].placeName}...
+            💥 CHÚC MỪNG ${myGroup.teamName.toUpperCase()}! VƯỢT CHẶNG THÀNH CÔNG: ${wp.placeName.toUpperCase()} (+${reward} ĐIỂM ➔ Tổng ${myGroup.gold} điểm)! Đang leo núi tiếp tới ${dirInfo.waypoints[nextStage].placeName}...
           </div>
         `;
         updateAllUI();
@@ -6086,21 +6134,19 @@
         renderBossMatchColumns();
 
         if (pairedRowIds.length === CORE_HISTORY_ROWS.length) {
-          triggerStageBreakExplosion('Đỉnh Olimpia', 500, '🏆 CHINH PHỤC ĐỈNH OLIMPIA THÀNH CÔNG!');
+          triggerStageBreakExplosion('Đỉnh Olimpia', 10, '🏆 CHINH PHỤC ĐỈNH OLIMPIA THÀNH CÔNG!');
           playSound('fanfare');
           playVoiceClip('congrats_stage4_victory');
           document.getElementById('duelHeroFighter').classList.add('hero-charge');
           document.getElementById('duelGateBoss').classList.add('shattered');
 
-          myGroup.gold += 500;
+          if (!myGroup.conqueredStages.includes(4)) myGroup.conqueredStages.push(4);
+          myGroup.gold = myGroup.conqueredStages.length * 10;
           myGroup.streak += 1;
           myGroup.maxStreak = Math.max(myGroup.maxStreak || 1, myGroup.streak);
-          if (!myGroup.conqueredStages.includes(4)) myGroup.conqueredStages.push(4);
-          if (!myGroup.finishedAt) {
-            myGroup.finishedAt = Date.now();
-            const baseStart = roomMatchState.startedAt || (myGroup.finishedAt - 18000);
-            myGroup.elapsedSec = Number(Math.max(4.0, (myGroup.finishedAt - baseStart) / 1000).toFixed(1));
-          }
+          myGroup.finishedAt = Date.now();
+          const baseStart = roomMatchState.startedAt || (myGroup.finishedAt - 18000);
+          myGroup.elapsedSec = Number(Math.max(2.0, (myGroup.finishedAt - baseStart) / 1000).toFixed(1));
 
           allFourLanesState[myGroup.direction].stageProgress = 4;
           allFourLanesState[myGroup.direction].gold = myGroup.gold;
@@ -6125,7 +6171,7 @@
           fb.innerHTML = `
             <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
               <div style="font-size:15px; font-weight:900; color:#047857;">
-                🏆 CHÚC MỪNG ${myGroup.teamName.toUpperCase()} ĐÃ LÊN TỚI ĐỈNH OLIMPIA (+500🪙)!
+                🏆 CHÚC MỪNG ${myGroup.teamName.toUpperCase()} ĐÃ LÊN TỚI ĐỈNH OLIMPIA (+10 ĐIỂM ➔ Tổng ${myGroup.gold} điểm)!
               </div>
               <div style="display:flex; gap:8px; flex-wrap:wrap;">
                 <button class="btn-3d btn-3d-emerald" style="padding:7px 14px; font-size:12.5px;" onclick="openKnowledgeSummaryModal()">
@@ -6177,7 +6223,7 @@
     }
 
     /* =====================================================================
-     * 9B. STAGE 4 RANKING ENGINE (MINIMALIST: CHỈ HIỆN TÊN ĐỘI = TÊN NHÓM + SỐ ĐIỂM)
+     * 9B. STAGE 4 RANKING ENGINE (MINIMALIST: 10 ĐIỂM/CÂU & ĐỘI NÀO VỀ TRƯỚC ĐỨNG ĐẦU)
      *     & GIANT HIGH-CONTRAST BẢNG CHUẨN KIẾN THỨC CHỐT BÀI CHO CÔ GIÁO
      * ===================================================================== */
     function computeFourGroupsRankingAndAnalysis() {
@@ -6187,7 +6233,8 @@
         const isMe = myRole === 'STUDENT' && hasClaimedCharacter && myGroup.direction === dirKey;
         const online = isMe || Boolean(lane.online);
         const stageProgress = isMe ? myGroup.conqueredStages.length : (lane.stageProgress || 0);
-        const gold = isMe ? myGroup.gold : (lane.gold || 250);
+        const exactScore = online ? (stageProgress * 10) : 0;
+        const gold = exactScore;
         const maxStreak = isMe ? (myGroup.maxStreak || 1) : (lane.maxStreak || 1);
         const wrongAttempts = isMe ? (myGroup.wrongAttempts || 0) : (lane.wrongAttempts || 0);
         const minExpectedAtt = stageProgress >= 4 ? 6 : stageProgress;
@@ -6199,7 +6246,7 @@
         const finishedAt = isMe ? (myGroup.finishedAt || 0) : (lane.finishedAt || 0);
         let elapsedSec = isMe ? (myGroup.elapsedSec || 0) : (lane.elapsedSec || 0);
         if (stageProgress >= 4 && !elapsedSec && finishedAt && roomMatchState.startedAt) {
-          elapsedSec = Number(Math.max(4.0, (finishedAt - roomMatchState.startedAt) / 1000).toFixed(1));
+          elapsedSec = Number(Math.max(2.0, (finishedAt - roomMatchState.startedAt) / 1000).toFixed(1));
         } else if (stageProgress >= 4 && !elapsedSec) {
           elapsedSec = 25.0;
         }
@@ -6227,46 +6274,29 @@
           wrongRows,
           finishedAt,
           elapsedSec,
-          accuracyPct
+          accuracyPct,
+          stageScore: exactScore,
+          accuracyScore: 0,
+          speedScore: 0,
+          combatScore: 0,
+          evalTotalScore: exactScore
         };
       });
 
-      const finishers = rawEntries
-        .filter(e => e.online && e.stageProgress >= 4)
-        .sort((a, b) => (a.elapsedSec || 9999) - (b.elapsedSec || 9999));
-
-      rawEntries.forEach((e) => {
-        if (!e.online) {
-          e.stageScore = 0;
-          e.accuracyScore = 0;
-          e.speedScore = 0;
-          e.combatScore = 0;
-          e.evalTotalScore = 0;
-          return;
-        }
-        e.stageScore = e.stageProgress * 100;
-        e.accuracyScore = Math.max(0, Math.round(e.accuracyPct * 3.5) - e.wrongAttempts * 15);
-        if (e.stageProgress >= 4) {
-          const finishIdx = finishers.findIndex(f => f.direction === e.direction);
-          const orderBonus = finishIdx === 0 ? 70 : finishIdx === 1 ? 45 : finishIdx === 2 ? 25 : 10;
-          const timePts = Math.max(80, Math.round(230 - (e.elapsedSec || 25) * 2.4));
-          e.speedScore = Math.min(300, timePts + orderBonus);
-        } else {
-          e.speedScore = e.stageProgress * 25;
-        }
-        e.combatScore = Math.min(250, Math.round(Math.max(0, e.gold - 250) * 0.16 + e.maxStreak * 18));
-        e.evalTotalScore = e.stageScore + e.accuracyScore + e.speedScore + e.combatScore;
-      });
-
+      // STRICT RULE: Mỗi câu 10 điểm (0, 10, 20, 30, 40 điểm) — Đội nào về đích trước thì đứng đầu!
       rawEntries.sort((a, b) => {
         if (a.online !== b.online) return a.online ? -1 : 1;
-        if (b.stageProgress !== a.stageProgress) return b.stageProgress - a.stageProgress;
         if (b.evalTotalScore !== a.evalTotalScore) return b.evalTotalScore - a.evalTotalScore;
-        if (b.accuracyPct !== a.accuracyPct) return b.accuracyPct - a.accuracyPct;
-        if (a.stageProgress >= 4 && b.stageProgress >= 4 && a.elapsedSec !== b.elapsedSec) {
-          return (a.elapsedSec || 9999) - (b.elapsedSec || 9999);
+        if (b.stageProgress !== a.stageProgress) return b.stageProgress - a.stageProgress;
+        if (a.finishedAt && b.finishedAt && a.finishedAt !== b.finishedAt) {
+          return a.finishedAt - b.finishedAt;
         }
-        return b.gold - a.gold;
+        if (a.finishedAt && !b.finishedAt) return -1;
+        if (!a.finishedAt && b.finishedAt) return 1;
+        if (a.elapsedSec && b.elapsedSec && a.elapsedSec !== b.elapsedSec) {
+          return a.elapsedSec - b.elapsedSec;
+        }
+        return a.wrongAttempts - b.wrongAttempts;
       });
 
       const rankMeta = [
@@ -6735,7 +6765,7 @@
         stageProgress: payload.stageProgress || 0,
         tokenStepIdx: typeof payload.tokenStepIdx === 'number' ? payload.tokenStepIdx : STAGE_STEP_MAP[Math.min(4, payload.stageProgress || 0)],
         stepBubbleText: payload.stepBubbleText || '',
-        gold: payload.gold || 250,
+        gold: typeof payload.gold === 'number' ? payload.gold : ((payload.stageProgress || 0) * 10),
         streak: typeof payload.streak === 'number' ? payload.streak : (prevLane.streak || 1),
         maxStreak: typeof payload.maxStreak === 'number' ? payload.maxStreak : (prevLane.maxStreak || 1),
         wrongAttempts: typeof payload.wrongAttempts === 'number' ? payload.wrongAttempts : (prevLane.wrongAttempts || 0),
@@ -7376,28 +7406,29 @@
         roomMatchState.hostTeamName = 'Cô Giáo (Chủ Phòng)';
       }
 
-      if (roomMatchState.status === 'WAITING') {
-        bar.classList.add('active');
+      if (isMeHost) {
+        // Teacher view: show #hostLobbyOverlayBar when WAITING, hide studentPlayHud
         if (studentPlayHud) studentPlayHud.classList.remove('active');
-        const badge = document.getElementById('lobbyRoleBadge');
-        const title = document.getElementById('lobbyHeaderTitle');
-        const sub = document.getElementById('lobbySubStatusText');
-        const actionArea = document.getElementById('lobbyActionArea');
+        if (roomMatchState.status === 'WAITING') {
+          bar.classList.add('active');
+          const badge = document.getElementById('lobbyRoleBadge');
+          const title = document.getElementById('lobbyHeaderTitle');
+          const sub = document.getElementById('lobbySubStatusText');
+          const actionArea = document.getElementById('lobbyActionArea');
 
-        const readyList = onlineList.filter(l => l.isReady !== false);
-        const readyCount = readyList.length;
-        const canTeacherStart = onlineCount > 0 && readyCount === onlineCount;
+          const readyList = onlineList.filter(l => l.isReady !== false);
+          const readyCount = readyList.length;
+          const canTeacherStart = onlineCount > 0 && readyCount === onlineCount;
 
-        const joinedNames = onlineList.map(l => {
-          const stIcon = l.isReady !== false ? '✅ Sẵn sàng' : '📖 Đang đọc HD';
-          return `${FOUR_DIRECTIONS[l.direction].name}: ${l.teamName} (${stIcon})`;
-        }).join(' • ');
-        title.textContent = `SẢNH CHỜ PHÒNG #${currentRoomCode} (${readyCount}/${onlineCount} ĐỘI SẴN SÀNG • ${onlineCount}/4 ĐỘI VÀO)`;
-        sub.textContent = joinedNames
-          ? `Trạng thái: ${joinedNames}`
-          : 'Đang chờ các nhóm học sinh chọn nhân vật, đọc hướng dẫn và bấm Sẵn Sàng...';
+          const joinedNames = onlineList.map(l => {
+            const stIcon = l.isReady !== false ? '✅ Sẵn sàng' : '📖 Đang đọc HD';
+            return `${FOUR_DIRECTIONS[l.direction].name}: ${l.teamName} (${stIcon})`;
+          }).join(' • ');
+          title.textContent = `SẢNH CHỜ PHÒNG #${currentRoomCode} (${readyCount}/${onlineCount} ĐỘI SẴN SÀNG • ${onlineCount}/4 ĐỘI VÀO)`;
+          sub.textContent = joinedNames
+            ? `Trạng thái: ${joinedNames}`
+            : 'Đang chờ các nhóm học sinh chọn nhân vật, đọc hướng dẫn và bấm Sẵn Sàng...';
 
-        if (isMeHost) {
           badge.textContent = '👩‍🏫 CÔ GIÁO (CHỦ PHÒNG)';
           badge.style.background = '#F59E0B';
           badge.style.color = '#0F172A';
@@ -7412,20 +7443,13 @@
             </button>
           `;
         } else {
-          badge.textContent = '✅ HỌC SINH ĐÃ SẴN SÀNG';
-          badge.style.background = '#10B981';
-          badge.style.color = '#FFFFFF';
-          actionArea.innerHTML = `
-            <div class="waiting-member-pill" id="waitingForHostBadge">
-              ✋ Đã Sẵn Sàng — Chờ Cô Giáo bấm BẮT ĐẦU...
-            </div>
-            <button class="hud-mini-btn" onclick="openOnboardingModal()">🏳️ Đổi Đội</button>
-            <button class="hud-mini-btn" onclick="toggleStudentBrowserFullscreen()">⛶ Full Màn Hình</button>
-          `;
+          bar.classList.remove('active');
         }
       } else {
+        // Student view: NEVER show the huge #hostLobbyOverlayBar on top of the student's map!
+        // Always use the ultra-compact 1-line pill #studentPlayingTopHud so the top of the map is 100% clear.
         bar.classList.remove('active');
-        if (!isMeHost && studentPlayHud) {
+        if (studentPlayHud) {
           studentPlayHud.classList.add('active');
           const dirInfo = FOUR_DIRECTIONS[myGroup.direction] || FOUR_DIRECTIONS.east;
           const avEl = document.getElementById('fsHudAvatar');
@@ -7438,15 +7462,24 @@
           const tName = document.getElementById('fsHudTeamName');
           if (tName) tName.textContent = myGroup.teamName;
           const stText = document.getElementById('fsHudStatsText');
-          if (stText) {
-            stText.textContent = `🔗 Phòng #${currentRoomCode} • 🏯 Chặng ${Math.min(4, myGroup.currentStage)}/4 (${myGroup.conqueredStages.length}/4 qua) • 🪙 ${myGroup.gold} • 🔥 x${myGroup.streak}`;
-          }
+          const changeBtn = document.getElementById('btnFsChangeTeam');
           const lbBtn = document.getElementById('btnFsOpenLb');
-          if (lbBtn) {
-            lbBtn.style.display = myGroup.conqueredStages.includes(4) ? 'inline-flex' : 'none';
+          const scorePoints = myGroup.conqueredStages.length * 10;
+          if (roomMatchState.status === 'WAITING') {
+            if (stText) {
+              stText.textContent = `⏳ Sẵn sàng • #${currentRoomCode}`;
+            }
+            if (changeBtn) changeBtn.style.display = 'inline-flex';
+            if (lbBtn) lbBtn.style.display = 'none';
+          } else {
+            if (stText) {
+              stText.textContent = `⛰️ Chặng ${myGroup.conqueredStages.length}/4 • ⭐ ${scorePoints} điểm`;
+            }
+            if (changeBtn) changeBtn.style.display = 'none';
+            if (lbBtn) {
+              lbBtn.style.display = myGroup.conqueredStages.includes(4) ? 'inline-flex' : 'none';
+            }
           }
-        } else if (studentPlayHud) {
-          studentPlayHud.classList.remove('active');
         }
       }
     }
