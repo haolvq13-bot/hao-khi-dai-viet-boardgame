@@ -718,30 +718,36 @@
     /* CRISP VECTOR HTML MAP LABELS (100% RAZOR-SHARP AT ANY RESOLUTION) */
     .olimpia-map-hud-title {
       position: absolute;
-      left: 2.2%;
-      top: 9.2%;
+      left: 1.6%;
+      top: 10.5%;
       z-index: 14;
       pointer-events: none;
-      background: rgba(15, 23, 42, 0.85);
-      border: 2.5px solid #F59E0B;
-      border-radius: 16px;
-      padding: 10px 16px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+      background: rgba(15, 23, 42, 0.88);
+      border: 2px solid #F59E0B;
+      border-radius: 14px;
+      padding: 7px 13px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
       backdrop-filter: blur(4px);
+      transition: top 0.2s ease;
+    }
+
+    .host-lobby-overlay-bar.active ~ .olimpia-map-hud-title,
+    .student-playing-top-hud.active ~ .olimpia-map-hud-title {
+      top: 15.8%;
     }
 
     .olimpia-map-hud-title .main-t {
-      font-size: clamp(16px, 2vw, 24px);
+      font-size: clamp(13px, 1.5vw, 19px);
       font-weight: 900;
       color: #FEF08A;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.4px;
       text-shadow: 0 2px 6px rgba(0, 0, 0, 0.75);
       line-height: 1.15;
     }
 
     .olimpia-map-hud-title .sub-t {
-      margin-top: 4px;
-      font-size: clamp(11px, 1.1vw, 13px);
+      margin-top: 3px;
+      font-size: clamp(10px, 0.95vw, 12px);
       font-weight: 800;
       color: #E2E8F0;
       display: flex;
@@ -749,51 +755,10 @@
       flex-wrap: wrap;
     }
 
-    .olimpia-stage-sign {
-      position: absolute;
-      transform: translate(-50%, -50%);
-      z-index: 15;
-      pointer-events: none;
-      background: linear-gradient(180deg, #15803D 0%, #14532D 100%);
-      border: 2.5px solid #FEF08A;
-      border-radius: 12px;
-      padding: 5px 12px;
-      text-align: center;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.48);
-      white-space: nowrap;
-    }
-
-    .olimpia-stage-sign .s-head {
-      font-size: clamp(11px, 1.15vw, 14px);
-      font-weight: 900;
-      color: #FEF08A;
-      letter-spacing: 0.3px;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.65);
-    }
-
-    .olimpia-stage-sign .s-sub {
-      font-size: clamp(9.5px, 0.95vw, 11.5px);
-      font-weight: 800;
-      color: #FFFFFF;
-    }
-
-    .olimpia-start-banner {
-      position: absolute;
-      left: 50.0%;
-      top: 95.5%;
-      transform: translate(-50%, -50%);
-      z-index: 25;
-      pointer-events: none;
-      background: linear-gradient(90deg, #78350F 0%, #B45309 50%, #78350F 100%);
-      color: #FEF08A;
-      border: 2.5px solid #FDE047;
-      border-radius: 999px;
-      padding: 3px 18px;
-      font-size: clamp(11px, 1.2vw, 14px);
-      font-weight: 900;
-      letter-spacing: 1px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.55);
-      white-space: nowrap;
+    @media (max-width: 640px) {
+      .olimpia-map-hud-title {
+        display: none;
+      }
     }
 
     /* 3D Student Avatar Token Moving Smoothly Along the Olympia Road */
@@ -1387,8 +1352,9 @@
 
     .options-grid {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 9px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      align-items: stretch;
       margin-bottom: 12px;
     }
 
@@ -1396,35 +1362,47 @@
       background: #F8FAFC;
       border: 2.5px solid #CBD5E1;
       border-radius: 15px;
-      padding: 12px 15px;
+      padding: 11px 12px;
       text-align: left;
       font-family: inherit;
-      font-size: 14.5px;
-      font-weight: 700;
+      font-size: 13.5px;
+      font-weight: 800;
+      line-height: 1.38;
       color: var(--text-ink);
       cursor: pointer;
       display: flex;
-      align-items: center;
-      gap: 12px;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: space-between;
+      gap: 8px;
       box-shadow: 0 4px 0 #CBD5E1;
       transition: all 0.14s ease;
+      min-width: 0;
+    }
+
+    .option-btn-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      width: 100%;
     }
 
     .option-btn:hover:not(:disabled) {
       background: #FEF3C7;
       border-color: var(--primary-gold);
-      transform: translateX(4px);
+      transform: translateY(-2px);
     }
 
     .option-letter {
-      width: 30px;
-      height: 30px;
-      border-radius: 9px;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
       background: var(--primary-gold);
       color: #FFFFFF;
       font-family: 'JetBrains Mono', monospace;
       font-weight: 900;
-      font-size: 14px;
+      font-size: 13.5px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -2428,59 +2406,85 @@
       flex-shrink: 0;
     }
 
-    /* Stage 4 Drag-and-Drop Arena */
+    /* Stage 4 Drag-and-Drop Arena — HORIZONTAL NON-SCROLLING TRAY + 3 TARGET CARDS */
     .stage4-dnd-container {
-      display: grid;
-      grid-template-columns: 1.15fr 0.95fr;
-      gap: 14px;
-      align-items: start;
-      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 8px;
     }
 
-    @media (max-width: 760px) {
-      .stage4-dnd-container {
-        grid-template-columns: 1fr;
-        gap: 10px;
-      }
+    .stage4-top-tray-box {
+      background: linear-gradient(180deg, #ECFDF5 0%, #D1FAE5 100%);
+      border: 2px solid #10B981;
+      border-radius: 14px;
+      padding: 8px 10px;
+    }
+
+    .stage4-bottom-targets-box {
+      background: #F8FAFC;
+      border: 2px solid #CBD5E1;
+      border-radius: 14px;
+      padding: 8px 10px;
+    }
+
+    #matchRightCol {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    #matchLeftCol {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      align-items: stretch;
     }
 
     .stage4-evidence-card {
       background: #FFFFFF;
       border: 2.5px solid #CBD5E1;
-      border-radius: 16px;
-      padding: 10px 12px;
-      margin-bottom: 10px;
-      box-shadow: 0 4px 0 #CBD5E1;
+      border-radius: 13px;
+      padding: 8px 10px;
+      margin-bottom: 0;
+      box-shadow: 0 3px 0 #CBD5E1;
       transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 6px;
     }
 
+    .stage4-evidence-card.paired,
     .stage4-evidence-card.paired-card {
       border-color: #10B981;
       background: #ECFDF5;
-      box-shadow: 0 4px 0 #059669;
+      box-shadow: 0 3px 0 #059669;
     }
 
     .stage4-evidence-text {
-      font-size: 13.5px;
+      font-size: 12.5px;
       font-weight: 800;
       color: var(--text-ink);
-      line-height: 1.42;
-      margin-bottom: 8px;
+      line-height: 1.35;
+      margin-bottom: 0;
     }
 
     .stage4-drop-slot {
-      border: 2.5px dashed #F59E0B;
+      border: 2px dashed #F59E0B;
       background: #FFFBEB;
-      border-radius: 12px;
-      padding: 10px 12px;
-      min-height: 50px;
+      border-radius: 10px;
+      padding: 7px 8px;
+      min-height: 42px;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
-      font-size: 12.5px;
+      font-size: 11.5px;
       font-weight: 800;
       color: #B45309;
+      line-height: 1.3;
       transition: all 0.18s ease;
       cursor: pointer;
     }
@@ -2490,9 +2494,10 @@
       background: #D1FAE5;
       color: #065F46;
       transform: scale(1.02);
-      box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.3);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3);
     }
 
+    .stage4-drop-slot.paired,
     .stage4-drop-slot.paired-slot {
       border-style: solid;
       border-color: #059669;
@@ -2505,19 +2510,19 @@
     .stage4-drag-chip {
       background: linear-gradient(180deg, #FFFFFF 0%, #FEF3C7 100%);
       border: 2.5px solid #D97706;
-      border-radius: 14px;
-      padding: 11px 13px;
-      margin-bottom: 9px;
-      font-size: 13.5px;
+      border-radius: 12px;
+      padding: 8px 10px;
+      margin-bottom: 0;
+      font-size: 12px;
       font-weight: 800;
       color: #0F172A;
-      line-height: 1.4;
+      line-height: 1.32;
       cursor: grab;
-      box-shadow: 0 4px 0 #B45309, 0 6px 14px rgba(15, 23, 42, 0.12);
+      box-shadow: 0 3px 0 #B45309, 0 4px 10px rgba(15, 23, 42, 0.1);
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
-      gap: 10px;
+      gap: 6px;
       touch-action: none;
       transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
@@ -2530,16 +2535,77 @@
     .stage4-drag-chip.selected-chip {
       border-color: #0284C7;
       background: #E0F2FE;
-      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.35), 0 4px 0 #0369A1;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.35), 0 3px 0 #0369A1;
     }
 
+    .stage4-drag-chip.paired,
     .stage4-drag-chip.paired-chip {
-      opacity: 0.48;
+      opacity: 0.45;
       background: #D1FAE5;
       border-color: #10B981;
       box-shadow: none;
       cursor: default;
       pointer-events: none;
+    }
+
+    @media (max-width: 720px) {
+      .options-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 6px !important;
+      }
+      .option-btn {
+        padding: 7px 6px !important;
+        font-size: 11px !important;
+        border-radius: 11px !important;
+        gap: 5px !important;
+      }
+      .option-letter {
+        width: 22px !important;
+        height: 22px !important;
+        font-size: 11px !important;
+        border-radius: 6px !important;
+      }
+      .drag-handle-pill {
+        font-size: 9px !important;
+        padding: 2px 5px !important;
+      }
+      .stage4-top-tray-box,
+      .stage4-bottom-targets-box {
+        padding: 6px 7px !important;
+      }
+      #matchRightCol {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 5px !important;
+      }
+      .stage4-drag-chip {
+        padding: 6px 6px !important;
+        font-size: 10.5px !important;
+        line-height: 1.25 !important;
+        border-radius: 10px !important;
+        flex-direction: column !important;
+        gap: 3px !important;
+      }
+      #matchLeftCol {
+        grid-template-columns: 1fr !important;
+        gap: 6px !important;
+      }
+      .stage4-evidence-card {
+        display: grid !important;
+        grid-template-columns: 1.15fr 0.85fr !important;
+        align-items: stretch !important;
+        gap: 6px !important;
+        padding: 6px 7px !important;
+      }
+      .stage4-evidence-text {
+        font-size: 11px !important;
+        line-height: 1.28 !important;
+      }
+      .stage4-drop-slot {
+        min-height: 38px !important;
+        padding: 5px 6px !important;
+        font-size: 10.5px !important;
+        line-height: 1.22 !important;
+      }
     }
 
     .dnd-floating-ghost {
@@ -3117,18 +3183,6 @@
             <span>🔵 ĐƯỜNG ĐI CHUNG</span>
           </div>
         </div>
-        <div class="olimpia-stage-sign" style="left: 14.5%; top: 37.5%;">
-          <div class="s-head">1. CHẶNG 1: KHỞI ĐỘNG</div>
-          <div class="s-sub">[KIẾN THỨC CHUNG]</div>
-        </div>
-        <div class="olimpia-stage-sign" style="left: 38.0%; top: 34.5%;">
-          <div class="s-head">2. CHẶNG 2: VƯỢT CHƯỚNG NGẠI VẬT</div>
-          <div class="s-sub">[GIẢI MÃ CHƯỚNG NGẠI VẬT]</div>
-        </div>
-        <div class="olimpia-stage-sign" style="left: 48.0%; top: 15.5%;">
-          <div class="s-head">3. CHẶNG 3: TĂNG TỐC</div>
-          <div class="s-sub">[TƯ DUY LOGIC / BỨT PHÁ]</div>
-        </div>
         <div id="mapStagesContainer"></div>
         <div id="mapTokensContainer"></div>
 
@@ -3313,30 +3367,35 @@
         </div>
       </div>
 
-      <!-- Standard Question Area (Stages 1, 2, 3 — WITH DRAG AND DROP TARGET BOX!) -->
+      <!-- Standard Question Area (Stages 1, 2, 3 — WITH DRAG AND DROP TARGET BOX & 3 HORIZONTAL OPTIONS!) -->
       <div id="standardBattleQuestionArea">
         <div class="question-prompt" id="battleQuestionPrompt"></div>
         <div class="source-excerpt" id="battleSourceExcerpt"></div>
         <div class="stage123-drop-box" id="stage123DropZone">
-          📥 <span><strong>Ô ĐÁP ÁN TRẠM LEO NÚI:</strong> Kéo thẻ đáp án đúng (A, B, C hoặc D) bên dưới thả vào ô này (hoặc chạm vào thẻ)!</span>
+          📥 <span><strong>Ô ĐÁP ÁN TRẠM LEO NÚI:</strong> Kéo 1 trong 3 thẻ đáp án ngang (A, B, C) bên dưới thả vào ô này (hoặc chạm vào thẻ)!</span>
         </div>
         <div class="options-grid" id="battleOptionsGrid"></div>
       </div>
 
-      <!-- Stage 4 Grand Reunion (KÉO THẢ 3 CẶP DẪN CHỨNG & Ý NGHĨA RÚT RA + CHỐT KIẾN THỨC + BẢNG XẾP HẠNG TỐI GIẢN) -->
+      <!-- Stage 4 Grand Reunion (KÉO THẢ 3 CẶP DẪN CHỨNG & Ý NGHĨA RÚT RA GỌN TRÊN 1 MÀN HÌNH ĐIỆN THOẠI & MÁY TÍNH) -->
       <div id="bossMatchingQuestionArea" style="display:none;">
         <div id="bossMatchingInteractiveBox">
-          <div class="question-prompt" style="font-size:15.5px;">
-            ⛰️ <strong>FINAL: Đỉnh Olimpia — Vị Trí Chiến Thắng (Kéo - Thả Ghép Nối):</strong> Em hãy <strong>giữ và kéo thẻ <em>"Ý nghĩa rút ra"</em> (Cột phải / bên dưới) thả vào đúng ô <em>"Dẫn chứng/biểu hiện"</em> tương ứng</strong> để chinh phục Đỉnh Olimpia và mở <strong>Bảng Xếp Hạng & Bảng Chốt Kiến Thức</strong>:
+          <div class="question-prompt" style="font-size:13.5px; padding:7px 11px; margin-bottom:8px;">
+            🏆 <strong>FINAL: Đỉnh Olimpia (Kéo - Thả 3 Cặp):</strong> Giữ & kéo thẻ <strong><em>"Ý nghĩa rút ra"</em> (Khay ngang bên trên)</strong> thả xuống đúng ô <strong><em>"Dẫn chứng/biểu hiện"</em> (Bên dưới)</strong> — hoặc chạm thẻ rồi chạm ô!
           </div>
-          <div class="stage4-dnd-container matching-arena">
-            <div>
-              <div style="font-size:12.5px; font-weight:900; color:#991B1B; margin-bottom:8px;">📜 3 HỘP ĐÍCH: DẪN CHỨNG / BIỂU HIỆN (THẢ THẺ VÀO ĐÂY)</div>
-              <div id="matchLeftCol"></div>
-            </div>
-            <div>
-              <div style="font-size:12.5px; font-weight:900; color:#047857; margin-bottom:8px;">✋ KHAY THẺ KÉO: Ý NGHĨA RÚT RA (GIỮ & KÉO THẢ SANG Ô TRÁI)</div>
+          <div class="stage4-dnd-container">
+            <div class="stage4-top-tray-box">
+              <div style="font-size:11.5px; font-weight:900; color:#065F46; margin-bottom:6px; display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap;">
+                <span>✋ BƯỚC 1 — KHAY 3 THẺ KÉO NGANG: Ý NGHĨA RÚT RA (KÉO XUỐNG HOẶC CHẠM CHỌN)</span>
+                <span style="font-size:10.5px; background:#FEF3C7; color:#92400E; padding:1.5px 7px; border-radius:999px; border:1px solid #F59E0B;">3 thẻ nằm ngang — Không cần cuộn trang</span>
+              </div>
               <div id="matchRightCol"></div>
+            </div>
+            <div class="stage4-bottom-targets-box">
+              <div style="font-size:11.5px; font-weight:900; color:#991B1B; margin-bottom:6px;">
+                📜 BƯỚC 2 — 3 HỘP ĐÍCH: DẪN CHỨNG / BIỂU HIỆN (THẢ THẺ Ý NGHĨA VÀO Ô TƯƠNG ỨNG)
+              </div>
+              <div id="matchLeftCol"></div>
             </div>
           </div>
         </div>
@@ -5466,7 +5525,7 @@
       const dropBox = document.getElementById('stage123DropZone');
       if (dropBox) {
         dropBox.className = 'stage123-drop-box';
-        dropBox.innerHTML = `📥 <span><strong>Ô THẢ ĐÁP ÁN:</strong> Kéo thẻ đáp án bên dưới thả vào đây (hoặc chạm vào thẻ đáp án)!</span>`;
+        dropBox.innerHTML = `📥 <span><strong>Ô THẢ ĐÁP ÁN:</strong> Kéo 1 trong 3 thẻ đáp án ngang (A, B, C) bên dưới thả vào đây (hoặc chạm vào thẻ)!</span>`;
         wireHtml5DropZone(dropBox, (draggedBtn) => {
           if (draggedBtn && !draggedBtn.disabled) {
             submitBattleAnswer(draggedBtn, draggedBtn.dataset.correct === '1');
@@ -5476,16 +5535,18 @@
 
       const grid = document.getElementById('battleOptionsGrid');
       grid.innerHTML = '';
-      const letters = ['A', 'B', 'C', 'D'];
-      activeStageBattle.options.forEach((opt, idx) => {
+      const letters = ['A', 'B', 'C'];
+      activeStageBattle.options.slice(0, 3).forEach((opt, idx) => {
         const btn = document.createElement('button');
         btn.className = 'option-btn draggable-option';
         btn.dataset.correct = opt.isCorrect ? '1' : '0';
         btn.dataset.dragValue = String(idx);
         btn.innerHTML = `
-          <span class="option-letter">${letters[idx]}</span>
-          <span style="flex:1;">${opt.text}</span>
-          <span class="drag-handle-pill">✋ KÉO THẢ</span>
+          <div class="option-btn-top-row">
+            <span class="option-letter">${letters[idx]}</span>
+            <span class="drag-handle-pill">✋ KÉO THẢ</span>
+          </div>
+          <div style="flex:1; width:100%;">${opt.text}</div>
         `;
         btn.onclick = () => submitBattleAnswer(btn, opt.isCorrect);
         attachUniversalDragAndDrop(
@@ -5528,13 +5589,12 @@
         return {
           stageNum,
           targetRow,
-          prompt: `[${wp.placeName}] Từ "Dẫn chứng / biểu hiện" lịch sử dưới đây, hãy KÉO THẢ "Ý nghĩa rút ra" chính xác vào Ô Thả Đáp Án:`,
+          prompt: `[${wp.placeName}] Từ "Dẫn chứng / biểu hiện" lịch sử dưới đây, hãy KÉO THẢ 1 trong 3 thẻ "Ý nghĩa rút ra" (A, B, C) vào Ô Thả Đáp Án:`,
           excerpt: `📜 Dẫn chứng / biểu hiện: "${targetRow.evidence}"`,
           options: shuffleArray([
             { text: targetRow.role, isCorrect: true },
             { text: otherRows[0].role, isCorrect: false },
-            { text: otherRows[1].role, isCorrect: false },
-            { text: 'Làm suy giảm tinh thần đoàn kết dân tộc và phụ thuộc hoàn toàn vào ngoại bang', isCorrect: false }
+            { text: otherRows[1].role, isCorrect: false }
           ])
         };
       }
@@ -5543,13 +5603,12 @@
         return {
           stageNum,
           targetRow,
-          prompt: `[${wp.placeName}] Để làm rõ cho "Ý nghĩa rút ra" dưới đây, hãy KÉO THẢ "Dẫn chứng / biểu hiện" đúng vào Ô Thả Đáp Án:`,
+          prompt: `[${wp.placeName}] Để làm rõ cho "Ý nghĩa rút ra" dưới đây, hãy KÉO THẢ 1 trong 3 thẻ "Dẫn chứng / biểu hiện" (A, B, C) vào Ô Thả Đáp Án:`,
           excerpt: `👑 Ý nghĩa rút ra: "${targetRow.role}"`,
           options: shuffleArray([
             { text: targetRow.evidence, isCorrect: true },
             { text: otherRows[0].evidence, isCorrect: false },
-            { text: otherRows[1].evidence, isCorrect: false },
-            { text: 'Bãi bỏ quân đội thường trực và cắt giảm toàn bộ các cuộc tập trận phòng thủ đất nước', isCorrect: false }
+            { text: otherRows[1].evidence, isCorrect: false }
           ])
         };
       }
@@ -5562,13 +5621,12 @@
       return {
         stageNum,
         targetRow,
-        prompt: `[${wp.placeName}] KÉO THẢ cặp từ khóa còn thiếu vào vị trí (1) và (2) để vượt qua chặng thi:`,
+        prompt: `[${wp.placeName}] KÉO THẢ 1 trong 3 cặp từ khóa (A, B, C) vào vị trí (1) và (2) để vượt qua chặng thi:`,
         excerpt: `📜 Dẫn chứng/biểu hiện: ${maskedEv}<br/>👑 Ý nghĩa rút ra: ${maskedRl}`,
         options: shuffleArray([
           { text: `(1) "${kw1}"  ↔  (2) "${kw2}"`, isCorrect: true },
           { text: `(1) "${otherRows[0].keywords[0]}"  ↔  (2) "${otherRows[0].keywords[1]}"`, isCorrect: false },
-          { text: `(1) "${otherRows[1].keywords[0]}"  ↔  (2) "${otherRows[1].keywords[1]}"`, isCorrect: false },
-          { text: `(1) "${targetRow.wrongCloze}"`, isCorrect: false }
+          { text: `(1) "${otherRows[1].keywords[0]}"  ↔  (2) "${otherRows[1].keywords[1]}"`, isCorrect: false }
         ])
       };
     }
@@ -5707,10 +5765,12 @@
      * 9. STAGE 4 SUMMIT CHALLENGE (CHẶNG 4 ĐỈNH THIÊNG VỀ NGUỒN — KÉO THẢ 3 CẶP)
      * ===================================================================== */
     let selectedLeftId = null;
+    let selectedRightId = null;
     let pairedRowIds = [];
 
     function openBossCitadelChallenge(opts = {}) {
       selectedLeftId = null;
+      selectedRightId = null;
       const isTeacher = isTeacherAuthenticated && myRole === 'TEACHER';
       const isDone4 = myGroup.conqueredStages.includes(4);
       const showCompletedLeaderboard = Boolean(isTeacher || isDone4 || opts.viewOnly || opts.completedView);
@@ -5792,7 +5852,7 @@
       leftCol.innerHTML = '';
       rightCol.innerHTML = '';
 
-      // 1. Render 3 Evidence Cards + Drop Zones in #matchLeftCol
+      // 1. Render 3 Evidence Cards + Drop Zones in #matchLeftCol (Bottom Target Row)
       CORE_HISTORY_ROWS.forEach((row) => {
         const isPaired = pairedRowIds.includes(row.id);
         const card = document.createElement('div');
@@ -5805,11 +5865,20 @@
         dropSlot.innerHTML = isPaired
           ? `✅ <span><strong>Ý nghĩa rút ra:</strong> ${row.role}</span>`
           : selectedLeftId === row.id
-            ? `👉 <span>Đang chọn ô này — Hãy bấm hoặc kéo thẻ <strong>"Ý nghĩa rút ra"</strong> bên phải thả vào đây!</span>`
-            : `📥 <span>Kéo thẻ <strong>"Ý nghĩa rút ra"</strong> thả vào ô này (hoặc chạm để chọn)</span>`;
+            ? `👉 <span>Đang chọn ô này — Hãy chạm hoặc kéo 1 thẻ <strong>"Ý nghĩa rút ra"</strong> ở khay trên thả vào đây!</span>`
+            : selectedRightId
+              ? `📥 <span>Chạm vào đây để thả thẻ <strong>"Ý nghĩa rút ra"</strong> đang chọn!</span>`
+              : `📥 <span>Kéo thẻ <strong>"Ý nghĩa rút ra"</strong> ở trên thả vào đây (hoặc chạm chọn)</span>`;
 
         if (!isPaired) {
           card.onclick = () => {
+            if (selectedRightId) {
+              selectedLeftId = row.id;
+              const rId = selectedRightId;
+              selectedRightId = null;
+              onBossRightClick(rId);
+              return;
+            }
             selectedLeftId = row.id;
             playSound('step');
             renderBossMatchColumns();
@@ -5818,6 +5887,7 @@
             const roleId = draggedChip.dataset.id;
             if (roleId) {
               selectedLeftId = row.id;
+              selectedRightId = null;
               onBossRightClick(roleId);
             }
           });
@@ -5825,33 +5895,36 @@
 
         const evTitle = document.createElement('div');
         evTitle.className = 'stage4-evidence-text';
-        evTitle.innerHTML = `${row.eraIcon} <strong>Dẫn chứng/biểu hiện:</strong> ${row.evidence}`;
+        evTitle.innerHTML = `${row.eraIcon} <strong>Dẫn chứng:</strong> ${row.evidence}`;
 
         card.appendChild(evTitle);
         card.appendChild(dropSlot);
         leftCol.appendChild(card);
       });
 
-      // 2. Render 3 Draggable "Ý nghĩa rút ra" Chips in #matchRightCol
+      // 2. Render 3 Draggable "Ý nghĩa rút ra" Chips in #matchRightCol (Top Horizontal Tray)
       (window._bossRightOrder || ['row0', 'row1', 'row2']).forEach((rId) => {
         const row = CORE_HISTORY_ROWS.find(r => r.id === rId);
         const isPaired = pairedRowIds.includes(row.id);
+        const isChipSelected = selectedRightId === row.id;
         const chip = document.createElement('div');
-        chip.className = `match-item stage4-drag-chip ${isPaired ? 'paired' : ''}`;
+        chip.className = `match-item stage4-drag-chip ${isPaired ? 'paired' : isChipSelected ? 'selected-chip' : ''}`;
         chip.dataset.id = row.id;
         chip.dataset.dragValue = row.id;
         chip.innerHTML = `
-          <span class="drag-grip-icon">${isPaired ? '✅' : '✋'}</span>
+          <span class="drag-grip-icon" style="font-size:11px; font-weight:900; color:#92400E;">${isPaired ? '✅ Đã ghép' : isChipSelected ? '👉 Đang chọn' : '✋ Kéo/Chạm'}</span>
           <span style="flex:1;">👑 ${row.role}</span>
         `;
         if (!isPaired) {
           chip.onclick = () => {
-            if (!selectedLeftId) {
-              // Auto-select first unpaired evidence row if student taps a role chip directly, or guide them
-              showToast('👉 Hãy KÉO THẢ thẻ này vào ô "Dẫn chứng/biểu hiện" bên trái (hoặc chạm chọn 1 ô bên trái trước)!', false);
+            if (selectedLeftId) {
+              selectedRightId = null;
+              onBossRightClick(row.id);
               return;
             }
-            onBossRightClick(row.id);
+            selectedRightId = (selectedRightId === row.id) ? null : row.id;
+            playSound('step');
+            renderBossMatchColumns();
           };
           attachUniversalDragAndDrop(
             chip,
@@ -5861,6 +5934,7 @@
               const draggedRoleId = draggedEl.dataset.id;
               if (targetRowId && draggedRoleId) {
                 selectedLeftId = targetRowId;
+                selectedRightId = null;
                 onBossRightClick(draggedRoleId);
               }
             },
