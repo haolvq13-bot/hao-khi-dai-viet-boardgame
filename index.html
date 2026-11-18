@@ -3757,10 +3757,17 @@
         elapsedSec: 0,
         isPlayer: false,
         online: false,
+        connected: false,
         isReady: false,
         claimedBy: null,
         revision: 0
       };
+    }
+
+    function isLaneCurrentlyConnected(lane) {
+      if (!lane || !lane.online) return false;
+      return typeof window.classroomLaneIsLive === 'function'
+        ? window.classroomLaneIsLive(lane) : lane.connected === true;
     }
 
     let allFourLanesState = {
@@ -4813,8 +4820,16 @@
       const freeDirs = Object.keys(FOUR_DIRECTIONS).filter(k => !isDirectionTakenByOther(k));
       const noticeEl = document.getElementById('onboardTakenNotice');
       const confirmBtn = document.getElementById('btnConfirmEnterBoard');
+      const relayState = window.classroomRelayStatus?.();
+      const teacherAvailable = !window.classroomRelayEnabled || Boolean(relayState?.ready && relayState.teacherPresent && !relayState.conflict);
+      if (confirmBtn) confirmBtn.disabled = Boolean(pendingTeamClaim) || !teacherAvailable;
       if (noticeEl) {
-        if (freeDirs.length === 0) {
+        if (!teacherAvailable) {
+          noticeEl.style.color = '#92400E';
+          noticeEl.textContent = relayState?.ready
+            ? `⏳ Phòng #${currentRoomCode} chưa có cô giáo kết nối. Nhờ cô mở đúng phòng này; trang sẽ tự cập nhật.`
+            : `⏳ Đang kết nối phòng #${currentRoomCode}. Giữ trang mở, kết nối sẽ tự thử lại.`;
+        } else if (freeDirs.length === 0) {
           noticeEl.style.color = '#B91C1B';
           if (isTeacherAuthenticated) {
             noticeEl.innerHTML = `
@@ -5014,6 +5029,7 @@
     function handleTeacherTeamClaim(payload) {
       if (myRole !== 'TEACHER' || !isTeacherAuthenticated) return;
       if (!payload.claimedBy || !payload.requestId || !FOUR_DIRECTIONS[payload.direction]) return;
+      window.classroomPrepareTeamClaim?.();
       const existing = Object.keys(allFourLanesState).find(k =>
         allFourLanesState[k].online && allFourLanesState[k].claimedBy === payload.claimedBy
       );
@@ -5264,9 +5280,17 @@
 
         const node = document.createElement('div');
         node.className = `stage-node my-lane ${isConquered ? 'conquered' : ''} ${isLocked ? 'locked-stage' : ''} ${isActiveTarget ? 'active-target' : ''}`;
+        node.setAttribute('role', 'button');
+        node.tabIndex = 0;
+        node.setAttribute('aria-label', 'Chặng ' + stageNum + ': ' + wp.title);
+        node.onkeydown = event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); node.click(); } };
         node.style.left = wp.x + '%';
         node.style.top = wp.y + '%';
         node.onclick = () => {
+          if (isTeacherView && stageNum === 1 && roomMatchState.status === 'WAITING') {
+            hostTriggerStartMatch(1);
+            return;
+          }
           if (isTeacherView) {
             showToast(`👩‍🏫 ${wp.title} — Các đội trả lời đúng câu hỏi Kéo-Thả để vượt qua chặng này!`);
             return;
@@ -5318,12 +5342,12 @@
       Object.values(FOUR_DIRECTIONS).forEach((dir) => {
         const laneState = allFourLanesState[dir.key];
         const isMe = !isTeacherView && dir.key === myGroup.direction;
-        const isOnline = isMe || Boolean(laneState && laneState.online);
+        const isOnline = isLaneCurrentlyConnected(laneState);
         const stepIdx = isMe
           ? myGroup.tokenStepIdx
           : (typeof laneState.tokenStepIdx === 'number' ? laneState.tokenStepIdx : STAGE_STEP_MAP[Math.min(4, laneState.stageProgress)]);
         const pt = dir.pathSteps[stepIdx] || dir.pathSteps[0];
-        const bubbleText = isMe ? myGroup.stepBubbleText : (laneState.stepBubbleText || '');
+        const bubbleText = !isOnline ? (laneState.online ? '🔴 Mất kết nối' : '') : isMe ? myGroup.stepBubbleText : (laneState.stepBubbleText || '');
         const rankInfo = liveRankMap[dir.key];
         const rankBadgeStr = (isOnline && (roomMatchState.status === 'PLAYING' || laneState.stageProgress > 0) && rankInfo)
           ? `${rankInfo.medalIcon}#${rankInfo.rank} `
@@ -5412,7 +5436,7 @@
       }
 
       const startBtn = document.getElementById('btnTeacherStartMatchSidebar');
-      const onlineList = Object.values(allFourLanesState).filter(l => l.online);
+      const onlineList = Object.values(allFourLanesState).filter(isLaneCurrentlyConnected);
       const onlineCount = onlineList.length;
       const readyCount = onlineList.filter(l => l.isReady !== false).length;
       const canTeacherStart = !teacherRoomConflict && onlineCount === 4 && readyCount === 4;
@@ -5461,7 +5485,7 @@
         const rankedList = computeFourGroupsRankingAndAnalysis();
         rankedList.forEach((r) => {
           const dir = FOUR_DIRECTIONS[r.direction];
-          const isOnline = r.online;
+          const isOnline = isLaneCurrentlyConnected(allFourLanesState[r.direction]);
           const item = document.createElement('div');
           item.style.cssText = `padding:9px 11px; border-radius:12px; border:2.5px solid ${isOnline ? dir.color : '#CBD5E1'}; background:${r.rank === 1 && r.stageProgress >= 4 ? '#FEF3C7' : isOnline ? '#FFFFFF' : '#F8FAFC'}; font-size:12px; display:flex; align-items:center; justify-content:space-between; gap:8px; cursor:pointer;`;
           item.onclick = () => openLeaderboardModal();
@@ -5470,7 +5494,7 @@
               <img src="${r.img}" alt="${r.teamName}" style="width:32px; height:32px; border-radius:50%; border:2px solid ${dir.color}; object-fit:cover; background:#FFF; flex-shrink:0;" />
               <div style="min-width:0; flex:1;">
                 <div style="font-weight:900; color:${dir.color}; font-size:10.5px;">
-                  ${isOnline ? `${r.medalIcon} HẠNG ${r.rank}` : `⚪ ${dir.name} (Chờ vào)`}
+                  ${isOnline ? `${r.medalIcon} HẠNG ${r.rank}` : allFourLanesState[r.direction].online ? `🔴 ${dir.name} (Mất kết nối)` : `⚪ ${dir.name} (Chờ vào)`}
                 </div>
                 <div style="font-weight:900; color:#0F172A; font-size:12.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
                   ${isOnline ? r.teamName : '⏳ Đang chờ nhóm vào...'}
@@ -6726,7 +6750,7 @@
       const base = isLocalLoopback
         ? 'https://haolvq13-bot.github.io/hao-khi-dai-viet-boardgame/'
         : window.location.href.split('?')[0].split('#')[0];
-      return `${base}?room=${encodeURIComponent(code)}&mode=student&v=20261118-relay`;
+      return `${base}?room=${encodeURIComponent(code)}&mode=student&v=20261118-live-presence`;
     }
 
     function updateQrModalUI() {
@@ -6754,7 +6778,7 @@
         Object.values(FOUR_DIRECTIONS).forEach((dir) => {
           const lane = allFourLanesState[dir.key];
           const isMe = hasClaimedCharacter && dir.key === myGroup.direction;
-          const isOnline = isMe || lane.online;
+          const isOnline = isLaneCurrentlyConnected(lane);
           const isHostLane = isOnline && lane.claimedBy && lane.claimedBy === roomMatchState.hostClientId;
           const div = document.createElement('div');
           div.style.cssText = `padding:6px 8px; border-radius:10px; border:2px solid ${isOnline ? dir.color : '#CBD5E1'}; background:${isOnline ? '#FFFFFF' : '#F1F5F9'}; font-size:11px;`;
@@ -6768,7 +6792,7 @@
       }
 
       const onlineCount = Object.values(allFourLanesState).filter(
-        l => (hasClaimedCharacter && l.direction === myGroup.direction) || l.online
+        l => isLaneCurrentlyConnected(l)
       ).length;
       const badge = document.getElementById('onlineCountBadge');
       if (badge) badge.textContent = `🟢 ${onlineCount}/4`;
@@ -6891,12 +6915,18 @@
           ) {
             roomMatchState.status = 'PLAYING';
             roomMatchState.startedAt = incomingMeta.startedAt || Date.now();
+            roomMatchState.launchStage = incomingMeta.launchStage || 0;
             onRoomMatchStartedEffect();
             updateAllUI();
           }
         }
         if (payload.lanes) {
           Object.values(payload.lanes).forEach((l) => {
+            if (l && window.classroomSnapshotLaneIsDeparted?.(l)) return;
+            if (l && FOUR_DIRECTIONS[l.direction] && l.online === false) {
+              allFourLanesState[l.direction] = createInitialLaneState(l.direction);
+              return;
+            }
             if (l && l.direction && l.online) {
               applyIncomingPlayerSync({ ...l, roomCode: currentRoomCode });
             }
@@ -6931,6 +6961,7 @@
         ) {
           roomMatchState.status = 'PLAYING';
           roomMatchState.startedAt = cmdStartedAt;
+          roomMatchState.launchStage = payload.roomMatchState?.launchStage || 0;
           onRoomMatchStartedEffect();
           updateAllUI();
         }
@@ -6966,6 +6997,7 @@
         elapsedSec: payload.elapsedSec || prevLane.elapsedSec || 0,
         isPlayer: false,
         online: true,
+        connected: payload.connected === true,
         isReady: payload.isReady !== false,
         claimedBy: payload.claimedBy || ('remote_' + payload.direction),
         revision: payload.revision || 0
@@ -6996,7 +7028,7 @@
 
       // On Teacher View: when all 4 online groups reach Stage 4, automatically open the Grand Ranking & Evaluation Modal!
       if (isTeacherAuthenticated && myRole === 'TEACHER' && !hasAutoOpenedTeacherFinalModal) {
-        const onlineLanes = Object.values(allFourLanesState).filter(l => l.online);
+        const onlineLanes = Object.values(allFourLanesState).filter(isLaneCurrentlyConnected);
         if (onlineLanes.length === 4 && onlineLanes.every(l => l.stageProgress >= 4)) {
           hasAutoOpenedTeacherFinalModal = true;
           launchFireworks(140);
@@ -7029,16 +7061,22 @@
         overlay.classList.add('active');
         setTimeout(() => overlay.classList.remove('active'), 1100);
       }
-      showToast('🥁 CÔ GIÁO ĐÃ BẤM BẮT ĐẦU! Bấm "⚔️ BẮT ĐẦU" để tiến quân ngay!');
+      showToast('🥁 TRẬN ĐẤU BẮT ĐẦU! Bấm trực tiếp vào chặng trên bản đồ để tiến quân.');
+      if (myRole === 'STUDENT' && hasClaimedCharacter && roomMatchState.launchStage === 1) {
+        const startEpoch = roomMatchState.startedAt;
+        setTimeout(() => {
+          if (roomMatchState.status === 'PLAYING' && roomMatchState.startedAt === startEpoch && myGroup.currentStage === 1) marchToStageAndOpenQuestion(1);
+        }, 1150);
+      }
     }
 
-    function hostTriggerStartMatch() {
+    function hostTriggerStartMatch(launchStage = 0) {
       if (!isTeacherAuthenticated || myRole !== 'TEACHER') {
         playSound('wrong');
         showToast('🔒 Chỉ Cô Giáo (Chủ Phòng) mới được bấm BẮT ĐẦU TRẬN ĐẤU!', true);
         return;
       }
-      const onlineList = Object.values(allFourLanesState).filter(l => l.online);
+      const onlineList = Object.values(allFourLanesState).filter(isLaneCurrentlyConnected);
       const readyList = onlineList.filter(l => l.isReady !== false);
       if (teacherRoomConflict || roomMatchState.status === 'PLAYING') return;
       if (onlineList.length < 4) {
@@ -7058,6 +7096,7 @@
         return;
       }
       roomMatchState.status = 'PLAYING';
+      roomMatchState.launchStage = launchStage === 1 ? 1 : 0;
       roomMatchState.startedAt = Date.now();
       roomMatchState.hostClientId = myClientId;
       roomMatchState.hostDirection = 'TEACHER';
@@ -7371,6 +7410,7 @@
     }
 
     function initWebRtcPeerMesh(code) {
+      if (window.classroomRelayEnabled) return;
       if (typeof Peer === 'undefined') return;
       const cleanCode = code.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() || '1010';
       const roleSuffix = myRole === 'TEACHER' ? 'teacher' : ('student-' + myClientId);
@@ -7416,7 +7456,7 @@
             updateAllUI();
             showToast('Phòng này đã có Cô Giáo mở. Hãy đóng cửa sổ chủ phòng cũ hoặc tạo mã phòng khác.', true);
           }
-          if (err && err.type === 'unavailable-id' && myRole === 'STUDENT' && !hasClaimedCharacter) {
+          if (err && err.type === 'unavailable-id' && myRole === 'STUDENT' && !hasClaimedCharacter && !window.classroomRelayEnabled) {
             myClientId = 'client_' + Math.random().toString(36).slice(2, 12) + '_' + Date.now();
             try { sessionStorage.setItem('hkdv_session_client_id', myClientId); } catch (e) {}
             if (pendingTeamClaim) pendingTeamClaim.request.claimedBy = myClientId;
@@ -7525,6 +7565,11 @@
       const nextCode = (code || '1010').trim().toUpperCase();
       const isRoomChanged = nextCode !== currentRoomCode;
       currentRoomCode = nextCode;
+      if (window.location.protocol === 'https:' || window.location.protocol === 'http:') {
+        const roomUrl = new URL(window.location.href);
+        roomUrl.searchParams.set('room', currentRoomCode);
+        window.history.replaceState(null, '', roomUrl);
+      }
 
       if (isRoomChanged) {
         hasClaimedCharacter = false;
@@ -7642,7 +7687,7 @@
       if (!bar) return;
 
       const onlineList = Object.values(allFourLanesState).filter(
-        l => (hasClaimedCharacter && l.direction === myGroup.direction) || l.online
+        l => isLaneCurrentlyConnected(l)
       );
       const onlineCount = onlineList.length;
 
@@ -7783,7 +7828,7 @@
         }
         renderTeacherHostSidebar();
 
-        const onlineCount = Object.values(allFourLanesState).filter(l => l.online).length;
+        const onlineCount = Object.values(allFourLanesState).filter(isLaneCurrentlyConnected).length;
         const finishedCount = Object.values(allFourLanesState).filter(l => l.online && l.stageProgress >= 4).length;
         if (guideBanner) {
           guideBanner.innerHTML = `👩‍🏫 <strong>Màn hình Cô Giáo (Phòng #${currentRoomCode})</strong>: Học sinh nhập Mã Phòng <strong>#${currentRoomCode}</strong> để chọn 1 trong 4 Đội Leo Núi ➔ Cô Giáo bấm <strong>"🥁 BẮT ĐẦU TRẬN ĐẤU"</strong>!`;
@@ -7942,6 +7987,6 @@
       }, 1500);
     });
   </script>
-  <script src="classroom-relay.js?v=20261118-relay"></script>
+  <script src="classroom-relay.js?v=20261118-live-presence"></script>
 </body>
 </html>
