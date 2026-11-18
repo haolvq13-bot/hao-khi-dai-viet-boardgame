@@ -3707,6 +3707,7 @@
     let myRole = _initUrlMode === 'teacher' ? 'TEACHER' : 'STUDENT'; // 'STUDENT' | 'TEACHER'
     let hasClaimedCharacter = false;
     let studentReadyAt = 0;
+    let localMatchStartedPerf = null;
     let roomMatchState = {
       status: 'WAITING', // 'WAITING' | 'PLAYING'
       hostClientId: null,
@@ -3734,6 +3735,7 @@
       conqueredStages: [],
       masteredRowIds: [],
       isReady: false,
+      syncRevision: 0,
       questionRoute: generateRandomizedRoute('east')
     };
 
@@ -3755,7 +3757,8 @@
         isPlayer: false,
         online: false,
         isReady: false,
-        claimedBy: null
+        claimedBy: null,
+        revision: 0
       };
     }
 
@@ -4686,6 +4689,7 @@
 
     function clearRoomLanesStateInternal(newHostClientId = null, newHostDirection = null, newHostTeamName = null) {
       const resetEpoch = Date.now();
+      localMatchStartedPerf = null;
       hasAutoOpenedTeacherFinalModal = false;
       closeLeaderboardModal();
       closeBattleModal();
@@ -4923,7 +4927,86 @@
       document.getElementById('onboardingModal').classList.add('open');
     }
 
-    function proceedToRulesGuideStep() {
+    let pendingTeamClaim = null;
+    const roomDiagnostics = [];
+    window.olimpiaRoomDiagnostics = roomDiagnostics;
+
+    function recordRoomDiagnostic(event, details = {}) {
+      roomDiagnostics.push({ event, roomCode: currentRoomCode, at: new Date().toISOString(), ...details });
+      if (roomDiagnostics.length > 200) roomDiagnostics.shift();
+    }
+
+    function requestTeamClaim(direction, teamName) {
+      if (pendingTeamClaim) return Promise.resolve(null);
+      return new Promise((resolve) => {
+        const request = {
+          type: 'TEAM_CLAIM_REQUEST', roomCode: currentRoomCode,
+          requestId: myClientId + '_' + Math.random().toString(36).slice(2),
+          claimedBy: myClientId, direction, teamName
+        };
+        const finish = (result) => {
+          clearInterval(retryTimer);
+          clearTimeout(timeoutTimer);
+          pendingTeamClaim = null;
+          resolve(result);
+        };
+        const send = () => {
+          if (syncChannel) {
+            try { syncChannel.postMessage(request); } catch (e) {}
+          }
+          sendToAllWebRtcPeers(request);
+        };
+        const retryTimer = setInterval(send, 600);
+        const timeoutTimer = setTimeout(() => {
+          recordRoomDiagnostic('team-claim-timeout');
+          finish(null);
+        }, 12000);
+        pendingTeamClaim = { requestId: request.requestId, finish };
+        initWebRtcPeerMesh(currentRoomCode);
+        send();
+      });
+    }
+
+    function handleTeacherTeamClaim(payload) {
+      if (myRole !== 'TEACHER' || !isTeacherAuthenticated) return;
+      if (!payload.claimedBy || !payload.requestId || !FOUR_DIRECTIONS[payload.direction]) return;
+      const existing = Object.keys(allFourLanesState).find(k =>
+        allFourLanesState[k].online && allFourLanesState[k].claimedBy === payload.claimedBy
+      );
+      const requested = allFourLanesState[payload.direction];
+      const direction = existing || (!requested.online ? payload.direction :
+        Object.keys(allFourLanesState).find(k => !allFourLanesState[k].online));
+      const accepted = Boolean(direction && roomMatchState.status === 'WAITING');
+      if (accepted && !existing) {
+        allFourLanesState[direction] = {
+          ...createInitialLaneState(direction), online: true, isReady: false,
+          teamName: payload.teamName || FOUR_DIRECTIONS[direction].defaultTeamName,
+          claimedBy: payload.claimedBy, stepBubbleText: '📖 Đang đọc hướng dẫn...'
+        };
+        saveRoomSnapshotToStorage({ ...allFourLanesState[direction], roomCode: currentRoomCode });
+        recordRoomDiagnostic('team-reserved', { direction, clientId: payload.claimedBy });
+      }
+      const result = {
+        type: 'TEAM_CLAIM_RESULT', roomCode: currentRoomCode,
+        requestId: payload.requestId, claimedBy: payload.claimedBy,
+        accepted, direction: accepted ? direction : null,
+        reason: roomMatchState.status === 'PLAYING' ? 'Trận đấu đã bắt đầu. Hãy chờ Cô Giáo mở ván mới.' : 'Phòng đã đủ 4 đội.',
+        roomMatchState: { ...roomMatchState }
+      };
+      if (syncChannel) {
+        try { syncChannel.postMessage(result); } catch (e) {}
+      }
+      sendToAllWebRtcPeers(result);
+      const snapshot = buildRoomStateSnapshotPayload();
+      if (syncChannel) {
+        try { syncChannel.postMessage(snapshot); } catch (e) {}
+      }
+      sendToAllWebRtcPeers(snapshot);
+      updateAllUI();
+    }
+
+    async function proceedToRulesGuideStep() {
+      if (pendingTeamClaim) return;
       clearWalkTimers();
       isMarchingAnimation = false;
       const rawName = document.getElementById('inputOnboardTeamName').value.trim();
@@ -4933,18 +5016,23 @@
         connectToOnlineRoom(rawRoom);
       }
 
-      if (isDirectionTakenByOther(selectedDirectionKey)) {
-        const freeDir = Object.keys(FOUR_DIRECTIONS).find(k => !isDirectionTakenByOther(k));
-        if (!freeDir) {
-          playSound('wrong');
-          showToast(`⚠️ Phòng #${currentRoomCode} đã đủ 4 nhóm chọn Đội! Hãy kiểm tra Mã Phòng hoặc nhờ Cô Giáo mở khóa ván mới!`, true);
-          renderOnboardingDirectionCards();
-          return;
-        }
-        const oldName = FOUR_DIRECTIONS[selectedDirectionKey].name;
-        selectedDirectionKey = freeDir;
-        showToast(`⚡ ${oldName} vừa có nhóm vào trước chọn! Hệ thống chuyển bạn sang ${FOUR_DIRECTIONS[freeDir].name}!`);
+      const confirmButton = document.getElementById('btnConfirmEnterBoard');
+      if (confirmButton) confirmButton.disabled = true;
+      let claim;
+      try {
+        claim = await requestTeamClaim(selectedDirectionKey, rawName);
+      } finally {
+        if (confirmButton) confirmButton.disabled = false;
       }
+      if (!claim || !claim.accepted) {
+        showToast(claim ? claim.reason : 'Chưa kết nối được Cô Giáo. Hãy kiểm tra mã phòng và bấm thử lại.', true);
+        return;
+      }
+      if (selectedDirectionKey !== claim.direction) {
+        showToast('Đội vừa được nhóm khác chọn. Cô Giáo đã xếp nhóm bạn vào ' + FOUR_DIRECTIONS[claim.direction].name + '.');
+      }
+      selectedDirectionKey = claim.direction;
+      roomMatchState.resetEpoch = claim.roomMatchState.resetEpoch || 0;
 
       Object.keys(allFourLanesState).forEach((k) => {
         if (k !== selectedDirectionKey && allFourLanesState[k].claimedBy === myClientId) {
@@ -5026,6 +5114,7 @@
     function confirmStartRoleplay() {
       if (!hasClaimedCharacter) {
         proceedToRulesGuideStep();
+        return;
       }
       clearWalkTimers();
       isMarchingAnimation = false;
@@ -5837,9 +5926,9 @@
         myGroup.gold = myGroup.conqueredStages.length * 10;
         myGroup.streak += 1;
         myGroup.maxStreak = Math.max(myGroup.maxStreak || 1, myGroup.streak);
-        myGroup.finishedAt = Date.now();
-        const baseStart = roomMatchState.startedAt || (myGroup.finishedAt - 10000);
-        myGroup.elapsedSec = Number(Math.max(1.0, (myGroup.finishedAt - baseStart) / 1000).toFixed(1));
+        const elapsedMs = localMatchStartedPerf === null ? 0 : Math.max(0, performance.now() - localMatchStartedPerf);
+        myGroup.finishedAt = (roomMatchState.startedAt || Date.now()) + Math.round(elapsedMs);
+        myGroup.elapsedSec = Number((elapsedMs / 1000).toFixed(1));
 
         const nextStage = Math.min(4, stageNum + 1);
         myGroup.currentStage = nextStage;
@@ -6155,9 +6244,9 @@
           myGroup.gold = myGroup.conqueredStages.length * 10;
           myGroup.streak += 1;
           myGroup.maxStreak = Math.max(myGroup.maxStreak || 1, myGroup.streak);
-          myGroup.finishedAt = Date.now();
-          const baseStart = roomMatchState.startedAt || (myGroup.finishedAt - 18000);
-          myGroup.elapsedSec = Number(Math.max(2.0, (myGroup.finishedAt - baseStart) / 1000).toFixed(1));
+          const elapsedMs = localMatchStartedPerf === null ? 0 : Math.max(0, performance.now() - localMatchStartedPerf);
+          myGroup.finishedAt = (roomMatchState.startedAt || Date.now()) + Math.round(elapsedMs);
+          myGroup.elapsedSec = Number((elapsedMs / 1000).toFixed(1));
 
           allFourLanesState[myGroup.direction].stageProgress = 4;
           allFourLanesState[myGroup.direction].gold = myGroup.gold;
@@ -6635,12 +6724,10 @@
       if (!ts) return false;
       if (roomMatchState.resetEpoch && ts <= roomMatchState.resetEpoch) return false;
       if (meta && meta.hostDirection && meta.hostDirection !== 'TEACHER') return false;
-      // Strict Rule for Students:
-      // 1. A student MUST have already selected a General and clicked "✋ CHỐT TƯỚNG & BẤM SẴN SÀNG!"
-      // 2. The Teacher's "BẮT ĐẦU TRẬN ĐẤU" command MUST be triggered AFTER the student clicked Ready!
+      // Device wall clocks are independent. Readiness is local state; the
+      // teacher's resetEpoch already rejects commands from earlier matches.
       if (!isTeacherAuthenticated || myRole !== 'TEACHER') {
-        if (!hasClaimedCharacter || !studentReadyAt) return false;
-        if (ts < studentReadyAt) return false;
+        if (!hasClaimedCharacter || !studentReadyAt || !myGroup.isReady) return false;
       }
       return true;
     }
@@ -6648,17 +6735,44 @@
     function applyIncomingPlayerSync(payload) {
       if (!payload || payload.roomCode !== currentRoomCode) return;
 
+      if (payload.type === 'TEAM_CLAIM_REQUEST') {
+        handleTeacherTeamClaim(payload);
+        return;
+      }
+      if (payload.type === 'TEAM_CLAIM_RESULT') {
+        if (payload.claimedBy === myClientId && pendingTeamClaim &&
+            payload.requestId === pendingTeamClaim.requestId) {
+          pendingTeamClaim.finish(payload);
+        }
+        return;
+      }
+
       // Handle Room Reset Command from Teacher / Host (unlocks all 4 characters immediately!)
       if (payload.type === 'ROOM_RESET_CMD') {
         const incomingEpoch = payload.resetEpoch || Date.now();
         if (incomingEpoch <= (roomMatchState.resetEpoch || 0)) return;
-        // If this student already clicked Ready AFTER this resetEpoch was created, only record resetEpoch!
-        if (hasClaimedCharacter && studentReadyAt && incomingEpoch < studentReadyAt) {
-          roomMatchState.resetEpoch = incomingEpoch;
-          return;
-        }
+        if (pendingTeamClaim) pendingTeamClaim.finish(null);
+        clearWalkTimers();
+        isMarchingAnimation = false;
         hasClaimedCharacter = false;
         studentReadyAt = 0;
+        localMatchStartedPerf = null;
+        myGroup.isReady = false;
+        myGroup.gold = 0;
+        myGroup.streak = 1;
+        myGroup.maxStreak = 1;
+        myGroup.wrongAttempts = 0;
+        myGroup.totalAttempts = 0;
+        myGroup.wrongRows = [];
+        myGroup.finishedAt = 0;
+        myGroup.elapsedSec = 0;
+        myGroup.tokenWaypointIdx = 0;
+        myGroup.tokenStepIdx = 0;
+        myGroup.currentStage = 1;
+        myGroup.conqueredStages = [];
+        myGroup.masteredRowIds = [];
+        myGroup.stepBubbleText = '';
+        pairedRowIds = [];
         hasAutoOpenedTeacherFinalModal = false;
         closeLeaderboardModal();
         closeBattleModal();
@@ -6674,14 +6788,17 @@
           allFourLanesState[k] = createInitialLaneState(k);
         });
         if (myRole === 'STUDENT') {
-          const onboardEl = document.getElementById('onboardingModal');
-          if (onboardEl) onboardEl.classList.add('open');
+          const marchButton = document.getElementById('btnMarchForward');
+          const floatingButton = document.getElementById('btnMapFloatingGo');
+          if (marchButton) marchButton.disabled = false;
+          if (floatingButton) {
+            floatingButton.disabled = false;
+            floatingButton.classList.remove('marching-now');
+          }
+          openOnboardingModal();
         }
-        renderOnboardingDirectionCards();
-        renderDioramaMap();
-        renderTeacherHostSidebar();
-        updateQrModalUI();
-        updateHostLobbyOverlayUI();
+        recordRoomDiagnostic('match-reset', { resetEpoch: incomingEpoch });
+        updateAllUI();
         return;
       }
 
@@ -6689,15 +6806,7 @@
       if (
         roomMatchState.resetEpoch &&
         payload.roomMatchState &&
-        payload.roomMatchState.resetEpoch &&
-        payload.roomMatchState.resetEpoch < roomMatchState.resetEpoch
-      ) {
-        return;
-      }
-      if (
-        roomMatchState.resetEpoch &&
-        payload.ts &&
-        payload.ts < roomMatchState.resetEpoch - 500
+        (payload.roomMatchState.resetEpoch || 0) < roomMatchState.resetEpoch
       ) {
         return;
       }
@@ -6706,7 +6815,12 @@
         if (payload.roomMatchState) {
           const incomingMeta = payload.roomMatchState;
           if (incomingMeta.resetEpoch && incomingMeta.resetEpoch > (roomMatchState.resetEpoch || 0)) {
-            roomMatchState.resetEpoch = incomingMeta.resetEpoch;
+            // A reconnecting student may have missed ROOM_RESET_CMD. Apply the
+            // same cleanup before accepting the new epoch or sending heartbeats.
+            applyIncomingPlayerSync({
+              type: 'ROOM_RESET_CMD', roomCode: currentRoomCode,
+              resetEpoch: incomingMeta.resetEpoch, roomMatchState: incomingMeta
+            });
           }
           if (incomingMeta.hostClientId) {
             roomMatchState.hostClientId = incomingMeta.hostClientId;
@@ -6770,6 +6884,15 @@
       if (hasClaimedCharacter && payload.direction === myGroup.direction && payload.claimedBy === myClientId) return;
 
       const prevLane = allFourLanesState[payload.direction] || createInitialLaneState(payload.direction);
+      // BroadcastChannel, storage snapshots and P2P can deliver older copies
+      // after a newer update. Order each device's updates by its own counter.
+      if (prevLane.claimedBy === payload.claimedBy &&
+          (prevLane.revision || 0) > (payload.revision || 0)) return;
+      if (myRole === 'TEACHER' && prevLane.online && prevLane.claimedBy &&
+          prevLane.claimedBy !== payload.claimedBy) {
+        recordRoomDiagnostic('conflicting-team-packet', { direction: payload.direction });
+        return;
+      }
       allFourLanesState[payload.direction] = {
         direction: payload.direction,
         teamName: payload.teamName || FOUR_DIRECTIONS[payload.direction].defaultTeamName,
@@ -6787,7 +6910,8 @@
         isPlayer: false,
         online: true,
         isReady: payload.isReady !== false,
-        claimedBy: payload.claimedBy || ('remote_' + payload.direction)
+        claimedBy: payload.claimedBy || ('remote_' + payload.direction),
+        revision: payload.revision || 0
       };
 
       // If no host is recorded yet, the earliest claimed player acts as fallback Host
@@ -6834,6 +6958,8 @@
     }
 
     function onRoomMatchStartedEffect() {
+      localMatchStartedPerf = performance.now();
+      recordRoomDiagnostic('match-started', { startedAt: roomMatchState.startedAt });
       if (bgmEnabled) startWarDrumBgm();
       playSound('start_horn');
       launchFireworks(110);
@@ -6915,7 +7041,8 @@
         isReady: Boolean(myGroup.isReady),
         claimedBy: hasClaimedCharacter ? myClientId : null,
         roomMatchState: { ...roomMatchState },
-        ts: Date.now()
+        ts: Date.now(),
+        revision: ++myGroup.syncRevision
       };
     }
 
@@ -7093,7 +7220,10 @@
 
         if (snap._meta) {
           if (snap._meta.resetEpoch && snap._meta.resetEpoch > (roomMatchState.resetEpoch || 0)) {
-            roomMatchState.resetEpoch = snap._meta.resetEpoch;
+            applyIncomingPlayerSync({
+              type: 'ROOM_RESET_CMD', roomCode: currentRoomCode,
+              resetEpoch: snap._meta.resetEpoch, roomMatchState: snap._meta
+            });
           }
           if (snap._meta.hostClientId) {
             roomMatchState.hostClientId = snap._meta.hostClientId;
@@ -7179,19 +7309,18 @@
 
     function initWebRtcPeerMesh(code) {
       if (typeof Peer === 'undefined') return;
+      const cleanCode = code.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() || '1010';
+      const roleSuffix = myRole === 'TEACHER' ? 'teacher' : ('student-' + myClientId);
+      const myPeerId = `hkdv-v4-${cleanCode}-${roleSuffix}`;
+      // Keep the same connection while selecting a team, reading and becoming
+      // ready. A connection belongs to a device, not to a contested team slot.
+      if (myPeer && !myPeer.destroyed && myPeer.id === myPeerId) return;
       if (myPeer) {
         try { myPeer.destroy(); } catch (e) {}
         myPeer = null;
       }
       activePeerConns = {};
       pendingPeerConnTs = {};
-
-      // Only open a PeerJS WebSocket once the user is Teacher Host or has claimed one of the 4 Generals!
-      if (myRole !== 'TEACHER' && !hasClaimedCharacter) return;
-
-      const cleanCode = code.replace(/[^a-zA-Z0-9]/g, '').toLowerCase() || '1010';
-      const roleSuffix = myRole === 'TEACHER' ? 'teacher' : myGroup.direction;
-      const myPeerId = `hkdv-v4-${cleanCode}-${roleSuffix}`;
 
       try {
         myPeer = new Peer(myPeerId);
@@ -7205,31 +7334,32 @@
           setupPeerConnHandlers(conn);
         });
 
+        myPeer.on('disconnected', () => {
+          recordRoomDiagnostic('signaling-disconnected');
+          setTimeout(() => {
+            if (myPeer && !myPeer.destroyed && myPeer.disconnected) {
+              try { myPeer.reconnect(); } catch (e) {}
+            }
+          }, 1500);
+        });
         myPeer.on('error', (err) => {
-          if (err && err.type === 'unavailable-id') {
-            try {
-              const fallbackPeer = new Peer(`hkdv-v4-${cleanCode}-${roleSuffix}-${Math.floor(Math.random() * 900 + 100)}`);
-              myPeer = fallbackPeer;
-              pendingPeerConnTs = {};
-              myPeer.on('open', () => connectToOtherDirectionalPeers(cleanCode));
-              myPeer.on('connection', (conn) => setupPeerConnHandlers(conn));
-            } catch (e2) {}
+          recordRoomDiagnostic('peer-error', { type: err && err.type });
+          if (err && err.type === 'unavailable-id' && myRole === 'TEACHER') {
+            showToast('Phòng này đã có Cô Giáo mở. Hãy đóng cửa sổ chủ phòng cũ hoặc tạo mã phòng khác.', true);
           }
         });
-      } catch (err) {}
+      } catch (err) {
+        recordRoomDiagnostic('peer-init-error', { message: String(err) });
+      }
     }
 
-    function connectToOtherDirectionalPeers(cleanCode) {
+        function connectToOtherDirectionalPeers(cleanCode) {
       if (!myPeer || myPeer.destroyed || !myPeer.open) return;
-      if (myRole === 'TEACHER' || !hasClaimedCharacter) return;
+      if (myRole === 'TEACHER') return;
       const now = Date.now();
-      // Connect to Teacher Star Hub + other active directional peers so all 4 teams & Teacher stay 100% synced!
+      // The teacher reserves the four team slots and relays room snapshots.
+      // Connect before team selection so occupied slots are visible in the lobby.
       const targets = [`hkdv-v4-${cleanCode}-teacher`];
-      Object.keys(FOUR_DIRECTIONS).forEach((dirKey) => {
-        if (dirKey !== myGroup.direction) {
-          targets.push(`hkdv-v4-${cleanCode}-${dirKey}`);
-        }
-      });
       targets.forEach((targetPeerId) => {
         if (activePeerConns[targetPeerId] && activePeerConns[targetPeerId].open) return;
         if (pendingPeerConnTs[targetPeerId] && now - pendingPeerConnTs[targetPeerId] < 3200) return;
@@ -7247,6 +7377,8 @@
         if (!data) return;
         if (
           data.type === 'PLAYER_SYNC' ||
+          data.type === 'TEAM_CLAIM_REQUEST' ||
+          data.type === 'TEAM_CLAIM_RESULT' ||
           data.type === 'START_MATCH_CMD' ||
           data.type === 'ROOM_RESET_CMD' ||
           data.type === 'ROOM_STATE_SNAPSHOT'
@@ -7267,6 +7399,8 @@
       const pushInitialHandshake = () => {
         if (!conn || !conn.open) return;
         activePeerConns[conn.peer] = conn;
+        delete pendingPeerConnTs[conn.peer];
+        recordRoomDiagnostic('room-connected', { peer: conn.peer });
         try {
           if (myRole === 'TEACHER') {
             conn.send(buildRoomStateSnapshotPayload());
@@ -7283,13 +7417,16 @@
         setTimeout(pushInitialHandshake, 850);
       });
       conn.on('close', () => {
+        recordRoomDiagnostic('room-connection-closed', { peer: conn.peer });
         delete pendingPeerConnTs[conn.peer];
         if (activePeerConns[conn.peer] === conn) delete activePeerConns[conn.peer];
       });
-      conn.on('error', () => {
+      conn.on('error', (err) => {
+        recordRoomDiagnostic('room-connection-error', { peer: conn.peer, type: err && err.type });
         delete pendingPeerConnTs[conn.peer];
         if (activePeerConns[conn.peer] === conn) delete activePeerConns[conn.peer];
       });
+      if (conn.open) pushInitialHandshake();
     }
 
     function connectToOnlineRoom(code) {
@@ -7331,6 +7468,8 @@
           if (!ev.data) return;
           if (
             ev.data.type === 'PLAYER_SYNC' ||
+            ev.data.type === 'TEAM_CLAIM_REQUEST' ||
+            ev.data.type === 'TEAM_CLAIM_RESULT' ||
             ev.data.type === 'START_MATCH_CMD' ||
             ev.data.type === 'ROOM_RESET_CMD' ||
             ev.data.type === 'ROOM_STATE_SNAPSHOT'
@@ -7388,7 +7527,8 @@
         isPlayer: true,
         online: true,
         isReady: Boolean(myGroup.isReady),
-        claimedBy: myClientId
+        claimedBy: myClientId,
+        revision: payload.revision
       };
 
       saveRoomSnapshotToStorage(payload);
