@@ -3028,7 +3028,7 @@
         </button>
 
         <button class="btn-3d" onclick="teacherUnlockAllCharactersInRoom(true)" style="width:100%; justify-content:center; padding:8px; font-size:12px; border-color:#DC2626; color:#991B1B; background:#FEF2F2;">
-          🔓 Mở Khóa / Reset 4 Đội
+          🔄 Reset & Đưa Học Sinh Ra Sảnh
         </button>
 
         <div class="panel-header" style="margin-top:2px;">
@@ -3125,7 +3125,7 @@
               <span style="font-size:13.5px; font-weight:900; color:#FEF08A;" id="lobbyHeaderTitle">SẢNH CHỜ HÀNH TRÌNH VỀ NGUỒN — PHÒNG #1010</span>
             </div>
             <div style="font-size:11.5px; color:#E2E8F0; font-weight:700; overflow:hidden; text-overflow:ellipsis;" id="lobbySubStatusText">
-              Học sinh nhập Tên Nhóm & chọn 1 trong 4 Đội Leo Núi. Khi Cô Giáo bấm "BẮT ĐẦU", cả 4 đội sẽ đồng loạt leo núi!
+              Học sinh nhập Tên Nhóm & chọn 1 trong 4 Đội Leo Núi. Khi Cô Giáo bấm "BẮT ĐẦU", các đội đã sẵn sàng sẽ cùng leo núi (từ 1 đến 4 đội)!
             </div>
           </div>
 
@@ -3243,7 +3243,7 @@
             👩‍🏫 CÔ GIÁO: MỞ PHÒNG #1010 & BẢN ĐỒ
           </button>
           <button class="btn-3d" id="btnUnlockAllInModal" style="padding:8px 12px; font-size:12px; border-radius:12px; border-color:#DC2626; color:#991B1B; background:#FFFFFF;" onclick="teacherUnlockAllCharactersInRoom(false)">
-            🔓 Mở Khóa 4 Đội
+            🔄 Reset & Đưa Về Sảnh
           </button>
           <button class="btn-3d" style="padding:8px 12px; font-size:12px; border-radius:12px; border-color:#10B981; color:#065F46; background:#FFFFFF;" onclick="openJoinRoomModal()">
             📱 Mã QR Phòng
@@ -3417,7 +3417,7 @@
         📱 Phòng Thi Đấu Online 4 Đội Leo Núi & Mã QR
       </h3>
       <p style="font-size:12.5px; color:var(--text-slate); margin-bottom:12px; line-height:1.45;">
-        Cho 4 nhóm quét <strong>Mã QR</strong> dưới đây (hoặc nhập cùng <strong>Mã Phòng</strong>) để cả 4 đội leo núi cùng xuất hiện và thi tài chinh phục Đỉnh Thiêng Về Nguồn!
+        Cho 1 đến 4 nhóm quét <strong>Mã QR</strong> dưới đây (hoặc nhập cùng <strong>Mã Phòng</strong>) để cả 4 đội leo núi cùng xuất hiện và thi tài chinh phục Đỉnh Thiêng Về Nguồn!
       </p>
 
       <div class="qr-modal-grid" style="display:grid; grid-template-columns: 185px 1fr; gap:14px; align-items:center; background:#F8FAFC; border:2px solid #E2E8F0; border-radius:16px; padding:12px; margin-bottom:12px; text-align:left;">
@@ -3948,6 +3948,7 @@
     }
 
     function waitForGeneralVoiceToFinish(callback, maxWaitMs = 4300) {
+      const voiceGeneration = roomJoinGeneration;
       if (!audioEnabled || !isGeneralVoiceCurrentlyPlaying()) {
         callback();
         return;
@@ -3957,7 +3958,7 @@
         if (done) return;
         done = true;
         clearTimeout(safetyTimer);
-        setTimeout(() => callback(), 220);
+        setTimeout(() => { if (voiceGeneration === roomJoinGeneration) callback(); }, 220);
       };
       const safetyTimer = setTimeout(finishOnce, maxWaitMs);
       try {
@@ -4695,7 +4696,10 @@
         showToast('Mã phòng đang có cô giáo khác mở. Hãy đóng màn hình cô giáo cũ rồi tải lại trang.', true);
         return;
       }
-      const resetEpoch = Date.now();
+      const resetEpoch = Math.max(Date.now(), (roomMatchState.resetEpoch || 0) + 1);
+      roomJoinGeneration++;
+      if (pendingTeamClaim) pendingTeamClaim.finish({ accepted: false, reason: 'Cô Giáo vừa reset phòng. Em chọn đội lại để tham gia ván mới.' });
+      handledTeamClaimIds.clear();
       localMatchStartedPerf = null;
       hasAutoOpenedTeacherFinalModal = false;
       closeLeaderboardModal();
@@ -4725,7 +4729,9 @@
       if (syncChannel) {
         try { syncChannel.postMessage(resetCmd); } catch (e) {}
       }
+      window.classroomAfterRoomReset?.(resetCmd);
       sendToAllWebRtcPeers(resetCmd);
+      sendToAllWebRtcPeers(buildRoomStateSnapshotPayload());
       pushActionToRoomHubServer(resetCmd);
       pushActionToCloudRelay(resetCmd, true);
     }
@@ -4756,7 +4762,7 @@
       updateAllUI();
       if (showFeedback) {
         playSound('drum');
-        showToast(`🔓 Đã mở khóa sạch cả 4 Đội tại Phòng #${currentRoomCode}! Học sinh có thể chọn lại ngay!`);
+        showToast(`🔓 Đã reset Phòng #${currentRoomCode}: xóa đội cũ và đưa tất cả học sinh về sảnh. Chờ học sinh chọn đội lại!`);
       }
     }
 
@@ -4928,6 +4934,7 @@
       document.getElementById('onboardingModal').classList.add('open');
     }
 
+    let roomJoinGeneration = 0;
     let pendingTeamClaim = null;
     const handledTeamClaimIds = new Set();
     const roomDiagnostics = [];
@@ -5066,12 +5073,14 @@
 
       const confirmButton = document.getElementById('btnConfirmEnterBoard');
       if (confirmButton) confirmButton.disabled = true;
+      const joinGeneration = roomJoinGeneration;
       let claim;
       try {
         claim = await requestTeamClaim(selectedDirectionKey, rawName);
       } finally {
         if (confirmButton) confirmButton.disabled = false;
       }
+      if (joinGeneration !== roomJoinGeneration) return;
       if (!claim || !claim.accepted) {
         showToast(claim ? claim.reason : 'Chưa kết nối được Cô Giáo. Hãy kiểm tra mã phòng và bấm thử lại.', true);
         return;
@@ -5210,7 +5219,7 @@
       const svgRoads = document.getElementById('dioramaSvgRoads');
       const stagesContainer = document.getElementById('mapStagesContainer');
       const tokensContainer = document.getElementById('mapTokensContainer');
-      stagesContainer.innerHTML = '';
+      stagesContainer.querySelectorAll('.road-step-dot').forEach(dot => dot.remove());
 
       const isTeacherView = myRole === 'TEACHER';
 
@@ -5240,6 +5249,11 @@
       });
 
       // Render Shared Olympia Checkpoints 1, 2, 3 (Khởi Động -> Vượt Chướng Ngại Vật -> Tăng Tốc)
+      const checkpointSignature = JSON.stringify([currentRoomCode, roomJoinGeneration, isTeacherView, myGroup.currentStage, myGroup.conqueredStages,
+        isTeacherView ? [1,2,3,4].map(stage => Object.values(allFourLanesState).some(lane => lane.stageProgress >= stage)) : null]);
+      if (stagesContainer.dataset.checkpointSignature !== checkpointSignature) {
+      stagesContainer.dataset.checkpointSignature = checkpointSignature;
+      stagesContainer.querySelectorAll('.stage-node, .center-citadel-node').forEach(node => node.remove());
       const stageBadges = {
         1: '1. KHỞI ĐỘNG',
         2: '2. VƯỢT CHƯỚNG NGẠI VẬT',
@@ -5306,6 +5320,7 @@
         <div class="citadel-ribbon">${isCenterConquered ? '🏆 ĐỈNH OLIMPIA & XẾP HẠNG' : '🏆 FINAL: ĐỈNH OLIMPIA'}</div>
       `;
       stagesContainer.appendChild(centerNode);
+      }
 
       // 3. Update All 4 Student Team Tokens (ĐỘI 1 Đỏ, ĐỘI 2 Xanh Dương, ĐỘI 3 Xanh Lá, ĐỘI 4 Vàng)
       const liveRankMap = {};
@@ -5415,7 +5430,7 @@
       const onlineList = Object.values(allFourLanesState).filter(isLaneCurrentlyConnected);
       const onlineCount = onlineList.length;
       const readyCount = onlineList.filter(l => l.isReady !== false).length;
-      const canTeacherStart = !teacherRoomConflict && onlineCount === 4 && readyCount === 4;
+      const canTeacherStart = !teacherRoomConflict && onlineCount > 0 && readyCount === onlineCount;
 
       const countEl = document.getElementById('teacherJoinedCountText');
       if (countEl) countEl.textContent = `🟢 ${readyCount}/${onlineCount} đội Sẵn Sàng (${onlineCount}/4 vào)`;
@@ -5435,8 +5450,8 @@
       if (startBtn) {
         if (roomMatchState.status === 'WAITING') {
           if (!canTeacherStart) {
-            startBtn.textContent = onlineCount < 4
-              ? `🔒 CHỜ ĐỦ 4 ĐỘI (${onlineCount}/4 VÀO)`
+            startBtn.textContent = onlineCount === 0
+              ? `🔒 CHỜ ÍT NHẤT 1 ĐỘI THAM GIA`
               : `🔒 CHỜ ĐỌC HƯỚNG DẪN (${readyCount}/${onlineCount} SẴN SÀNG)`;
             startBtn.disabled = true;
             startBtn.style.opacity = '0.55';
@@ -5581,11 +5596,13 @@
         activeWalkTimers.push(timerId);
       });
 
+      const marchGeneration = roomJoinGeneration;
       const finishDelay = totalSteps * stepIntervalMs + 520;
       const openTimerId = setTimeout(() => {
         // Wait for any active Male General voice clip (congrats_* or cmd_wrong_retreat) to finish 100%
         // before opening the stage modal and starting Female Narrator voice!
         waitForGeneralVoiceToFinish(() => {
+          if (marchGeneration !== roomJoinGeneration || !hasClaimedCharacter || roomMatchState.status !== 'PLAYING') return;
           isMarchingAnimation = false;
           myGroup.tokenWaypointIdx = targetStageNum;
           myGroup.stepBubbleText = '';
@@ -5949,7 +5966,15 @@
       };
     }
 
+    function scheduleRoundAction(callback, delay) {
+      const generation = roomJoinGeneration;
+      return setTimeout(() => {
+        if (generation === roomJoinGeneration && hasClaimedCharacter && roomMatchState.status === 'PLAYING') callback();
+      }, delay);
+    }
+
     function submitBattleAnswer(clickedBtn, isCorrect) {
+      if (!hasClaimedCharacter || !activeStageBattle || roomMatchState.status !== 'PLAYING') return;
       clearFloatingGhost();
       const allBtns = document.querySelectorAll('#battleOptionsGrid .option-btn');
       allBtns.forEach((b) => {
@@ -6020,9 +6045,9 @@
         `;
         updateAllUI();
 
-        setTimeout(() => {
+        scheduleRoundAction(() => {
           closeBattleModal();
-          setTimeout(() => {
+          scheduleRoundAction(() => {
             marchToStageAndOpenQuestion(nextStage);
           }, 300);
         }, 1450);
@@ -6053,7 +6078,7 @@
         `;
         showToast(`❌ Sai rồi! Phải trả lời ĐÚNG mới vượt qua được ${wp.placeName}!`, true);
 
-        setTimeout(() => {
+        scheduleRoundAction(() => {
           closeBattleModal();
           const curStone = STAGE_STEP_MAP[stageNum];
           isMarchingAnimation = true;
@@ -6063,7 +6088,7 @@
           renderDioramaMap();
           broadcastMyLane();
 
-          setTimeout(() => {
+          scheduleRoundAction(() => {
             myGroup.tokenStepIdx = Math.max(0, curStone - 2);
             myGroup.stepBubbleText = '🔙 Sai! Lùi bước 2/2';
             playSound('step');
@@ -6071,7 +6096,7 @@
             broadcastMyLane();
           }, 340);
 
-          setTimeout(() => {
+          scheduleRoundAction(() => {
             waitForGeneralVoiceToFinish(() => {
               isMarchingAnimation = false;
               myGroup.stepBubbleText = '';
@@ -6274,6 +6299,7 @@
     }
 
     function onBossRightClick(rightId) {
+      if (!hasClaimedCharacter || roomMatchState.status !== 'PLAYING') return;
       clearFloatingGhost();
       if (!selectedLeftId) {
         showToast('👉 Hãy kéo thả thẻ "Ý nghĩa rút ra" vào đúng ô "Dẫn chứng/biểu hiện" tương ứng!', true);
@@ -6728,7 +6754,7 @@
       const base = isLocalLoopback
         ? 'https://haolvq13-bot.github.io/hao-khi-dai-viet-boardgame/'
         : window.location.href.split('?')[0].split('#')[0];
-      return `${base}?room=${encodeURIComponent(code)}&mode=student&v=20261118-fixed1010`;
+      return `${base}?room=${encodeURIComponent(code)}&mode=student&v=20261118-roundreset`;
     }
 
     function updateQrModalUI() {
@@ -6810,7 +6836,9 @@
       if (payload.type === 'ROOM_RESET_CMD') {
         const incomingEpoch = payload.resetEpoch || Date.now();
         if (incomingEpoch <= (roomMatchState.resetEpoch || 0)) return;
-        if (pendingTeamClaim) pendingTeamClaim.finish(null);
+        roomJoinGeneration++;
+        if (pendingTeamClaim) pendingTeamClaim.finish({ accepted: false, reason: 'Cô Giáo vừa reset phòng. Em chọn đội lại để tham gia ván mới.' });
+        handledTeamClaimIds.clear();
         clearWalkTimers();
         isMarchingAnimation = false;
         hasClaimedCharacter = false;
@@ -6832,6 +6860,9 @@
         myGroup.masteredRowIds = [];
         myGroup.stepBubbleText = '';
         pairedRowIds = [];
+        selectedLeftId = null;
+        selectedRightId = null;
+        activeStageBattle = null;
         hasAutoOpenedTeacherFinalModal = false;
         closeLeaderboardModal();
         closeBattleModal();
@@ -6846,6 +6877,7 @@
         Object.keys(FOUR_DIRECTIONS).forEach((k) => {
           allFourLanesState[k] = createInitialLaneState(k);
         });
+        window.classroomAfterRoomReset?.(payload);
         if (myRole === 'STUDENT') {
           const marchButton = document.getElementById('btnMarchForward');
           const floatingButton = document.getElementById('btnMapFloatingGo');
@@ -6901,6 +6933,7 @@
             roomMatchState.status = 'PLAYING';
             roomMatchState.startedAt = incomingMeta.startedAt || Date.now();
             roomMatchState.launchStage = incomingMeta.launchStage || 0;
+            roomMatchState.participantDirections = incomingMeta.participantDirections || [];
             onRoomMatchStartedEffect();
             updateAllUI();
           }
@@ -6947,6 +6980,7 @@
           roomMatchState.status = 'PLAYING';
           roomMatchState.startedAt = cmdStartedAt;
           roomMatchState.launchStage = payload.roomMatchState?.launchStage || 0;
+          roomMatchState.participantDirections = payload.roomMatchState?.participantDirections || [];
           onRoomMatchStartedEffect();
           updateAllUI();
         }
@@ -7013,12 +7047,15 @@
 
       // On Teacher View: when all 4 online groups reach Stage 4, automatically open the Grand Ranking & Evaluation Modal!
       if (isTeacherAuthenticated && myRole === 'TEACHER' && !hasAutoOpenedTeacherFinalModal) {
-        const onlineLanes = Object.values(allFourLanesState).filter(isLaneCurrentlyConnected);
-        if (onlineLanes.length === 4 && onlineLanes.every(l => l.stageProgress >= 4)) {
+        const directions = roomMatchState.participantDirections || Object.values(allFourLanesState).filter(l => l.online).map(l => l.direction);
+        const onlineLanes = directions.map(key => allFourLanesState[key]).filter(Boolean);
+        if (onlineLanes.length > 0 && onlineLanes.every(l => l.stageProgress >= 4)) {
           hasAutoOpenedTeacherFinalModal = true;
           launchFireworks(140);
           playSound('victory');
+          const rankingGeneration = roomJoinGeneration;
           setTimeout(() => {
+            if (rankingGeneration !== roomJoinGeneration || roomMatchState.status !== 'PLAYING') return;
             openLeaderboardModal();
             announceChampionVoice();
           }, 450);
@@ -7042,7 +7079,7 @@
       if (overlay) {
         document.getElementById('stageBreakSub').textContent = `👩‍🏫 CÔ GIÁO ĐÃ PHÁT LỆNH KHỞI TRANH PHÒNG #${currentRoomCode}!`;
         document.getElementById('stageBreakTitle').textContent = `🥁 TRỐNG TRẬN ĐÃ ĐIỂM — XUẤT QUÂN!`;
-        document.getElementById('stageBreakReward').textContent = `Nút "⚔️ BẮT ĐẦU" đã mở khóa cho cả 4 nhóm học sinh!`;
+        document.getElementById('stageBreakReward').textContent = `Nút "⚔️ BẮT ĐẦU" đã mở khóa cho các đội tham gia!`;
         overlay.classList.add('active');
         setTimeout(() => overlay.classList.remove('active'), 1100);
       }
@@ -7064,11 +7101,6 @@
       const onlineList = Object.values(allFourLanesState).filter(isLaneCurrentlyConnected);
       const readyList = onlineList.filter(l => l.isReady !== false);
       if (teacherRoomConflict || roomMatchState.status === 'PLAYING') return;
-      if (onlineList.length < 4) {
-        showToast('⏳ Cần đủ 4 đội vào phòng trước khi bắt đầu (' + onlineList.length + '/4).', true);
-        recordRoomDiagnostic('start-blocked', { onlineCount: onlineList.length });
-        return;
-      }
       if (onlineList.length === 0) {
         playSound('wrong');
         showToast('⏳ Chưa có đội nào vào phòng! Hãy chờ học sinh chọn nhân vật, đọc hướng dẫn và bấm SẴN SÀNG!', true);
@@ -7082,6 +7114,7 @@
       }
       roomMatchState.status = 'PLAYING';
       roomMatchState.launchStage = launchStage === 1 ? 1 : 0;
+      roomMatchState.participantDirections = onlineList.map(lane => lane.direction);
       roomMatchState.startedAt = Date.now();
       roomMatchState.hostClientId = myClientId;
       roomMatchState.hostDirection = 'TEACHER';
@@ -7554,7 +7587,7 @@
         const roomUrl = new URL(window.location.href);
         roomUrl.searchParams.set('room', currentRoomCode);
         roomUrl.searchParams.set('mode', myRole === 'TEACHER' ? 'teacher' : 'student');
-        roomUrl.searchParams.set('v', '20261118-fixed1010');
+        roomUrl.searchParams.set('v', '20261118-roundreset');
         window.history.replaceState(null, '', roomUrl);
       }
 
@@ -7698,7 +7731,7 @@
 
           const readyList = onlineList.filter(l => l.isReady !== false);
           const readyCount = readyList.length;
-          const canTeacherStart = !teacherRoomConflict && onlineCount === 4 && readyCount === 4;
+          const canTeacherStart = !teacherRoomConflict && onlineCount > 0 && readyCount === onlineCount;
 
           const joinedNames = onlineList.map(l => {
             const stIcon = l.isReady !== false ? '✅ Sẵn sàng' : '📖 Đang đọc HD';
@@ -7713,8 +7746,8 @@
           badge.style.background = '#F59E0B';
           badge.style.color = '#0F172A';
           const btnText = !canTeacherStart
-            ? (onlineCount < 4
-                ? `🔒 CHỜ ĐỦ 4 ĐỘI (${onlineCount}/4 VÀO)`
+            ? (onlineCount === 0
+                ? `🔒 CHỜ ÍT NHẤT 1 ĐỘI THAM GIA`
                 : `🔒 CHỜ ĐỌC HƯỚNG DẪN & BẤM SẴN SÀNG (${readyCount}/${onlineCount})`)
             : `🥁 CÔ GIÁO: BẮT ĐẦU TRẬN ĐẤU (${readyCount}/${onlineCount} SẴN SÀNG)!`;
           actionArea.innerHTML = `
@@ -7857,7 +7890,7 @@
 
         if (roomMatchState.status !== 'PLAYING') {
           if (guideBanner) {
-            guideBanner.innerHTML = `✅ <strong>${myGroup.teamName} đã SẴN SÀNG tại Chân Núi</strong>! Hãy chờ <strong>Cô Giáo bấm "🥁 BẮT ĐẦU TRẬN ĐẤU"</strong> để cả 4 đội đồng loạt leo núi!`;
+            guideBanner.innerHTML = `✅ <strong>${myGroup.teamName} đã SẴN SÀNG tại Chân Núi</strong>! Hãy chờ <strong>Cô Giáo bấm "🥁 BẮT ĐẦU TRẬN ĐẤU"</strong> để các đội tham gia đồng loạt leo núi!`;
           }
           marchBtn.textContent = '✅ ĐÃ SẴN SÀNG — CHỜ CÔ GIÁO BẮT ĐẦU';
           marchBtn.style.background = 'linear-gradient(180deg, #0EA5E9 0%, #0284C7 100%)';
@@ -7967,6 +8000,6 @@
       }, 1500);
     });
   </script>
-  <script src="classroom-relay.js?v=20261118-fixed1010"></script>
+  <script src="classroom-relay.js?v=20261118-roundreset"></script>
 </body>
 </html>

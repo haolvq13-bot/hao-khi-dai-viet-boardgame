@@ -8,6 +8,7 @@
   let reconnectTimer = null, configuredUrl = null, connectedRoom = null;
   let connectedRole = null, connectedClientId = null, connectedAt = 0;
   let lastOnboardingConnection = '';
+  let configurationPending = false, lastConfigurationAt = 0, lastRelayActivity = 0;
   const lastSeen = new Map(), departedAt = new Map();
   const previousSend = sendToAllWebRtcPeers;
   const previousRender = renderRoomConnectionStatus;
@@ -27,6 +28,17 @@
   window.classroomLaneIsLive = live;
   window.classroomSnapshotLaneIsDeparted = lane => myRole === 'TEACHER' && departedAt.has(lane.claimedBy);
   window.classroomPrepareTeamClaim = refreshPresence;
+  window.classroomAfterRoomReset = packet => {
+    lastSeen.clear(); departedAt.clear(); connectedAt = performance.now();
+    if (myRole === 'STUDENT') {
+      // Each round starts outside all team slots, including cloned QR tabs.
+      myClientId = 'client_' + Math.random().toString(36).slice(2, 12) + '_' + Date.now();
+      try { sessionStorage.setItem('hkdv_session_client_id', myClientId); } catch (error) { recordRoomDiagnostic('session-storage-unavailable'); }
+      ready = false;
+      setTimeout(connect, 150);
+    }
+    recordRoomDiagnostic('round-session-cleared', { resetEpoch: packet.resetEpoch });
+  };
   window.classroomRelayStatus = () => ({ ready, teacherPresent, conflict, roomCode: connectedRoom, role: connectedRole, clientId: connectedClientId });
   window.isClassroomRelayTeacherReady = () => ready && identityMatches() && myRole === 'TEACHER' && !conflict;
   function refreshPresence() {
@@ -90,6 +102,14 @@
   }
   function onData(packet) {
     if (!packet || packet.roomCode !== currentRoomCode || !identityMatches()) return;
+    lastRelayActivity = performance.now();
+    if (packet.type === 'RELAY_PONG') {
+      teacherPresent = Boolean(packet.teacherPresent);
+      if (myRole === 'STUDENT' && packet.resetEpoch > (roomMatchState.resetEpoch || 0)) {
+        applyIncomingPlayerSync({ type: 'ROOM_RESET_CMD', roomCode: currentRoomCode, resetEpoch: packet.resetEpoch, roomMatchState: { status: 'WAITING', resetEpoch: packet.resetEpoch } });
+      }
+      renderRoomConnectionStatus(); return;
+    }
     if (packet.type === 'RELAY_READY') {
       ready = true; conflict = false; teacherPresent = Boolean(packet.teacherPresent);
       connectedAt = performance.now();
@@ -120,6 +140,7 @@
     if (packet.type === 'REQUEST_SYNC') { requestSnapshot(); return; }
     if (!['PLAYER_SYNC', 'TEAM_CLAIM_REQUEST', 'TEAM_CLAIM_RESULT', 'ROOM_STATE_SNAPSHOT', 'START_MATCH_CMD', 'ROOM_RESET_CMD'].includes(packet.type)) return;
     if (myRole === 'TEACHER' && (packet.type === 'PLAYER_SYNC' || packet.type === 'TEAM_CLAIM_REQUEST')) {
+      if (packet.type === 'PLAYER_SYNC' && (packet.roomMatchState?.resetEpoch || 0) < (roomMatchState.resetEpoch || 0)) return;
       lastSeen.set(packet.claimedBy, performance.now());
       departedAt.delete(packet.claimedBy); refreshPresence();
     }
@@ -152,9 +173,13 @@
       try { onData(JSON.parse(event.data)); } catch (error) { recordRoomDiagnostic('relay-message-error', { message: String(error) }); }
     };
     active.onerror = () => recordRoomDiagnostic('relay-transport-error');
-    active.onclose = () => {
+    active.onclose = event => {
       if (socket !== active) return;
       socket = null; ready = false; teacherPresent = false; refreshPresence();
+      if (event.code === 4001 && myRole === 'STUDENT') {
+        const epoch = Number(event.reason);
+        if (epoch > (roomMatchState.resetEpoch || 0)) applyIncomingPlayerSync({ type: 'ROOM_RESET_CMD', roomCode: currentRoomCode, resetEpoch: epoch, roomMatchState: { status: 'WAITING', resetEpoch: epoch } });
+      }
       recordRoomDiagnostic('relay-disconnected'); updateAllUI(); renderRoomConnectionStatus();
       if (!conflict) reconnectTimer = setTimeout(connect, 1500);
     };
@@ -164,25 +189,41 @@
     if (!identityMatches()) { conflict = false; connect(); }
   };
   async function loadConfiguration() {
+    if (configurationPending) return;
+    configurationPending = true;
+    lastConfigurationAt = Date.now();
+    const controller = new AbortController();
+    const deadline = setTimeout(() => controller.abort(), 6000);
     try {
-      const response = await fetch('relay-config.json?v=20261118-fixed1010&t=' + Date.now(), { cache: 'no-store' });
+      const response = await fetch('relay-config.json?v=20261118-roundreset&t=' + Date.now(), { cache: 'no-store', signal: controller.signal });
       if (!response.ok) throw new Error('Relay configuration unavailable');
       const config = await response.json(), url = new URL(config.url);
       const localTest = location.hostname === '127.0.0.1' && url.protocol === 'ws:' && url.hostname === '127.0.0.1';
       if (url.protocol !== 'wss:' && !localTest) throw new Error('Relay requires TLS');
+      if (configuredUrl && configuredUrl !== url.href) {
+        const old = socket; socket = null; ready = false; conflict = false;
+        if (old) { old.onclose = null; old.close(); }
+        recordRoomDiagnostic('relay-endpoint-updated');
+      }
       configuredUrl = url.href; connect();
     } catch (error) {
       recordRoomDiagnostic('relay-config-error', { message: String(error) });
       reconnectTimer = setTimeout(loadConfiguration, 2500);
-    }
+    } finally { clearTimeout(deadline); configurationPending = false; }
   }
   window.addEventListener('DOMContentLoaded', () => {
     loadConfiguration();
     setInterval(() => {
       if (refreshPresence()) { updateAllUI(); send(buildRoomStateSnapshotPayload()); }
       if (ready && !identityMatches()) connect();
+      if (!ready && !conflict && Date.now() - lastConfigurationAt > 5000) loadConfiguration();
     }, 500);
-    window.addEventListener('online', () => { conflict = false; connect(); });
+    setInterval(() => {
+      if (!ready) return;
+      if (performance.now() - lastRelayActivity > 16000) { socket?.close(); return; }
+      send({ type: 'RELAY_PING', roomCode: currentRoomCode });
+    }, 5000);
+    window.addEventListener('online', () => { conflict = false; loadConfiguration(); connect(); });
     document.addEventListener('visibilitychange', () => { if (!document.hidden) { connect(); requestSnapshot(); } });
   });
 })();
