@@ -11,7 +11,7 @@ const send = (socket, message) => {
 const server = http.createServer((req, res) => {
   if (req.url === '/health') {
     res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' });
-    res.end(JSON.stringify({ ok: true, version: 2, rooms: rooms.size, clients: [...rooms.values()].reduce((n, r) => n + r.clients.size, 0) }));
+    res.end(JSON.stringify({ ok: true, version: 3, rooms: rooms.size, clients: [...rooms.values()].reduce((n, r) => n + r.clients.size, 0) }));
     return;
   }
   res.writeHead(404); res.end();
@@ -49,8 +49,15 @@ wss.on('connection', socket => {
       }
       const target = rooms.get(packet.roomCode);
       if (packet.role === 'TEACHER' && target.teacher && target.teacher.readyState === WebSocket.OPEN) {
-        log('teacher-conflict', { roomCode: packet.roomCode, clientId: packet.clientId });
-        send(socket, { type: 'RELAY_CONFLICT', reason: 'teacher', roomCode: packet.roomCode }); socket.close(1008, 'Teacher already connected'); return;
+        if (packet.takeover !== true) {
+          log('teacher-conflict', { roomCode: packet.roomCode, clientId: packet.clientId });
+          send(socket, { type: 'RELAY_CONFLICT', reason: 'teacher', roomCode: packet.roomCode }); socket.close(1008, 'Teacher already connected'); return;
+        }
+        const previous = target.teacher;
+        for (const [id, peer] of target.clients) if (peer === previous) target.clients.delete(id);
+        target.teacher = null;
+        previous.close(4002, 'Teacher replaced by explicit reset');
+        log('teacher-replaced-by-reset', { roomCode: packet.roomCode, clientId: packet.clientId });
       }
       if (target.clients.has(packet.clientId)) {
         log('client-conflict', { roomCode: packet.roomCode, clientId: packet.clientId });
@@ -61,7 +68,7 @@ wss.on('connection', socket => {
       room.clients.set(clientId, socket); room.touched = Date.now();
       if (role === 'TEACHER') room.teacher = socket;
       log('client-joined', { roomCode: room.code, clientId, role });
-      send(socket, { type: 'RELAY_READY', roomCode: room.code, teacherPresent: Boolean(room.teacher) });
+      send(socket, { type: 'RELAY_READY', roomCode: room.code, teacherPresent: Boolean(room.teacher), resetEpoch: room.resetEpoch });
       if (room.snapshot) send(socket, room.snapshot);
       presence(room, 'RELAY_PRESENCE', clientId, role);
       return;
@@ -129,5 +136,5 @@ const heartbeat = setInterval(() => {
   for (const [code, room] of rooms) if (!room.clients.size && Date.now() - room.touched > 300000) rooms.delete(code);
 }, 25000);
 heartbeat.unref();
-server.listen(port, '127.0.0.1', () => log('classroom-relay-listening', { version: 2, port }));
+server.listen(port, '127.0.0.1', () => log('classroom-relay-listening', { version: 3, port }));
 process.on('SIGTERM', () => { clearInterval(heartbeat); wss.close(); server.close(); });

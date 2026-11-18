@@ -9,6 +9,7 @@
   let connectedRole = null, connectedClientId = null, connectedAt = 0;
   let lastOnboardingConnection = '';
   let configurationPending = false, lastConfigurationAt = 0, lastRelayActivity = 0;
+  let pendingTeacherReset = null, takeoverRequested = false;
   const lastSeen = new Map(), departedAt = new Map();
   const previousSend = sendToAllWebRtcPeers;
   const previousRender = renderRoomConnectionStatus;
@@ -28,6 +29,16 @@
   window.classroomLaneIsLive = live;
   window.classroomSnapshotLaneIsDeparted = lane => myRole === 'TEACHER' && departedAt.has(lane.claimedBy);
   window.classroomPrepareTeamClaim = refreshPresence;
+  window.requestClassroomTeacherReset = showFeedback => {
+    if (myRole !== 'TEACHER' || !isTeacherAuthenticated) return;
+    pendingTeacherReset = Boolean(showFeedback);
+    if (conflict) takeoverRequested = true;
+    conflict = false; teacherRoomConflict = false;
+    const old = socket; socket = null; ready = false;
+    if (old) { old.onclose = null; old.close(); }
+    recordRoomDiagnostic('teacher-reset-requested');
+    connect();
+  };
   window.classroomAfterRoomReset = packet => {
     lastSeen.clear(); departedAt.clear(); connectedAt = performance.now();
     if (myRole === 'STUDENT') {
@@ -113,10 +124,22 @@
     if (packet.type === 'RELAY_READY') {
       ready = true; conflict = false; teacherPresent = Boolean(packet.teacherPresent);
       connectedAt = performance.now();
+      if (myRole === 'TEACHER' && pendingTeacherReset !== null) {
+        roomMatchState.resetEpoch = Math.max(roomMatchState.resetEpoch || 0, packet.resetEpoch || 0);
+        teacherRoomConflict = false;
+        const feedback = pendingTeacherReset; pendingTeacherReset = null; takeoverRequested = false;
+        teacherUnlockAllCharactersInRoom(feedback);
+      }
       recordRoomDiagnostic('relay-connected', { role: connectedRole });
       requestSnapshot(); updateAllUI(); renderRoomConnectionStatus(); return;
     }
     if (packet.type === 'RELAY_CONFLICT') {
+      if (packet.reason === 'teacher' && myRole === 'TEACHER' && pendingTeacherReset !== null) {
+        takeoverRequested = true;
+        const old = socket; socket = null; ready = false; conflict = false;
+        if (old) { old.onclose = null; old.close(); }
+        setTimeout(connect, 150); return;
+      }
       if (packet.reason === 'client' && myRole === 'STUDENT' && !hasClaimedCharacter) {
         myClientId = 'client_' + Math.random().toString(36).slice(2, 12) + '_' + Date.now();
         try { sessionStorage.setItem('hkdv_session_client_id', myClientId); } catch (error) { recordRoomDiagnostic('session-storage-unavailable'); }
@@ -124,6 +147,7 @@
         connect(); return;
       }
       conflict = true; ready = false; teacherRoomConflict = myRole === 'TEACHER';
+      if (myRole === 'TEACHER') for (const key of Object.keys(allFourLanesState)) allFourLanesState[key] = createInitialLaneState(key);
       recordRoomDiagnostic('relay-room-conflict', { role: myRole });
       updateAllUI(); renderRoomConnectionStatus(); return;
     }
@@ -166,7 +190,7 @@
     socket = active;
     active.onopen = () => {
       if (!identityMatches()) { connect(); return; }
-      active.send(JSON.stringify({ type: 'RELAY_JOIN', roomCode: connectedRoom, role: connectedRole, clientId: connectedClientId }));
+      active.send(JSON.stringify({ type: 'RELAY_JOIN', roomCode: connectedRoom, role: connectedRole, clientId: connectedClientId, takeover: connectedRole === 'TEACHER' && takeoverRequested }));
     };
     active.onmessage = event => {
       if (socket !== active) return;
@@ -176,6 +200,11 @@
     active.onclose = event => {
       if (socket !== active) return;
       socket = null; ready = false; teacherPresent = false; refreshPresence();
+      if (event.code === 4002 && myRole === 'TEACHER') {
+        conflict = true; teacherRoomConflict = true; pendingTeacherReset = null;
+        for (const key of Object.keys(allFourLanesState)) allFourLanesState[key] = createInitialLaneState(key);
+        recordRoomDiagnostic('teacher-replaced-by-reset');
+      }
       if (event.code === 4001 && myRole === 'STUDENT') {
         const epoch = Number(event.reason);
         if (epoch > (roomMatchState.resetEpoch || 0)) applyIncomingPlayerSync({ type: 'ROOM_RESET_CMD', roomCode: currentRoomCode, resetEpoch: epoch, roomMatchState: { status: 'WAITING', resetEpoch: epoch } });
@@ -195,7 +224,7 @@
     const controller = new AbortController();
     const deadline = setTimeout(() => controller.abort(), 6000);
     try {
-      const response = await fetch('relay-config.json?v=20261118-roundreset&t=' + Date.now(), { cache: 'no-store', signal: controller.signal });
+      const response = await fetch('relay-config.json?v=20261118-room-authority&t=' + Date.now(), { cache: 'no-store', signal: controller.signal });
       if (!response.ok) throw new Error('Relay configuration unavailable');
       const config = await response.json(), url = new URL(config.url);
       const localTest = location.hostname === '127.0.0.1' && url.protocol === 'ws:' && url.hostname === '127.0.0.1';
