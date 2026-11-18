@@ -7410,7 +7410,7 @@
         });
         myPeer.on('error', (err) => {
           recordRoomDiagnostic('peer-error', { type: err && err.type });
-          if (err && err.type === 'unavailable-id' && myRole === 'TEACHER') {
+          if (err && err.type === 'unavailable-id' && myRole === 'TEACHER' && !window.isClassroomRelayTeacherReady?.()) {
             teacherRoomConflict = true;
             renderRoomConnectionStatus();
             updateAllUI();
@@ -7942,5 +7942,6 @@
       }, 1500);
     });
   </script>
+  <script src="classroom-relay.js?v=20261118-relay"></script>
 </body>
 </html>
