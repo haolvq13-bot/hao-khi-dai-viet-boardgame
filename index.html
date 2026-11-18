@@ -3702,6 +3702,7 @@
     const _initUrlParams = new URLSearchParams(window.location.search);
     const _initUrlMode = _initUrlParams.get('mode');
     let myClientId = getOrCreateSessionClientId();
+    let teacherRoomConflict = false;
     let isTeacherAuthenticated = _initUrlMode === 'teacher';
     let isQrStudentMode = _initUrlMode === 'student';
     let myRole = _initUrlMode === 'teacher' ? 'TEACHER' : 'STUDENT'; // 'STUDENT' | 'TEACHER'
@@ -4688,6 +4689,10 @@
     }
 
     function clearRoomLanesStateInternal(newHostClientId = null, newHostDirection = null, newHostTeamName = null) {
+      if (myRole === 'TEACHER' && teacherRoomConflict) {
+        showToast('Mã phòng đang có cô giáo khác mở. Hãy tạo mã phòng riêng trước.', true);
+        return;
+      }
       const resetEpoch = Date.now();
       localMatchStartedPerf = null;
       hasAutoOpenedTeacherFinalModal = false;
@@ -4759,7 +4764,7 @@
         showToast('🔒 Chỉ Cô Giáo (có Mã PIN) mới được tạo Mã Phòng mới!', true);
         return;
       }
-      const randomCode = String(Math.floor(1000 + Math.random() * 9000));
+      const randomCode = String(Math.floor(100000 + Math.random() * 900000));
       const r1 = document.getElementById('inputOnboardRoomCode');
       if (r1) r1.value = randomCode;
       const r2 = document.getElementById('inputRoomCode');
@@ -4928,12 +4933,51 @@
     }
 
     let pendingTeamClaim = null;
+    const handledTeamClaimIds = new Set();
     const roomDiagnostics = [];
     window.olimpiaRoomDiagnostics = roomDiagnostics;
 
     function recordRoomDiagnostic(event, details = {}) {
       roomDiagnostics.push({ event, roomCode: currentRoomCode, at: new Date().toISOString(), ...details });
       if (roomDiagnostics.length > 200) roomDiagnostics.shift();
+    }
+
+    function nextPlayerRevision() {
+      const key = 'hkdv_revision_' + myClientId;
+      let saved = 0;
+      try { saved = Number(sessionStorage.getItem(key)) || 0; } catch (e) {}
+      myGroup.syncRevision = Math.max(myGroup.syncRevision || 0, saved) + 1;
+      try { sessionStorage.setItem(key, String(myGroup.syncRevision)); } catch (e) {}
+      return myGroup.syncRevision;
+    }
+
+    function renderRoomConnectionStatus() {
+      let banner = document.getElementById('roomConnectionBanner');
+      if (!banner) {
+        banner = document.createElement('div');
+        banner.id = 'roomConnectionBanner';
+        banner.setAttribute('role', 'status');
+        banner.style.cssText = 'padding:10px 16px;font-weight:800;font-size:13px;text-align:center;background:#FEF3C7;color:#92400E;position:relative;z-index:61;';
+        const bar = document.querySelector('.topbar');
+        if (bar) bar.insertAdjacentElement('afterend', banner);
+      }
+      if (myRole === 'TEACHER') {
+        banner.hidden = !teacherRoomConflict && (typeof Peer === 'undefined' || Boolean(myPeer && myPeer.open));
+        if (teacherRoomConflict) {
+          banner.replaceChildren(document.createTextNode('⚠️ Mã phòng #' + currentRoomCode + ' đang có cô giáo khác mở. Màn hình này chưa nhận học sinh. '));
+          const button = document.createElement('button');
+          button.textContent = 'Tạo mã phòng riêng';
+          button.className = 'btn-3d btn-3d-gold';
+          button.onclick = () => teacherGenerateNewRoomCode(true);
+          banner.appendChild(button);
+        } else if (!banner.hidden) {
+          banner.textContent = '⏳ Đang mở kết nối chủ phòng #' + currentRoomCode + '. Chờ kết nối xong trước khi cho học sinh vào.';
+        }
+      } else {
+        const teacherConnected = Object.values(activePeerConns).some(c => c && c.open && c.peer.endsWith('-teacher'));
+        banner.hidden = teacherConnected;
+        banner.textContent = teacherConnected ? '' : '⏳ Chưa kết nối được cô giáo ở phòng #' + currentRoomCode + '. Kiểm tra mã phòng mới trên màn hình cô giáo.';
+      }
     }
 
     function requestTeamClaim(direction, teamName) {
@@ -4961,7 +5005,7 @@
           recordRoomDiagnostic('team-claim-timeout');
           finish(null);
         }, 12000);
-        pendingTeamClaim = { requestId: request.requestId, finish };
+        pendingTeamClaim = { requestId: request.requestId, request, finish };
         initWebRtcPeerMesh(currentRoomCode);
         send();
       });
@@ -4986,12 +5030,24 @@
         saveRoomSnapshotToStorage({ ...allFourLanesState[direction], roomCode: currentRoomCode });
         recordRoomDiagnostic('team-reserved', { direction, clientId: payload.claimedBy });
       }
+      if (accepted && existing && !handledTeamClaimIds.has(payload.requestId)) {
+        allFourLanesState[existing].isReady = false;
+      }
+      if (accepted) {
+        handledTeamClaimIds.add(payload.requestId);
+        if (handledTeamClaimIds.size > 200) handledTeamClaimIds.delete(handledTeamClaimIds.values().next().value);
+      }
+      recordRoomDiagnostic(accepted ? 'team-claim-accepted' : 'team-claim-rejected', {
+        direction: accepted ? direction : null,
+        reason: accepted ? null : (roomMatchState.status === 'PLAYING' ? 'already-playing' : 'room-full')
+      });
       const result = {
         type: 'TEAM_CLAIM_RESULT', roomCode: currentRoomCode,
         requestId: payload.requestId, claimedBy: payload.claimedBy,
         accepted, direction: accepted ? direction : null,
         reason: roomMatchState.status === 'PLAYING' ? 'Trận đấu đã bắt đầu. Hãy chờ Cô Giáo mở ván mới.' : 'Phòng đã đủ 4 đội.',
-        roomMatchState: { ...roomMatchState }
+        roomMatchState: { ...roomMatchState },
+        revisionBase: accepted ? (allFourLanesState[direction].revision || 0) : 0
       };
       if (syncChannel) {
         try { syncChannel.postMessage(result); } catch (e) {}
@@ -5033,6 +5089,7 @@
       }
       selectedDirectionKey = claim.direction;
       roomMatchState.resetEpoch = claim.roomMatchState.resetEpoch || 0;
+      myGroup.syncRevision = Math.max(myGroup.syncRevision || 0, claim.revisionBase || 0);
 
       Object.keys(allFourLanesState).forEach((k) => {
         if (k !== selectedDirectionKey && allFourLanesState[k].claimedBy === myClientId) {
@@ -5358,7 +5415,7 @@
       const onlineList = Object.values(allFourLanesState).filter(l => l.online);
       const onlineCount = onlineList.length;
       const readyCount = onlineList.filter(l => l.isReady !== false).length;
-      const canTeacherStart = onlineCount > 0 && readyCount === onlineCount;
+      const canTeacherStart = !teacherRoomConflict && onlineCount === 4 && readyCount === 4;
 
       const countEl = document.getElementById('teacherJoinedCountText');
       if (countEl) countEl.textContent = `🟢 ${readyCount}/${onlineCount} đội Sẵn Sàng (${onlineCount}/4 vào)`;
@@ -5378,8 +5435,8 @@
       if (startBtn) {
         if (roomMatchState.status === 'WAITING') {
           if (!canTeacherStart) {
-            startBtn.textContent = onlineCount === 0
-              ? `🔒 CHỜ HỌC SINH VÀO & SẴN SÀNG (0/4)`
+            startBtn.textContent = onlineCount < 4
+              ? `🔒 CHỜ ĐỦ 4 ĐỘI (${onlineCount}/4 VÀO)`
               : `🔒 CHỜ ĐỌC HƯỚNG DẪN (${readyCount}/${onlineCount} SẴN SÀNG)`;
             startBtn.disabled = true;
             startBtn.style.opacity = '0.55';
@@ -6983,6 +7040,12 @@
       }
       const onlineList = Object.values(allFourLanesState).filter(l => l.online);
       const readyList = onlineList.filter(l => l.isReady !== false);
+      if (teacherRoomConflict || roomMatchState.status === 'PLAYING') return;
+      if (onlineList.length < 4) {
+        showToast('⏳ Cần đủ 4 đội vào phòng trước khi bắt đầu (' + onlineList.length + '/4).', true);
+        recordRoomDiagnostic('start-blocked', { onlineCount: onlineList.length });
+        return;
+      }
       if (onlineList.length === 0) {
         playSound('wrong');
         showToast('⏳ Chưa có đội nào vào phòng! Hãy chờ học sinh chọn nhân vật, đọc hướng dẫn và bấm SẴN SÀNG!', true);
@@ -7042,7 +7105,7 @@
         claimedBy: hasClaimedCharacter ? myClientId : null,
         roomMatchState: { ...roomMatchState },
         ts: Date.now(),
-        revision: ++myGroup.syncRevision
+        revision: nextPlayerRevision()
       };
     }
 
@@ -7315,6 +7378,7 @@
       // Keep the same connection while selecting a team, reading and becoming
       // ready. A connection belongs to a device, not to a contested team slot.
       if (myPeer && !myPeer.destroyed && myPeer.id === myPeerId) return;
+      teacherRoomConflict = false;
       if (myPeer) {
         try { myPeer.destroy(); } catch (e) {}
         myPeer = null;
@@ -7325,6 +7389,8 @@
       try {
         myPeer = new Peer(myPeerId);
         myPeer.on('open', () => {
+          teacherRoomConflict = false;
+          renderRoomConnectionStatus();
           const stEl = document.getElementById('roomPeerStatusText');
           if (stEl) stEl.textContent = `Đã kết nối P2P Phòng #${code}`;
           connectToOtherDirectionalPeers(cleanCode);
@@ -7345,7 +7411,17 @@
         myPeer.on('error', (err) => {
           recordRoomDiagnostic('peer-error', { type: err && err.type });
           if (err && err.type === 'unavailable-id' && myRole === 'TEACHER') {
+            teacherRoomConflict = true;
+            renderRoomConnectionStatus();
+            updateAllUI();
             showToast('Phòng này đã có Cô Giáo mở. Hãy đóng cửa sổ chủ phòng cũ hoặc tạo mã phòng khác.', true);
+          }
+          if (err && err.type === 'unavailable-id' && myRole === 'STUDENT' && !hasClaimedCharacter) {
+            myClientId = 'client_' + Math.random().toString(36).slice(2, 12) + '_' + Date.now();
+            try { sessionStorage.setItem('hkdv_session_client_id', myClientId); } catch (e) {}
+            if (pendingTeamClaim) pendingTeamClaim.request.claimedBy = myClientId;
+            recordRoomDiagnostic('student-identity-recovered');
+            initWebRtcPeerMesh(currentRoomCode);
           }
         });
       } catch (err) {
@@ -7373,6 +7449,21 @@
 
     function setupPeerConnHandlers(conn) {
       if (!conn) return;
+      const peerConnection = conn.peerConnection;
+      if (peerConnection) {
+        peerConnection.addEventListener('connectionstatechange', () => {
+          recordRoomDiagnostic('data-channel-state', {
+            peer: conn.peer, state: peerConnection.connectionState,
+            iceState: peerConnection.iceConnectionState
+          });
+          if (peerConnection.connectionState === 'failed') {
+            try { conn.close(); } catch (e) {}
+          }
+        });
+        peerConnection.addEventListener('icecandidateerror', (event) => {
+          recordRoomDiagnostic('ice-server-error', { code: event.errorCode });
+        });
+      }
       conn.on('data', (data) => {
         if (!data) return;
         if (
@@ -7401,6 +7492,7 @@
         activePeerConns[conn.peer] = conn;
         delete pendingPeerConnTs[conn.peer];
         recordRoomDiagnostic('room-connected', { peer: conn.peer });
+        renderRoomConnectionStatus();
         try {
           if (myRole === 'TEACHER') {
             conn.send(buildRoomStateSnapshotPayload());
@@ -7574,7 +7666,7 @@
 
           const readyList = onlineList.filter(l => l.isReady !== false);
           const readyCount = readyList.length;
-          const canTeacherStart = onlineCount > 0 && readyCount === onlineCount;
+          const canTeacherStart = !teacherRoomConflict && onlineCount === 4 && readyCount === 4;
 
           const joinedNames = onlineList.map(l => {
             const stIcon = l.isReady !== false ? '✅ Sẵn sàng' : '📖 Đang đọc HD';
@@ -7589,8 +7681,8 @@
           badge.style.background = '#F59E0B';
           badge.style.color = '#0F172A';
           const btnText = !canTeacherStart
-            ? (onlineCount === 0
-                ? `🔒 CHỜ HỌC SINH CHỌN ĐỘI & SẴN SÀNG (0/4)`
+            ? (onlineCount < 4
+                ? `🔒 CHỜ ĐỦ 4 ĐỘI (${onlineCount}/4 VÀO)`
                 : `🔒 CHỜ ĐỌC HƯỚNG DẪN & BẤM SẴN SÀNG (${readyCount}/${onlineCount})`)
             : `🥁 CÔ GIÁO: BẮT ĐẦU TRẬN ĐẤU (${readyCount}/${onlineCount} SẴN SÀNG)!`;
           actionArea.innerHTML = `
@@ -7669,6 +7761,7 @@
     }
 
     function updateAllUI() {
+      renderRoomConnectionStatus();
       syncTeacherAuthUI();
       syncThemeButtonsUI();
       const teacherPanel = document.getElementById('teacherHostPanel');
@@ -7822,11 +7915,17 @@
         const r2 = document.getElementById('inputRoomCode');
         if (r2) r2.value = currentRoomCode;
       }
+      if (!urlRoom && myRole === 'TEACHER') {
+        currentRoomCode = String(Math.floor(100000 + Math.random() * 900000));
+        const teacherRoomInput = document.getElementById('inputOnboardRoomCode');
+        if (teacherRoomInput) teacherRoomInput.value = currentRoomCode;
+      }
       syncTeacherAuthUI();
       connectToOnlineRoom(currentRoomCode);
       renderOnboardingDirectionCards();
       updateAllUI();
       setInterval(() => {
+        renderRoomConnectionStatus();
         pollRoomHubServer();
       }, 400);
       setInterval(() => {
