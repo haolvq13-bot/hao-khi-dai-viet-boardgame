@@ -8,7 +8,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,500;0,600;0,700;0,800;0,900;1,700&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
-  <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
   <style>
     :root {
       --surface-card: #FFFFFF;
@@ -3013,7 +3012,6 @@
           </div>
           <div style="display:flex; justify-content:center; gap:6px; margin-top:6px; flex-wrap:wrap;">
             <button class="btn-3d" style="padding:4px 9px; font-size:11px; border-color:#10B981; color:#065F46;" onclick="openJoinRoomModal()">📱 Phóng To QR</button>
-            <button class="btn-3d" style="padding:4px 9px; font-size:11px; border-color:#0284C7; color:#0369A1;" onclick="teacherGenerateNewRoomCode(true)">🎲 Đổi Mã Phòng</button>
           </div>
         </div>
 
@@ -3238,17 +3236,14 @@
       <div id="teacherVerifiedBar" style="display:none; background:linear-gradient(135deg,#ECFDF5 0%,#D1FAE5 100%); border:2.5px solid #10B981; border-radius:16px; padding:10px 14px; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
         <div style="flex:1; min-width:210px;">
           <div style="font-size:12px; font-weight:900; color:#065F46;">✅ ĐÃ MỞ KHÓA QUYỀN CÔ GIÁO (CHỦ PHÒNG):</div>
-          <div style="font-size:11px; color:#047857; font-weight:700;">Cô Giáo có thể tạo phòng mới, mở khóa 4 đội, đổi mã phòng hoặc vào thẳng Bảng Điều Khiển</div>
+          <div style="font-size:11px; color:#047857; font-weight:700;">Phòng học cố định #1010. Cô Giáo mở bảng điều khiển hoặc mở khóa 4 đội cho ván mới.</div>
         </div>
         <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
           <button class="btn-3d btn-3d-gold" id="btnTeacherCreateRoom" style="padding:8px 14px; font-size:12.5px; border-radius:12px;" onclick="confirmStartAsTeacherHost()">
-            👩‍🏫 CÔ GIÁO: TẠO PHÒNG MỚI & MỞ BẢN ĐỒ
+            👩‍🏫 CÔ GIÁO: MỞ PHÒNG #1010 & BẢN ĐỒ
           </button>
           <button class="btn-3d" id="btnUnlockAllInModal" style="padding:8px 12px; font-size:12px; border-radius:12px; border-color:#DC2626; color:#991B1B; background:#FFFFFF;" onclick="teacherUnlockAllCharactersInRoom(false)">
             🔓 Mở Khóa 4 Đội
-          </button>
-          <button class="btn-3d" style="padding:8px 12px; font-size:12px; border-radius:12px; border-color:#0284C7; color:#0369A1; background:#FFFFFF;" onclick="teacherGenerateNewRoomCode(false)">
-            🎲 Đổi Mã Mới
           </button>
           <button class="btn-3d" style="padding:8px 12px; font-size:12px; border-radius:12px; border-color:#10B981; color:#065F46; background:#FFFFFF;" onclick="openJoinRoomModal()">
             📱 Mã QR Phòng
@@ -3281,7 +3276,7 @@
               value="1010"
               maxlength="8"
               placeholder="VD: 1010"
-              oninput="onRoomInputChanged(this.value)"
+              readonly aria-label="Mã phòng cố định 1010"
               style="width:100%; padding:9px 12px; font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:900; text-align:center; border:3px solid #10B981; border-radius:14px; background:#ECFDF5; color:#065F46;"
             />
           </div>
@@ -3439,12 +3434,12 @@
             <input
               type="text"
               id="inputRoomCode"
+              readonly aria-label="Mã phòng cố định 1010"
               value="1010"
               placeholder="VD: 1010"
               maxlength="8"
               style="flex:1; min-width:0; padding:7px 10px; font-family:'JetBrains Mono',monospace; font-size:18px; font-weight:900; text-align:center; border:3px solid var(--primary-gold); border-radius:12px; background:#FFFFFF;"
             />
-            <button class="btn-3d btn-3d-gold" style="white-space:nowrap; padding:7px 14px;" onclick="saveRoomConnection()">🚀 Đổi Mã</button>
           </div>
 
           <div style="font-size:11px; color:var(--text-slate); margin-bottom:8px; word-break:break-all; background:#FFFFFF; padding:6px 8px; border-radius:8px; border:1px solid #CBD5E1;">
@@ -4687,7 +4682,7 @@
     }
 
     function onRoomInputChanged(val) {
-      const clean = (val || '1010').trim().toUpperCase();
+      const clean = FIXED_CLASSROOM_CODE;
       if (clean.length >= 1) {
         connectToOnlineRoom(clean);
         pickFirstAvailableDirection();
@@ -4697,7 +4692,7 @@
 
     function clearRoomLanesStateInternal(newHostClientId = null, newHostDirection = null, newHostTeamName = null) {
       if (myRole === 'TEACHER' && teacherRoomConflict) {
-        showToast('Mã phòng đang có cô giáo khác mở. Hãy tạo mã phòng riêng trước.', true);
+        showToast('Mã phòng đang có cô giáo khác mở. Hãy đóng màn hình cô giáo cũ rồi tải lại trang.', true);
         return;
       }
       const resetEpoch = Date.now();
@@ -4744,7 +4739,7 @@
       clearWalkTimers();
       isMarchingAnimation = false;
       const rawRoomEl = document.getElementById('inputOnboardRoomCode');
-      const targetRoom = (rawRoomEl && rawRoomEl.value.trim()) ? rawRoomEl.value.trim().toUpperCase() : currentRoomCode;
+      const targetRoom = FIXED_CLASSROOM_CODE;
       currentRoomCode = targetRoom;
       hasClaimedCharacter = false;
 
@@ -4765,24 +4760,10 @@
       }
     }
 
-    function teacherGenerateNewRoomCode(fromSidebar = false) {
-      if (!isTeacherAuthenticated) {
-        playSound('wrong');
-        showToast('🔒 Chỉ Cô Giáo (có Mã PIN) mới được tạo Mã Phòng mới!', true);
-        return;
-      }
-      const randomCode = String(Math.floor(100000 + Math.random() * 900000));
-      const r1 = document.getElementById('inputOnboardRoomCode');
-      if (r1) r1.value = randomCode;
-      const r2 = document.getElementById('inputRoomCode');
-      if (r2) r2.value = randomCode;
-      connectToOnlineRoom(randomCode);
-      teacherUnlockAllCharactersInRoom(false);
-      playSound('fanfare');
-      showToast(`🎲 Đã tạo Mã Phòng Mới #${randomCode} (Cả 4 Đội đều còn trống)!`);
-      if (fromSidebar) {
-        updateAllUI();
-      }
+    function teacherGenerateNewRoomCode() {
+      connectToOnlineRoom(FIXED_CLASSROOM_CODE);
+      updateAllUI();
+      showToast('🔒 Phòng học cố định #1010. Mã phòng được giữ nguyên.');
     }
 
     function confirmStartAsTeacherHost() {
@@ -4979,12 +4960,7 @@
       if (myRole === 'TEACHER') {
         banner.hidden = !teacherRoomConflict && (typeof Peer === 'undefined' || Boolean(myPeer && myPeer.open));
         if (teacherRoomConflict) {
-          banner.replaceChildren(document.createTextNode('⚠️ Mã phòng #' + currentRoomCode + ' đang có cô giáo khác mở. Màn hình này chưa nhận học sinh. '));
-          const button = document.createElement('button');
-          button.textContent = 'Tạo mã phòng riêng';
-          button.className = 'btn-3d btn-3d-gold';
-          button.onclick = () => teacherGenerateNewRoomCode(true);
-          banner.appendChild(button);
+          banner.textContent = '⚠️ Phòng #' + currentRoomCode + ' đang có màn hình cô giáo khác mở. Hãy dùng màn hình đó, hoặc đóng màn hình cũ rồi tải lại trang này.';
         } else if (!banner.hidden) {
           banner.textContent = '⏳ Đang mở kết nối chủ phòng #' + currentRoomCode + '. Chờ kết nối xong trước khi cho học sinh vào.';
         }
@@ -6701,7 +6677,8 @@
      * 10. REAL-TIME 4-PLAYER ONLINE ROOM + QR CODE SYNC (WEBRTC PEERJS +
      *     BROADCASTCHANNEL + LOCALSTORAGE ROOM SNAPSHOT)
      * ===================================================================== */
-    let currentRoomCode = '1010';
+    const FIXED_CLASSROOM_CODE = '1010';
+    let currentRoomCode = FIXED_CLASSROOM_CODE;
     let syncChannel = null;
     let myPeer = null;
     let activePeerConns = {};
@@ -6740,6 +6717,7 @@
     }
 
     function getRoomShareUrl(code) {
+      code = FIXED_CLASSROOM_CODE;
       const host = window.location.hostname || '';
       const isLocalLoopback =
         window.location.protocol === 'file:' ||
@@ -6750,7 +6728,7 @@
       const base = isLocalLoopback
         ? 'https://haolvq13-bot.github.io/hao-khi-dai-viet-boardgame/'
         : window.location.href.split('?')[0].split('#')[0];
-      return `${base}?room=${encodeURIComponent(code)}&mode=student&v=20261118-live-presence`;
+      return `${base}?room=${encodeURIComponent(code)}&mode=student&v=20261118-fixed1010`;
     }
 
     function updateQrModalUI() {
@@ -6896,12 +6874,19 @@
         if (payload.roomMatchState) {
           const incomingMeta = payload.roomMatchState;
           if (incomingMeta.resetEpoch && incomingMeta.resetEpoch > (roomMatchState.resetEpoch || 0)) {
-            // A reconnecting student may have missed ROOM_RESET_CMD. Apply the
-            // same cleanup before accepting the new epoch or sending heartbeats.
-            applyIncomingPlayerSync({
-              type: 'ROOM_RESET_CMD', roomCode: currentRoomCode,
-              resetEpoch: incomingMeta.resetEpoch, roomMatchState: incomingMeta
-            });
+            const firstWaitingSnapshot = !hasClaimedCharacter && !roomMatchState.resetEpoch &&
+              roomMatchState.status === 'WAITING' && incomingMeta.status === 'WAITING';
+            if (firstWaitingSnapshot) {
+              // Learning the current classroom epoch must not cancel a join
+              // already in flight on a slower student connection.
+              roomMatchState.resetEpoch = incomingMeta.resetEpoch;
+            } else {
+              // Reconnecting players must still clean up a missed real reset.
+              applyIncomingPlayerSync({
+                type: 'ROOM_RESET_CMD', roomCode: currentRoomCode,
+                resetEpoch: incomingMeta.resetEpoch, roomMatchState: incomingMeta
+              });
+            }
           }
           if (incomingMeta.hostClientId) {
             roomMatchState.hostClientId = incomingMeta.hostClientId;
@@ -7454,7 +7439,7 @@
             teacherRoomConflict = true;
             renderRoomConnectionStatus();
             updateAllUI();
-            showToast('Phòng này đã có Cô Giáo mở. Hãy đóng cửa sổ chủ phòng cũ hoặc tạo mã phòng khác.', true);
+            showToast('Phòng này đã có Cô Giáo mở. Hãy đóng cửa sổ chủ phòng cũ rồi tải lại trang.', true);
           }
           if (err && err.type === 'unavailable-id' && myRole === 'STUDENT' && !hasClaimedCharacter && !window.classroomRelayEnabled) {
             myClientId = 'client_' + Math.random().toString(36).slice(2, 12) + '_' + Date.now();
@@ -7562,12 +7547,14 @@
     }
 
     function connectToOnlineRoom(code) {
-      const nextCode = (code || '1010').trim().toUpperCase();
+      const nextCode = FIXED_CLASSROOM_CODE;
       const isRoomChanged = nextCode !== currentRoomCode;
       currentRoomCode = nextCode;
       if (window.location.protocol === 'https:' || window.location.protocol === 'http:') {
         const roomUrl = new URL(window.location.href);
         roomUrl.searchParams.set('room', currentRoomCode);
+        roomUrl.searchParams.set('mode', myRole === 'TEACHER' ? 'teacher' : 'student');
+        roomUrl.searchParams.set('v', '20261118-fixed1010');
         window.history.replaceState(null, '', roomUrl);
       }
 
@@ -7953,17 +7940,10 @@
           isTeacherAuthenticated = true;
         }
       } catch (e) {}
-      if (urlRoom) {
-        currentRoomCode = urlRoom.trim().toUpperCase();
-        const r1 = document.getElementById('inputOnboardRoomCode');
-        if (r1) r1.value = currentRoomCode;
-        const r2 = document.getElementById('inputRoomCode');
-        if (r2) r2.value = currentRoomCode;
-      }
-      if (!urlRoom && myRole === 'TEACHER') {
-        currentRoomCode = String(Math.floor(100000 + Math.random() * 900000));
-        const teacherRoomInput = document.getElementById('inputOnboardRoomCode');
-        if (teacherRoomInput) teacherRoomInput.value = currentRoomCode;
+      currentRoomCode = FIXED_CLASSROOM_CODE;
+      for (const inputId of ['inputOnboardRoomCode', 'inputRoomCode']) {
+        const fixedRoomInput = document.getElementById(inputId);
+        if (fixedRoomInput) { fixedRoomInput.value = FIXED_CLASSROOM_CODE; fixedRoomInput.readOnly = true; }
       }
       syncTeacherAuthUI();
       connectToOnlineRoom(currentRoomCode);
@@ -7987,6 +7967,6 @@
       }, 1500);
     });
   </script>
-  <script src="classroom-relay.js?v=20261118-live-presence"></script>
+  <script src="classroom-relay.js?v=20261118-fixed1010"></script>
 </body>
 </html>

@@ -165,7 +165,7 @@
   };
   async function loadConfiguration() {
     try {
-      const response = await fetch('relay-config.json?v=20261118-live-presence&t=' + Date.now(), { cache: 'no-store' });
+      const response = await fetch('relay-config.json?v=20261118-fixed1010&t=' + Date.now(), { cache: 'no-store' });
       if (!response.ok) throw new Error('Relay configuration unavailable');
       const config = await response.json(), url = new URL(config.url);
       const localTest = location.hostname === '127.0.0.1' && url.protocol === 'ws:' && url.hostname === '127.0.0.1';
